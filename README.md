@@ -6,6 +6,8 @@ Já estão disponíveis **cadastro, login, renovação de sessão, logout, dashb
 
 A interface adota fantasia moderna com tema escuro, roxo/ciano e Geist. O [design system](docs/19-design-system.md) registra a direção fornecida, os componentes atuais, a proveniência da arte e os padrões para os próximos módulos.
 
+O ambiente online de testes está disponível em **[paralax-rpg-web.vercel.app](https://paralax-rpg-web.vercel.app)**. Use **Criar conta** para começar. Ele usa Vercel, PostgreSQL Neon separado do banco local e Blob para avatares persistentes. O [procedimento de publicação](docs/deploy-vercel.md) registra configuração e comandos de atualização; a [verificação online](docs/verification/004-publicacao-vercel.md) registra os fluxos testados.
+
 ## Executar localmente
 
 Pré-requisitos: Node.js 22.18 ou superior, npm 10 ou superior e Docker com Compose. A implementação foi verificada em Windows com Node.js 26.5.0.
@@ -26,7 +28,7 @@ Depois de atualizar o código, execute `npm run db:migrate` antes de iniciar par
 
 `setup` cria `.env` com senha de banco e chave de autenticação aleatórias e preserva uma configuração existente. `.env`, uploads e arquivos gerados são ignorados pelo Git. Se uma porta estiver ocupada, altere a configuração correspondente antes de iniciar; a porta web também está no script de `apps/web/package.json` e na configuração de testes.
 
-Os avatares ficam em `var/uploads/avatars`, são públicos, limitados a 2 MB e convertidos para WebP 256×256. O armazenamento em disco é a opção de desenvolvimento; produção com várias instâncias precisará de storage compartilhado.
+Os avatares são públicos, limitados a 2 MB e convertidos para WebP 256×256. No desenvolvimento ficam em `var/uploads/avatars`; na Vercel são armazenados em Blob privado e entregues pelas rotas da API.
 
 Se o npm encontrar erro de certificado no Windows, use os certificados instalados no sistema, mantendo a verificação TLS:
 
@@ -72,4 +74,4 @@ Consulte o [índice da documentação](docs/README.md), o [MVP](docs/14-mvp.md),
 
 Não há recuperação de senha, verificação de e-mail, troca de e-mail/username, campanhas, personagens persistidos ou WebSocket implementados. O editor ainda não oferece autosave, fórmulas, exclusão, restauração de versões ou cópia de sistemas. A prévia mostra a definição, sem criar personagens. O rate limit inicial usa memória por processo; coordenação entre instâncias e Redis entram quando a arquitetura distribuída for implementada. Avatares antigos permanecem até definir política de limpeza.
 
-O provedor de produção não foi escolhido e nenhum deploy foi realizado. A [especificação original](docs/referencias/especificacao-original.md) continua preservada integralmente.
+Vercel foi escolhida para publicar os módulos atuais para testes. A operação da plataforma completa, incluindo tempo real e recuperação de dados, continua a definir. A [especificação original](docs/referencias/especificacao-original.md) continua preservada integralmente.

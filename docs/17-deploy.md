@@ -2,7 +2,7 @@
 
 ## Status
 
-A origem fornece componentes de infraestrutura, mas não escolhe provedor, orçamento ou estratégia de publicação. Este documento é uma **proposta de operação de produção futura**. O ambiente local já possui aplicação, PostgreSQL isolado, migrations e scripts; há workflow CI preparado, sem execução remota confirmada. Nenhum deploy de produção foi realizado.
+A origem fornece componentes de infraestrutura, mas não escolhe provedor, orçamento ou estratégia de publicação. Para os módulos atuais, foi publicado e verificado um [ambiente online de testes](https://paralax-rpg-web.vercel.app) na Vercel, com PostgreSQL Neon e avatares em Blob; veja [configuração e atualização](deploy-vercel.md) e [evidências](verification/004-publicacao-vercel.md). O ambiente local mantém PostgreSQL isolado, migrations e scripts. A operação da plataforma completa descrita abaixo continua uma **proposta futura**. O workflow CI está preparado, sem execução remota confirmada.
 
 Comandos locais de instalação, build, testes e execução estão no [README](../README.md). Para o ambiente de testes solicitado posteriormente, Vercel, Neon e Blob já têm configuração própria no [procedimento de publicação](deploy-vercel.md). As propostas de operação da plataforma completa abaixo continuam futuras.
 

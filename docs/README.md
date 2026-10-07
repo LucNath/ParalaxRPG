@@ -15,9 +15,9 @@ Use primeiro a visão do produto, as regras de negócio e o MVP. Em seguida, con
 
 ## Estado da implementação
 
-Conta, autenticação, perfil com avatar e sistemas de RPG já estão implementados. Next.js, NestJS, PostgreSQL e Prisma foram adotados conforme a [decisão 001](architecture/decisions/001-base-e-autenticacao.md). O editor de sistemas, versões imutáveis e publicação privada/não listada/pública seguem a [decisão 002](architecture/decisions/002-sistemas-versionados.md). Campanhas e sessões ainda não estão implementadas; Redis, Socket.IO, provedor e orçamento de produção continuam pendentes.
+Conta, autenticação, perfil com avatar e sistemas de RPG já estão implementados. Next.js, NestJS, PostgreSQL e Prisma foram adotados conforme a [decisão 001](architecture/decisions/001-base-e-autenticacao.md). O editor de sistemas, versões imutáveis e publicação privada/não listada/pública seguem a [decisão 002](architecture/decisions/002-sistemas-versionados.md). O ambiente de testes usa [Vercel, Neon e Blob](deploy-vercel.md). Campanhas, sessões, Redis e Socket.IO continuam futuros; operação e orçamento da plataforma completa permanecem pendentes.
 
-Consulte as [instruções de execução](../README.md) e os relatórios de [conta/perfil](verification/001-autenticacao-perfil.md) e [sistemas](verification/003-sistemas.md). Os documentos de produto continuam descrevendo o escopo completo, sem significar que todas as funcionalidades estão disponíveis.
+Consulte as [instruções de execução](../README.md) e os relatórios de [conta/perfil](verification/001-autenticacao-perfil.md), [sistemas](verification/003-sistemas.md) e [publicação online](verification/004-publicacao-vercel.md). Os documentos de produto continuam descrevendo o escopo completo, sem significar que todas as funcionalidades estão disponíveis.
 
 ## Documentos
 
@@ -49,6 +49,7 @@ Consulte as [instruções de execução](../README.md) e os relatórios de [cont
 | [Verificação 001](verification/001-autenticacao-perfil.md) | Evidências do fluxo de conta e perfil |
 | [Verificação 002](verification/002-direcao-visual.md) | Build, fluxos e revisão visual da identidade dark roxo/ciano |
 | [Verificação 003](verification/003-sistemas.md) | Persistência, autorização, publicação, concorrência e editor desktop/mobile |
+| [Verificação 004](verification/004-publicacao-vercel.md) | Deploy Vercel, PostgreSQL Neon, Blob e fluxos pelo endereço público |
 
 ## Decisões pendentes
 
@@ -56,7 +57,7 @@ Estas decisões não impedem a leitura da documentação, mas devem ser resolvid
 
 | ID | Decisão | Documento de referência |
 | --- | --- | --- |
-| DP01 | Stack/versões locais adotadas na decisão 001; provedor e orçamento de produção pendentes | [Arquitetura](07-arquitetura.md) e [deploy](17-deploy.md) |
+| DP01 | Stack adotada na decisão 001 e Vercel/Neon/Blob para testes; operação e orçamento da plataforma completa pendentes | [Arquitetura](07-arquitetura.md) e [deploy](17-deploy.md) |
 | DP02 | Login por e-mail adotado; verificação de conta e recuperação de senha adiadas | [Decisão 001](architecture/decisions/001-base-e-autenticacao.md) |
 | DP03 | Tokens, transporte e revogação adotados na decisão 001; gestão completa de dispositivos futura | [Decisão 001](architecture/decisions/001-base-e-autenticacao.md) |
 | DP04 | Convite por usuário, e-mail ou link; validade e reenvio | [Regras](04-regras-de-negocio.md) |

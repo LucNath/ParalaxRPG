@@ -1,5 +1,7 @@
 # Publicação de testes na Vercel
 
+Publicado e verificado em 7 de outubro de 2026: **[abrir Paralax RPG](https://paralax-rpg-web.vercel.app)**. Cada participante deve criar sua própria conta. O site dispensa sessão na Vercel. Consulte as [evidências da publicação](verification/004-publicacao-vercel.md).
+
 ## Serviços e configuração
 
 O ambiente online usa a conta `lucky-8804ce74`, com projetos separados `paralax-rpg-web` (Next.js, raiz `apps/web`) e `paralax-rpg-api` (NestJS, raiz `apps/api`). Ambos incluem arquivos externos à raiz para resolver o workspace `packages/contracts`, usam Node.js 24 e região `iad1`.
