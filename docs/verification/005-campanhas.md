@@ -35,6 +35,33 @@ O fluxo principal passou primeiro em execução isolada. A regressão completa a
 
 Capturas de criação, detalhe e página pública em `.artifacts/{desktop,mobile}-campanha-{nova,detalhe,publica}.png` foram inspecionadas. A barra fixa pode aparecer no meio do screenshot completo por composição de captura. Contas sintéticas e seus próprios sistemas/campanhas/histórico são removidos ao final. Os testes locais guardam o destino do banco e não usam Neon.
 
+## Publicação e verificação online
+
+Disponível em **[Paralax RPG — Campanhas](https://paralax-rpg-web.vercel.app/campanhas)**. Código `9cf679b`, publicado pela CLI nos projetos existentes, sem envio ao GitHub. O target Vercel é `production`, usado como endereço estável do ambiente de testes.
+
+| Campo | Web | API |
+| --- | --- | --- |
+| Framework / status | Next.js / `READY` | NestJS / `READY` |
+| Build | 37 segundos | 32 segundos |
+| Deployment | `dpl_Cdnr2K1BrDdBiHFQDSyj5sGqmCqs` | `dpl_BLEuoqyV4xnBxFLJ331Fp6dqLXJS` |
+| Inspeção | [Web](https://vercel.com/lucky-8804ce74/paralax-rpg-web/Cdnr2K1BrDdBiHFQDSyj5sGqmCqs) | [API](https://vercel.com/lucky-8804ce74/paralax-rpg-api/BLEuoqyV4xnBxFLJ331Fp6dqLXJS) |
+
+A migration foi aplicada ao Neon por conexão direta após verificar o histórico das duas migrations anteriores. IDs de usuários, sistemas e versões existentes foram conferidos antes/depois e permaneceram presentes. Não houve reset, seed ou cópia do banco local. A mudança adiciona entidades; o código da publicação anterior continua compatível com o schema, caso seja necessário reverter apenas código.
+
+Smoke test pelo domínio público, sem sessão Vercel ou bypass, passou em desktop e emulação Pixel 7:
+
+- Readiness 200 e PostgreSQL conectado; cadastro e cookie HTTPS.
+- Criação de campanha privada com sistema de autoria do mestre.
+- Edição do sistema para nova versão sem alterar regras da campanha após recarga.
+- Edição da campanha, capacidade, estado, apresentação pública e catálogo anônimo.
+- Sistema privado e definição mantidos protegidos; novo acesso público negado após privatização.
+- Consulta SQL confirmou versão fixa, revisão 3, capacidade 6 e três registros de alteração.
+- Logout/login e campanha recuperada no dashboard, sem erro de página no navegador.
+
+Dados sintéticos removidos ao final por id, e-mail e username exatos. Capturas online inspecionadas em `.artifacts/online-{desktop,mobile}-campanha.png`. A primeira tentativa de executar o verificador parou na checagem de certificado do Node.js local, antes do cadastro; a execução com certificados do sistema (`NODE_USE_SYSTEM_CA=1`) passou, mantendo TLS verificado.
+
+Logs dos deployments finais consultados na janela de uma hora: nenhum HTTP 500; zero eventos de nível `error` no web. Na API, quatro avisos do driver PostgreSQL sobre a semântica futura de `sslmode=require`, todos associados a respostas 200 e nenhum outro evento de erro. O driver atual usa validação equivalente a `verify-full`; revisar TLS antes de atualizar sua versão principal. Não foram adicionados drains nem monitoramento externo contínuo nesta entrega.
+
 ## Limites
 
 Exclusão, transferência de mestre, sistemas de terceiros, troca/migração de sistema, imagens próprias, campanhas não listadas, membros, convites, personagens e sessões continuam futuros. A capacidade ainda não indica ocupação: não há jogadores cadastrados nesta etapa. O catálogo da interface exige login; apresentação pública por link e API pública dispensam sessão.

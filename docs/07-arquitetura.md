@@ -6,7 +6,7 @@ A origem recomenda frontend Next.js, backend NestJS, PostgreSQL, Redis e armazen
 
 O objetivo é manter regras de negócio e autorização no servidor, dados críticos em banco e definições de RPG configuráveis. Separar módulos não exige criar um serviço por módulo.
 
-O módulo `systems` já persiste definições JSON validadas e versões imutáveis, com autorização por autor e controle de revisão concorrente. A [decisão 002](architecture/decisions/002-sistemas-versionados.md) registra essa adoção da DP06; campanhas, fichas e transporte de tempo real continuam futuros.
+O módulo `systems` já persiste definições JSON validadas e versões imutáveis, com autorização por autor e controle de revisão concorrente. A [decisão 002](architecture/decisions/002-sistemas-versionados.md) registra essa adoção da DP06. O módulo `campaigns` mantém mestre, versão fixa, configuração, apresentação pública/privada e histórico transacional conforme a [decisão 003](architecture/decisions/003-campanhas-versionadas.md). Membros, convites, fichas e transporte de tempo real continuam futuros.
 
 ```mermaid
 flowchart TD

@@ -17,7 +17,7 @@ Use primeiro a visão do produto, as regras de negócio e o MVP. Em seguida, con
 
 Conta, autenticação, perfil com avatar, sistemas de RPG e campanhas básicas já estão implementados. Next.js, NestJS, PostgreSQL e Prisma foram adotados conforme a [decisão 001](architecture/decisions/001-base-e-autenticacao.md). Sistemas seguem a [decisão 002](architecture/decisions/002-sistemas-versionados.md); campanhas com versão fixa, mestre, configuração e apresentação pública/privada seguem a [decisão 003](architecture/decisions/003-campanhas-versionadas.md). O ambiente de testes usa [Vercel, Neon e Blob](deploy-vercel.md). Membros, convites, personagens, sessões, Redis e Socket.IO continuam futuros; operação e orçamento da plataforma completa permanecem pendentes.
 
-Consulte as [instruções de execução](../README.md) e os relatórios de [conta/perfil](verification/001-autenticacao-perfil.md), [sistemas](verification/003-sistemas.md) e [publicação online](verification/004-publicacao-vercel.md). Os documentos de produto continuam descrevendo o escopo completo, sem significar que todas as funcionalidades estão disponíveis.
+Consulte as [instruções de execução](../README.md) e os relatórios de [conta/perfil](verification/001-autenticacao-perfil.md), [sistemas](verification/003-sistemas.md), [primeira publicação online](verification/004-publicacao-vercel.md) e [campanhas](verification/005-campanhas.md). Os documentos de produto continuam descrevendo o escopo completo, sem significar que todas as funcionalidades estão disponíveis.
 
 ## Documentos
 

@@ -6,7 +6,7 @@ Publicado e verificado em 7 de outubro de 2026: **[abrir Paralax RPG](https://pa
 
 O ambiente online usa a conta `lucky-8804ce74`, com projetos separados `paralax-rpg-web` (Next.js, raiz `apps/web`) e `paralax-rpg-api` (NestJS, raiz `apps/api`). Ambos incluem arquivos externos à raiz para resolver o workspace `packages/contracts`, usam Node.js 24 e região `iad1`.
 
-O banco `paralax-rpg-tests` foi criado pelo Marketplace Neon no plano `free_v3`, separado do PostgreSQL local. Autenticação Neon adicional fica desativada: as contas continuam usando a autenticação implementada no projeto. As duas migrations existentes foram aplicadas por conexão direta, após confirmar que o schema público estava vazio. Não foram copiados usuários ou arquivos locais.
+O banco `paralax-rpg-tests` foi criado pelo Marketplace Neon no plano `free_v3`, separado do PostgreSQL local. Autenticação Neon adicional fica desativada: as contas continuam usando a autenticação implementada no projeto. Na primeira publicação, as duas migrations iniciais foram aplicadas por conexão direta após confirmar schema público vazio. O incremento de [campanhas](verification/005-campanhas.md) acrescentou a terceira migration, preservando usuários, sistemas e versões existentes. Não foram copiados usuários ou arquivos locais.
 
 Avatares online usam o Blob store privado `paralax-rpg-avatars`. A API normaliza imagens para WebP e mantém as rotas públicas de avatar existentes; o cliente não recebe a credencial do store. `AVATAR_STORAGE=local` permanece o padrão de desenvolvimento. Arquivos antigos são preservados até definir retenção.
 
