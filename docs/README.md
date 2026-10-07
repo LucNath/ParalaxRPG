@@ -15,7 +15,7 @@ Use primeiro a visão do produto, as regras de negócio e o MVP. Em seguida, con
 
 ## Estado da implementação
 
-Conta, autenticação, perfil com avatar e sistemas de RPG já estão implementados. Next.js, NestJS, PostgreSQL e Prisma foram adotados conforme a [decisão 001](architecture/decisions/001-base-e-autenticacao.md). O editor de sistemas, versões imutáveis e publicação privada/não listada/pública seguem a [decisão 002](architecture/decisions/002-sistemas-versionados.md). O ambiente de testes usa [Vercel, Neon e Blob](deploy-vercel.md). Campanhas, sessões, Redis e Socket.IO continuam futuros; operação e orçamento da plataforma completa permanecem pendentes.
+Conta, autenticação, perfil com avatar, sistemas de RPG e campanhas básicas já estão implementados. Next.js, NestJS, PostgreSQL e Prisma foram adotados conforme a [decisão 001](architecture/decisions/001-base-e-autenticacao.md). Sistemas seguem a [decisão 002](architecture/decisions/002-sistemas-versionados.md); campanhas com versão fixa, mestre, configuração e apresentação pública/privada seguem a [decisão 003](architecture/decisions/003-campanhas-versionadas.md). O ambiente de testes usa [Vercel, Neon e Blob](deploy-vercel.md). Membros, convites, personagens, sessões, Redis e Socket.IO continuam futuros; operação e orçamento da plataforma completa permanecem pendentes.
 
 Consulte as [instruções de execução](../README.md) e os relatórios de [conta/perfil](verification/001-autenticacao-perfil.md), [sistemas](verification/003-sistemas.md) e [publicação online](verification/004-publicacao-vercel.md). Os documentos de produto continuam descrevendo o escopo completo, sem significar que todas as funcionalidades estão disponíveis.
 
@@ -46,10 +46,12 @@ Consulte as [instruções de execução](../README.md) e os relatórios de [cont
 | [Publicação Vercel](deploy-vercel.md) | Projetos, banco de testes, avatares persistentes e atualização do ambiente online |
 | [Decisão 001](architecture/decisions/001-base-e-autenticacao.md) | Stack e política de autenticação adotadas na primeira etapa |
 | [Decisão 002](architecture/decisions/002-sistemas-versionados.md) | Definições versionadas, salvamento concorrente e visibilidade dos sistemas |
+| [Decisão 003](architecture/decisions/003-campanhas-versionadas.md) | Campanhas com versão fixa, mestre, apresentação pública/privada e histórico de configuração |
 | [Verificação 001](verification/001-autenticacao-perfil.md) | Evidências do fluxo de conta e perfil |
 | [Verificação 002](verification/002-direcao-visual.md) | Build, fluxos e revisão visual da identidade dark roxo/ciano |
 | [Verificação 003](verification/003-sistemas.md) | Persistência, autorização, publicação, concorrência e editor desktop/mobile |
 | [Verificação 004](verification/004-publicacao-vercel.md) | Deploy Vercel, PostgreSQL Neon, Blob e fluxos pelo endereço público |
+| [Verificação 005](verification/005-campanhas.md) | Campanhas, proteção do mestre, versão fixa, publicação, concorrência e seletor de regras |
 
 ## Decisões pendentes
 

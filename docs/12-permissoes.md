@@ -6,6 +6,8 @@ O RBAC de origem combina papéis da plataforma e papéis dentro da campanha. **S
 
 ## Papéis de origem
 
+No recorte de campanhas já implementado, o mestre é o usuário identificado por `Campaign.ownerId`, atribuído pela sessão na criação. Só ele consulta regras pela campanha e edita a configuração. Público lê apenas apresentação de campanhas `PUBLIC`; campanha privada conhecida por ID continua retornando 404 a terceiros. Membros, convites e papéis adicionais ainda não existem. Veja a [decisão 003](architecture/decisions/003-campanhas-versionadas.md).
+
 | Escopo | Papel | Significado |
 | --- | --- | --- |
 | Plataforma | ADMIN | Administração da plataforma; poderes detalhados não definidos |

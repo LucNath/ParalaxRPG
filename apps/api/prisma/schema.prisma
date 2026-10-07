@@ -18,6 +18,7 @@ model User {
   profile Profile?
   refreshSessions RefreshSession[]
   systems RpgSystem[]
+  campaigns Campaign[]
 }
 
 model Profile {
@@ -73,5 +74,51 @@ model SystemVersion {
   definition Json
   createdAt DateTime @default(now())
   system RpgSystem @relation(fields: [systemId], references: [id], onDelete: Cascade)
+  campaigns Campaign[]
   @@unique([systemId, number])
+}
+
+enum CampaignVisibility {
+  PRIVATE
+  PUBLIC
+}
+
+enum CampaignStatus {
+  PLANNED
+  RECRUITING
+  ACTIVE
+  PAUSED
+  ENDED
+  CANCELLED
+}
+
+model Campaign {
+  id String @id @default(uuid())
+  ownerId String
+  systemVersionId String
+  name String
+  description String @default("")
+  visibility CampaignVisibility @default(PRIVATE)
+  status CampaignStatus @default(PLANNED)
+  maxPlayers Int
+  revision Int @default(1)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  systemVersion SystemVersion @relation(fields: [systemVersionId], references: [id], onDelete: NoAction)
+  changes CampaignChange[]
+  @@index([ownerId, updatedAt])
+  @@index([visibility, updatedAt])
+  @@index([systemVersionId])
+}
+
+model CampaignChange {
+  id String @id @default(uuid())
+  campaignId String
+  revision Int
+  actorId String
+  snapshot Json
+  createdAt DateTime @default(now())
+  campaign Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  @@unique([campaignId, revision])
 }

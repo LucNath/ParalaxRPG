@@ -2,7 +2,7 @@
 
 Este é um modelo **conceitual e lógico proposto**, derivado das entidades das seções 40–41. Não é uma migration, um schema Prisma ou uma decisão definitiva de armazenamento. Campos, enums e restrições devem ser validados junto da implementação.
 
-`User`, `Profile`, `RefreshSession`, `RpgSystem` e `SystemVersion` já possuem [schema Prisma](../apps/api/prisma/schema.prisma) e migrations versionadas. As demais entidades abaixo continuam propostas para os próximos módulos.
+`User`, `Profile`, `RefreshSession`, `RpgSystem`, `SystemVersion`, `Campaign` e `CampaignChange` já possuem [schema Prisma](../apps/api/prisma/schema.prisma) e migrations versionadas. As demais entidades abaixo continuam propostas para os próximos módulos.
 
 ## Recorte implementado de sistemas
 
@@ -10,7 +10,13 @@ Este é um modelo **conceitual e lógico proposto**, derivado das entidades das 
 
 A definição JSON inclui `schemaVersion: 1`, atributos, perícias, recursos e dados. Campos usam UUIDs estáveis gerados pelo editor, preservados entre versões; a ordem das listas é a ordem de apresentação. Perícias podem referenciar atributos da mesma definição, e recursos podem ter máximo nulo. Schemas estritos rejeitam duplicatas, referências inválidas e limites inconsistentes. Não existem tabelas separadas `SystemAttribute`, `SystemSkill` ou `SystemResource` neste recorte.
 
-A [decisão 002](architecture/decisions/002-sistemas-versionados.md) registra visibilidade, limites e versionamento. Campanhas futuras deverão apontar para `SystemVersion.id`, sem atualizar fichas automaticamente quando o criador salvar novas regras.
+A [decisão 002](architecture/decisions/002-sistemas-versionados.md) registra visibilidade, limites e versionamento. Campanhas já apontam para `SystemVersion.id`, sem mudar as regras vinculadas quando o criador salvar novas versões.
+
+## Recorte implementado de campanhas
+
+`Campaign` armazena mestre (`ownerId`), versão fixa (`systemVersionId`), nome, descrição, visibilidade pública/privada, estado, capacidade de jogadores, revisão e datas. A versão deve pertencer a um sistema criado pelo mestre; não pode ser alterada pela API. A chave estrangeira impede remover uma versão referenciada. Índices cobrem mestre/atualização, visibilidade/atualização e versão.
+
+`CampaignChange` registra revisão única por campanha, ator, snapshot da configuração e data. Criação/edição e histórico usam a mesma transação, com controle otimista de concorrência. O banco também limita capacidade a 1–20 e revisão positiva. Definição do sistema e histórico não são enviados no DTO público. Membros e convites ainda não existem; responsabilidade usa `ownerId`. A [decisão 003](architecture/decisions/003-campanhas-versionadas.md) registra os limites.
 
 ## Convenções propostas
 
@@ -61,7 +67,7 @@ erDiagram
 | User | id, identificador de login, username, passwordHash, status | Login único conforme DP02; hash nunca vai em DTO público |
 | Profile | userId, nome, biografia, avatarKey, bannerKey, localização opcional, links | Relação 1:1; perfil público filtra informações privadas |
 | RPGSystem | id, creatorId, nome, descrição, temática, visibilidade | Criador e acesso explícitos; regras futuras podem ser conteúdo estruturado |
-| SystemVersion | id, systemId, número, definição, publishedAt | Versão imutável adotada; campos reais no recorte acima; vínculo de campanha futuro |
+| SystemVersion | id, systemId, número, definição, publishedAt | Versão imutável adotada; campos reais e vínculo de campanha no recorte acima |
 | SystemAttribute | id, versionId, key, label, tipo, limites, ordem | `key` única no escopo da versão |
 | SystemSkill | id, versionId, key, label, configuração | Associação a atributos depende do sistema, sem regra universal |
 | SystemResource | id, versionId, key, label, configuração de valores | Vida, mana ou sanidade são exemplos, não recursos obrigatórios |

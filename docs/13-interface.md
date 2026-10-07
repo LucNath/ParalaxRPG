@@ -47,7 +47,7 @@ flowchart LR
 | Ao vivo agora | Sessões públicas elegíveis, campanha, tema, Mestre e informações publicadas | Assistir; retirar sessão encerrada da lista |
 | Sala do espectador | Projeção pública da sessão | Acompanhamento somente; sem comandos de ficha, dados ou administração |
 
-Publicação básica de sistemas e visibilidade não listada já estão disponíveis conforme a [decisão 002](architecture/decisions/002-sistemas-versionados.md). O dashboard oferece ações somente para módulos implementados. Espaços reservados a campanhas e sessões trazem a indicação “Em desenvolvimento”, sem dados fictícios ou ações disponíveis. Mapa e combate continuam nas etapas futuras.
+Publicação básica de sistemas e visibilidade não listada já estão disponíveis conforme a [decisão 002](architecture/decisions/002-sistemas-versionados.md). Campanhas básicas seguem a [decisão 003](architecture/decisions/003-campanhas-versionadas.md): listagem com busca e abas próprias/públicas, criação com seleção paginada de sistemas, detalhe do mestre, edição e página pública de apresentação. O dashboard mostra até três campanhas reais do mestre. Sessões continuam “Em desenvolvimento”; membros, convites, mapas e combate são futuros. Não há dados fictícios nem controles de ingresso sem funcionalidade.
 
 ## Editor visual de sistema
 

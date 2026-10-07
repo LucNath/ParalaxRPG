@@ -4,7 +4,7 @@
 
 O MVP 1 deve comprovar o fluxo completo da seção 59. Não basta ter telas isoladas: usuários distintos precisam interagir com persistência, autorização e comunicação em tempo real.
 
-A implementação já cobre conta/perfil e sistemas: cadastro, login, renovação, logout, avatar e dashboard têm [verificação própria](verification/001-autenticacao-perfil.md); criação/edição, prévia, persistência versionada e visibilidade têm [verificação de sistemas](verification/003-sistemas.md). Os passos 1 e 2 do fluxo abaixo estão disponíveis. O fluxo completo do MVP 1 ainda não está implementado.
+A implementação já cobre conta/perfil, sistemas e campanhas básicas: cadastro, login, renovação, logout, avatar e dashboard têm [verificação própria](verification/001-autenticacao-perfil.md); criação/edição, prévia, persistência versionada e visibilidade têm [verificação de sistemas](verification/003-sistemas.md). Campanhas incluem versão fixa, mestre, configuração e apresentação pública/privada, com [verificação própria](verification/005-campanhas.md). Os passos 1–3 do fluxo abaixo estão disponíveis. Exclusão, convites e membros continuam futuros. O fluxo completo do MVP 1 ainda não está implementado.
 
 ## Escopo de origem — MVP 1
 

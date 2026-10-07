@@ -9,7 +9,7 @@
     "typecheck": "tsc --noEmit -p tsconfig.build.json",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate deploy",
-    "test": "node --test test/auth.integration.test.cjs test/systems.integration.test.cjs"
+    "test": "node --test test/auth.integration.test.cjs test/systems.integration.test.cjs test/campaigns.integration.test.cjs"
   },
   "dependencies": {
     "@nestjs/common": "12.1.2",

@@ -43,6 +43,25 @@ Listas usam `{items, page, pageSize, total}`; 20 itens por página, `page` de 1�
 
 Não há `GET /systems`, `PATCH /systems/:id`, exclusão ou consulta de versões antigas implementados. A tabela de origem abaixo preserva o planejamento; o recorte atual usa `PUT` para salvar uma definição completa e separa listas públicas/privadas. A [decisão 002](architecture/decisions/002-sistemas-versionados.md) registra os limites, a visibilidade e o vínculo de versões.
 
+## Contrato implementado — campanhas
+
+Prefixo `/api/v1`; schemas em `contracts`. `CreateCampaignInput` contém nome, descrição, visibilidade pública/privada, estado, `maxPlayers` e `systemVersionId`. A autoria é atribuída pela sessão; somente versões de sistemas criados pelo mestre são elegíveis. `UpdateCampaignInput` contém a configuração completa e `expectedRevision`, sem aceitar troca de sistema ou mestre.
+
+| Rota | Entrada/saída | Acesso |
+| --- | --- | --- |
+| `POST /campaigns` | `CreateCampaignInput`; retorna `CampaignDetail`, 201 | Autenticado; sistema de autoria do titular |
+| `PUT /campaigns/:id` | `UpdateCampaignInput`; retorna detalhe atualizado | Mestre; 409 para revisão obsoleta |
+| `GET /campaigns/mine` | `page`, `search`; retorna `CampaignsPage` | Somente campanhas do mestre autenticado |
+| `GET /campaigns/mine/:id` | Configuração e definição da versão vinculada | Mestre; 404 para outro usuário |
+| `GET /campaigns/public` | `page`, `search`; retorna apresentações públicas | Anônimo; somente `PUBLIC` |
+| `GET /campaigns/:id` | `CampaignSummary` com apresentação da campanha | Anônimo; privado retorna 404 |
+
+`CampaignSummary` inclui id, nome, descrição, visibilidade, estado, capacidade, revisão, datas, perfil público do mestre e `system: {name, version}`. A projeção pública não inclui definição nem identificador da versão, e-mail ou auditoria. `CampaignDetail`, exclusivo do mestre, acrescenta `systemVersionId` e `definition`. Sistema privado permanece privado mesmo quando a campanha é pública.
+
+Listas e validação de UUID seguem o padrão de sistemas: 20 itens, página 1–10000, busca de até 80 caracteres, ordenação por atualização/id e `no-store`. Schemas estritos rejeitam campos extras e capacidades fora de 1–20. Erro de versão alheia/inexistente usa 404 `CAMPAIGN_SYSTEM_UNAVAILABLE`; edição concorrente usa 409 `CAMPAIGN_REVISION_CONFLICT`. Escrita e `CampaignChange` são transacionais.
+
+Não há `GET /campaigns`, `PATCH`, exclusão, inscrição, convite ou edição de membros implementados. Veja a [decisão 003](architecture/decisions/003-campanhas-versionadas.md).
+
 ## Rotas de origem
 
 | Método e rota | Operação | Autorização esperada |

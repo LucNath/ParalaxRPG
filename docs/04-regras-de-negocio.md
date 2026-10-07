@@ -11,7 +11,7 @@ As regras marcadas como **origem** vêm do anexo. As **derivadas** explicitam co
 | RB03 | Toda campanha está associada a um sistema; todo personagem está associado a usuário, campanha, sistema e ficha | Origem |
 | RB04 | A ficha varia com a definição do sistema; atributos fixos de um RPG não devem ser impostos pela plataforma | Origem |
 | RB05 | O Mestre da campanha não ganha direito de editar o sistema original de outro criador | Derivada |
-| RB06 | Campanha utiliza uma versão identificada do sistema, evitando mudanças silenciosas nas fichas | Decisão 002; vínculo será implementado com campanhas |
+| RB06 | Campanha utiliza uma versão identificada do sistema, evitando mudanças silenciosas nas fichas | Decisões 002/003; vínculo implementado |
 
 No MVP 1, o editor define atributos, perícias, recursos e dados. Fórmulas como `Vida Máxima = Constituição * 5 + Nível * 10`, `Defesa = 10 + Destreza + Armadura` e `Ataque = 1d20 + Força + Proficiência` são exemplos futuros, não linguagem de programação já especificada.
 
@@ -30,7 +30,7 @@ No MVP 1, o editor define atributos, perícias, recursos e dados. Fórmulas como
 
 Campos de campanha descritos na origem: nome, imagem, banner, descrição, sistema, Mestre, capacidade de jogadores, classificação indicativa, tags, idioma, frequência e status. A obrigatoriedade de cada campo não foi definida. Para o MVP, propõe-se exigir nome, sistema, visibilidade e capacidade; os demais podem ser opcionais.
 
-Estados de campanha: **Planejada, Recrutando, Em andamento, Pausada, Finalizada, Cancelada**. A origem não define o grafo de transição nem impede reabertura. Proposta: mudanças são feitas pelo Mestre e auditadas; reabrir campanha encerrada depende de política específica.
+Estados de campanha: **Planejada, Recrutando, Em andamento, Pausada, Finalizada, Cancelada**. A origem não define o grafo de transição nem impede reabertura. A [decisão 003](architecture/decisions/003-campanhas-versionadas.md) adota seleção de qualquer estado pelo mestre, inclusive reabertura, com registro transacional da configuração. Isso não inicia sessões nem concede ingresso. Neste recorte, criação/edição, nome, descrição, capacidade, estado e visibilidade pública/privada estão disponíveis; demais campos, membros e convites continuam futuros.
 
 ## Visibilidade
 

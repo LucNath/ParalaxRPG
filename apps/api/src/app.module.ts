@@ -11,11 +11,12 @@ import { AuthGuard } from './modules/auth/auth.guard';
 import { OriginGuard } from './modules/auth/origin.guard';
 import { UsersModule } from './modules/users/users.module';
 import { SystemsModule } from './modules/systems/systems.module';
+import { CampaignsModule } from './modules/campaigns/campaigns.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, ignoreEnvFile: !!process.env.VERCEL, envFilePath: resolve(projectRoot(), '.env'), validate: validateEnvironment }),
-    DatabaseModule, AuthModule, UsersModule, SystemsModule,
+    DatabaseModule, AuthModule, UsersModule, SystemsModule, CampaignsModule,
     ThrottlerModule.forRoot([{ name: 'default', ttl: 60000, limit: 120 }]),
   ],
   controllers: [HealthController],

@@ -97,3 +97,30 @@ export interface SystemSummary {
 }
 export interface SystemDetail extends SystemSummary { versionId: string; definition: SystemDefinition }
 export interface SystemsPage { items: SystemSummary[]; page: number; pageSize: number; total: number }
+
+export const campaignVisibilitySchema = z.enum(['PRIVATE', 'PUBLIC']);
+export const campaignStatusSchema = z.enum(['PLANNED', 'RECRUITING', 'ACTIVE', 'PAUSED', 'ENDED', 'CANCELLED']);
+export const campaignStatusLabels = { PLANNED: 'Planejada', RECRUITING: 'Recrutando', ACTIVE: 'Em andamento', PAUSED: 'Pausada', ENDED: 'Finalizada', CANCELLED: 'Cancelada' } as const;
+export const campaignVisibilityLabels = { PRIVATE: 'Privada', PUBLIC: 'Pública' } as const;
+export const campaignSettingsSchema = z.object({
+  name: z.string().trim().min(2, 'Use pelo menos 2 caracteres.').max(80, 'Use até 80 caracteres.'),
+  description: z.string().trim().max(4000, 'Use até 4000 caracteres.'),
+  visibility: campaignVisibilitySchema,
+  status: campaignStatusSchema,
+  maxPlayers: z.number().int('Use um número inteiro.').min(1, 'Escolha pelo menos 1 jogador.').max(20, 'Use até 20 jogadores.'),
+}).strict();
+export const createCampaignSchema = campaignSettingsSchema.extend({ systemVersionId: z.uuid('Escolha um sistema.') }).strict();
+export const updateCampaignSchema = campaignSettingsSchema.extend({ expectedRevision: z.number().int().min(1).max(2147483646) }).strict();
+export const listCampaignsQuerySchema = listSystemsQuerySchema;
+export type CampaignSettings = z.infer<typeof campaignSettingsSchema>;
+export type CreateCampaignInput = z.infer<typeof createCampaignSchema>;
+export type UpdateCampaignInput = z.infer<typeof updateCampaignSchema>;
+export type CampaignStatus = z.infer<typeof campaignStatusSchema>;
+export type CampaignVisibility = z.infer<typeof campaignVisibilitySchema>;
+export interface CampaignSummary extends CampaignSettings {
+  id: string; revision: number; createdAt: string; updatedAt: string;
+  owner: { id: string; username: string; displayName: string };
+  system: { name: string; version: number };
+}
+export interface CampaignDetail extends CampaignSummary { systemVersionId: string; definition: SystemDefinition }
+export interface CampaignsPage { items: CampaignSummary[]; page: number; pageSize: number; total: number }

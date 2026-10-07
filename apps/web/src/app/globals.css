@@ -327,6 +327,36 @@ svg { flex-shrink: 0; }
 .system-description { color: var(--muted); font-size: 13px; white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.9; }
 .public-system .preview-stats { grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); }
 
+/* Campaigns: presentation, pinned rules and settings. */
+.campaign-layout { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 24px; align-items: start; }
+.campaign-editor .editor-heading h1 { overflow-wrap: anywhere; }
+.campaign-settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.campaign-system-panel { align-self: start; min-width: 0; }
+.campaign-pinned { padding: 20px; background: var(--surface-soft); border: 1px solid var(--border); border-radius: 8px; }
+.campaign-pinned strong, .campaign-pinned span { display: block; overflow-wrap: anywhere; }
+.campaign-pinned span { color: var(--accent-text); font-size: 12px; margin-top: 6px; }
+.campaign-pinned p { margin: 14px 0 0; font-size: 12px; color: var(--muted); }
+.campaign-definition summary { cursor: pointer; color: var(--accent-text); }
+.campaign-definition .system-preview { padding: 24px 0 0; }
+.campaign-heading { margin-top: 24px; }
+.campaign-heading h1 { overflow-wrap: anywhere; }
+.campaign-presentation { padding: 28px; min-width: 0; }
+.campaign-presentation h2 { font-size: 20px; }
+.campaign-meta { display: flex; flex-wrap: wrap; gap: 14px 24px; margin-top: 24px; color: var(--muted); font-size: 12px; }
+.campaign-meta span { display: inline-flex; align-items: center; gap: 8px; overflow-wrap: anywhere; min-width: 0; }
+.campaign-rules { margin-top: 24px; }
+.campaign-rules-note { padding: 22px 28px 0; margin: 0; color: var(--muted); font-size: 12px; }
+.campaign-rules .preview-stats { grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); }
+.campaign-banner { background-image: linear-gradient(0deg, #0D0F1440, transparent), url('/art/paralax-world.webp'); }
+.campaign-compact-list { padding: 0 26px 16px; }
+.campaign-compact-item { display: flex; gap: 14px; align-items: center; justify-content: space-between; padding: 20px 0; border-bottom: 1px solid var(--border); }
+.campaign-compact-item:last-child { border-bottom: 0; }
+.campaign-compact-item h2 { font-size: 17px; margin: 8px 0; overflow-wrap: anywhere; }
+.campaign-compact-item .system-author { font-size: 11px; }
+.campaign-loading { padding: 24px; }
+@media (max-width: 900px) { .campaign-layout { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 650px) { .campaign-settings-grid { grid-template-columns: 1fr; } .campaign-presentation { padding: 22px; } .campaign-compact-list { padding-inline: 22px; } }
+
 /* Profile editing and public identity. */
 .profile-layout { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(250px, .8fr); gap: 24px; }
 .profile-editor { padding-bottom: 26px; }

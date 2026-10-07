@@ -6,7 +6,7 @@ A origem divide o produto em quatro MVPs e evolução futura. Este roadmap mant�
 
 ## Etapas
 
-Estado atual: conta/perfil e sistemas básicos já estão disponíveis, incluindo edição, versões imutáveis, prévia e as três visibilidades. Consulte a [verificação 003](verification/003-sistemas.md). O próximo incremento é campanhas vinculadas a uma versão de sistema, seguido de membros/convites e personagens. O MVP 1 permanece em andamento.
+Estado atual: conta/perfil, sistemas básicos e campanhas vinculadas a uma versão de sistema já estão disponíveis. Campanhas incluem criação, edição, capacidade, estados, apresentação pública/privada, listas e proteção do mestre. Consulte as verificações de [sistemas](verification/003-sistemas.md) e [campanhas](verification/005-campanhas.md). O próximo incremento é membros/convites, seguido de personagens. O MVP 1 permanece em andamento.
 
 | Etapa | Conteúdo | Dependências | Critério de saída proposto |
 | --- | --- | --- | --- |

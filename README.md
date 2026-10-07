@@ -2,7 +2,7 @@
 
 Plataforma para criar sistemas próprios de RPG, organizar campanhas e jogar online. A plataforma fornece as ferramentas; o criador define as regras.
 
-Já estão disponíveis **cadastro, login, renovação de sessão, logout, dashboard, perfil com avatar e criação/edição de sistemas de RPG**, com PostgreSQL real. O editor configura atributos, perícias, recursos e dados, mostra uma prévia da ficha e salva versões imutáveis. Sistemas podem ser privados, não listados ou públicos, com busca no catálogo. Campanhas e mesa virtual são as próximas entregas; o MVP 1 completo ainda não está concluído.
+Já estão disponíveis **cadastro, login, renovação de sessão, logout, dashboard, perfil com avatar, sistemas de RPG e campanhas básicas**, com PostgreSQL real. O editor de sistemas configura atributos, perícias, recursos e dados, mostra uma prévia da ficha e salva versões imutáveis. Sistemas podem ser privados, não listados ou públicos. Campanhas usam uma versão fixa de um sistema do mestre e oferecem descrição, estado, capacidade, edição e apresentação pública/privada. Convites, membros, personagens e mesa virtual são as próximas entregas; o MVP 1 completo ainda não está concluído.
 
 A interface adota fantasia moderna com tema escuro, roxo/ciano e Geist. O [design system](docs/19-design-system.md) registra a direção fornecida, os componentes atuais, a proveniência da arte e os padrões para os próximos módulos.
 
@@ -25,6 +25,8 @@ npm run dev
 Abra [http://localhost:3000](http://localhost:3000). Não há conta padrão: use **Criar conta**. A API fica em `http://localhost:4000/api/v1` e o PostgreSQL local em `127.0.0.1:56432`.
 
 Depois de atualizar o código, execute `npm run db:migrate` antes de iniciar para aplicar migrations novas sem reiniciar o banco. No painel, abra **Sistemas** para criar suas regras. O salvamento é explícito; cada edição salva gera uma versão, e alterações concorrentes retornam um conflito sem sobrescrever a outra aba.
+
+Em **Campanhas**, use **Criar campanha**, escolha um sistema criado por você, preencha a apresentação e salve. A versão escolhida fica fixa mesmo quando você edita o sistema. Só o mestre edita a campanha; tornar pública compartilha a apresentação, sem publicar as regras de um sistema privado. O dashboard mostra suas campanhas reais. A [decisão 003](docs/architecture/decisions/003-campanhas-versionadas.md) registra as políticas.
 
 `setup` cria `.env` com senha de banco e chave de autenticação aleatórias e preserva uma configuração existente. `.env`, uploads e arquivos gerados são ignorados pelo Git. Se uma porta estiver ocupada, altere a configuração correspondente antes de iniciar; a porta web também está no script de `apps/web/package.json` e na configuração de testes.
 
@@ -61,7 +63,7 @@ Para parar a aplicação, use `Ctrl+C` no terminal de desenvolvimento. `npm run 
 | Pasta | Conteúdo |
 | --- | --- |
 | `apps/web` | Next.js e interface em português |
-| `apps/api` | NestJS, autenticação, usuários, sistemas versionados e Prisma |
+| `apps/api` | NestJS, autenticação, usuários, sistemas versionados, campanhas e Prisma |
 | `packages/contracts` | Schemas Zod e DTOs públicos compartilhados |
 | `tests/e2e` | Testes de navegação desktop/mobile |
 | `docs` | Requisitos, arquitetura, decisões e instruções |
@@ -72,6 +74,6 @@ Consulte o [índice da documentação](docs/README.md), o [MVP](docs/14-mvp.md),
 
 ## Limites atuais
 
-Não há recuperação de senha, verificação de e-mail, troca de e-mail/username, campanhas, personagens persistidos ou WebSocket implementados. O editor ainda não oferece autosave, fórmulas, exclusão, restauração de versões ou cópia de sistemas. A prévia mostra a definição, sem criar personagens. O rate limit inicial usa memória por processo; coordenação entre instâncias e Redis entram quando a arquitetura distribuída for implementada. Avatares antigos permanecem até definir política de limpeza.
+Não há recuperação de senha, verificação de e-mail, troca de e-mail/username, convites, membros, personagens persistidos ou WebSocket implementados. O editor ainda não oferece autosave, fórmulas, exclusão, restauração de versões ou cópia de sistemas. Campanhas não oferecem exclusão, troca de sistema, transferência de mestre ou uso de sistemas de terceiros. A prévia mostra a definição, sem criar personagens. O rate limit inicial usa memória por processo; coordenação entre instâncias e Redis entram quando a arquitetura distribuída for implementada. Avatares antigos permanecem até definir política de limpeza.
 
 Vercel foi escolhida para publicar os módulos atuais para testes. A operação da plataforma completa, incluindo tempo real e recuperação de dados, continua a definir. A [especificação original](docs/referencias/especificacao-original.md) continua preservada integralmente.

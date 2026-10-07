@@ -47,16 +47,19 @@ Escala: texto de formulário 13px, labels 12px, corpo 13–14px, título de card
 | --- | --- |
 | Início | Arte panorâmica, headline fornecida, cadastro e apresentação da plataforma; cartões de identidade/criação/conexão distinguem disponibilidade |
 | Cadastro e login | Arte lateral no desktop; formulário com foco, validação, envio e mensagem de erro; formulário prioritário no celular |
-| Dashboard | Identidade, primeiros passos reais e espaços explicitamente futuros para campanhas/sessões; sem contadores inventados |
+| Dashboard | Identidade, primeiros passos e campanhas reais; sessões explicitamente futuras, sem contadores inventados |
 | Perfil | Editor, avatar, feedback de salvamento, link público e dados privados separados |
 | Perfil público | Banner padrão, avatar, nome, username, biografia, localização e data de entrada; sem atribuir papéis ou estatísticas inexistentes |
 | Sistemas | Cards com observatório astral, busca, abas meus/públicos, visibilidade e versão; estados de carregamento, vazio e erro |
 | Editor de sistemas | Categorias laterais, campos ordenáveis, salvamento explícito e prévia; categorias e conteúdo empilhados no celular |
 | Sistema público | Banner astral, autor, descrição, visibilidade, versão e definição da ficha |
+| Campanhas | Cards com arte existente, busca e abas próprias/públicas; mestre, estado e versão do sistema |
+| Editor de campanhas | Apresentação/configuração e seleção de sistema em dois painéis; conteúdo empilhado no celular; feedback e proteção de rascunho |
+| Campanha pública | Banner, apresentação, mestre, estado, capacidade e nome/versão do sistema; sem definição privada |
 
-No desktop, navegação global de 96px com ícone e rótulo. Início, Sistemas e Perfil são links reais; Explorar/Campanhas/Personagens são indicações indisponíveis com explicação de desenvolvimento. No celular, barra inferior com Início, Sistemas, Perfil e saída; itens futuros são omitidos. O cabeçalho oferece breadcrumbs e acesso ao perfil público. Configurações terá entrada própria quando houver funcionalidade correspondente.
+No desktop, navegação global de 96px com ícone e rótulo. Início, Sistemas, Campanhas e Perfil são links reais; Explorar/Personagens são indicações indisponíveis com explicação de desenvolvimento. No celular, barra inferior com Início, Sistemas, Campanhas, Perfil e saída; itens futuros são omitidos. O cabeçalho oferece breadcrumbs e acesso ao perfil público. Configurações terá entrada própria quando houver funcionalidade correspondente.
 
-“Explorar campanhas” será ação da landing quando existir um catálogo real. Nesta etapa, “Conhecer a Paralax” leva à apresentação na mesma página.
+“Conhecer campanhas” na landing leva à listagem implementada no painel; leitura de apresentações públicas por link dispensa login. “Conhecer a Paralax” continua levando à apresentação na mesma página. Convites e sessões permanecem futuros, explicitados no cartão de campanhas.
 
 ## Base de componentes
 
