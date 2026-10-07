@@ -8,8 +8,8 @@ import { AppModule } from './app.module';
 import { ErrorFilter } from './common/error.filter';
 import { trustedOrigins } from './common/trusted-origins';
 
-export async function createApplication(logger: false | undefined = undefined) {
-  const app = await NestFactory.create(AppModule, { bodyParser: false, logger });
+export async function createApplication(logger: false | undefined = undefined, factory: typeof NestFactory = NestFactory) {
+  const app = await factory.create(AppModule, { bodyParser: false, logger });
   const config = app.get(ConfigService);
   app.setGlobalPrefix('api/v1');
   app.use(helmet());
