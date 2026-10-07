@@ -11,10 +11,12 @@ Avatares online usam o Blob store privado `paralax-rpg-avatars`. A API normaliza
 | Projeto | Variáveis necessárias |
 | --- | --- |
 | Web | `API_INTERNAL_URL` com o endereço HTTPS da API |
-| API | `NODE_ENV=production`, `WEB_ORIGIN`, `API_PUBLIC_ORIGIN`, `DATABASE_URL`, `AUTH_ACCESS_SECRET`, `AVATAR_STORAGE=vercel-blob`, `BLOB_STORE_ID` e credencial fornecida pela conexão do store |
+| API | `NODE_ENV=production`, `NODE_OPTIONS=--experimental-require-module`, `WEB_ORIGIN`, `API_PUBLIC_ORIGIN`, `DATABASE_URL`, `AUTH_ACCESS_SECRET`, `AVATAR_STORAGE=vercel-blob`, `BLOB_STORE_ID` e credencial fornecida pela conexão do store |
 | Migrations | `DATABASE_URL_UNPOOLED` com a conexão direta Neon; aplicação usa `DATABASE_URL` com pooling |
 
 A chave de sessão online foi gerada separadamente, armazenada como variável sensível e nunca registrada no repositório. `.env`, arquivos obtidos da Vercel, tokens, uploads e artefatos locais são ignorados. As variáveis do ambiente online não substituem `.env` local.
+
+O install executa `npm ci --include=dev` na raiz do monorepo, garantindo TypeScript e demais ferramentas compartilhadas. A API mantém CommonJS e NestJS 12; [a opção documentada da Vercel](https://vercel.com/docs/functions/runtimes/node-js/advanced-node-configuration#experimental-nodejs-require-of-es-module) habilita o carregamento de dependências ESM no runtime.
 
 O navegador acessa `/api/v1` no mesmo domínio do site, por rewrite para a API. Assim, o cookie de refresh permanece HttpOnly/Secure/SameSite=Lax no domínio do site. Origem da escrita e do refresh é validada pela API. Compartilhar sempre o domínio canônico configurado em `WEB_ORIGIN`.
 
