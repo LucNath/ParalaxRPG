@@ -1,0 +1,16 @@
+.env
+.env.*
+**/.env
+**/.env.*
+.artifacts
+test-results
+playwright-report
+var
+**/dist
+**/.next
+**/node_modules
+apps/api/src/generated
+apps/web/public/art/*.png
+docs
+tests
+.github

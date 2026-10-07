@@ -1,0 +1,38 @@
+{
+  "mode": "imagegen: ferramenta integrada",
+  "intent": "generate with style reference",
+  "reference": "apps/web/public/art/paralax-world.png",
+  "webpQuality": 82,
+  "assets": [
+    {
+      "slug": "astral-observatory",
+      "title": "Observatório astral",
+      "prompt": "Use case: stylized-concept\nAsset type: wide 16:9 website card illustration for the system creator on Paralax RPG.\nInput images: Image 1 is a STYLE REFERENCE only: match its cinematic painterly fantasy rendering, charcoal shadows, violet portal glow, cyan light, mist and sense of immense scale. Create an entirely new scene.\nPrimary request: a majestic astral observatory where worlds and their rules are imagined.\nScene/backdrop: an isolated dark stone platform above a sea of clouds, distant jagged mountains and a deep starry night sky.\nSubject: a large suspended faceted violet crystal surrounded by slender orbital rings and a luminous geometric cyan constellation lattice, supported by elegant monumental obsidian pylons; small cyan rivers of light run through the platform.\nStyle/medium: premium cinematic digital concept art, painterly detail, atmospheric depth, restrained modern fantasy.\nComposition/framing: wide landscape 16:9, clean strong silhouette and central focus that reads at small card size, usable dark lower edge for a subtle gradient overlay; no UI rendered.\nLighting/mood: calm mystery, wonder, violet crystal backlight and cyan reflected light; dark but the subject clearly readable.\nColor palette: charcoal #0D0F14, slate blue, violet #7C5CFC, teal #3DD6C6, no gold.\nConstraints: single standalone artwork. No text, letters, numbers, logos, watermark, people, parchment, leather, books, generic medieval castle, card border or collage.",
+      "png": "apps/web/public/art/astral-observatory.png",
+      "webp": "apps/web/public/art/astral-observatory.webp",
+      "width": 1672,
+      "height": 941,
+      "webpBytes": 260722
+    },
+    {
+      "slug": "luminous-forest",
+      "title": "Floresta luminosa",
+      "prompt": "Use case: stylized-concept\nAsset type: wide 16:9 illustration for the identity/characters card on Paralax RPG.\nInput images: Image 1 is a STYLE REFERENCE only: match its cinematic painterly rendering, immense fantasy scale, charcoal shadows, violet glow, cyan rivers, mist and restrained palette. Generate a new scene, not a modification of the valley.\nPrimary request: three adventurers looking toward a luminous forest world full of possibilities.\nScene/backdrop: enormous ancient dark trees with subtle violet light in their canopies, cyan bioluminescent roots and small streams, distant floating stones, fine mist, a deep midnight sky visible between branches.\nSubject: three small adventurers seen from behind on a dark stone bridge in the lower central third, distinct silhouettes with simple modern fantasy travel clothing, one tall cloaked traveler, one shorter agile traveler and one staff bearer; the vast forest remains the protagonist. Natural proportions; no close-up faces.\nStyle/medium: premium cinematic digital concept art, painterly detail and strong atmospheric depth.\nComposition/framing: wide landscape 16:9; clear central silhouettes that survive a website card crop; luminous path and trees lead into the distance; a dark lower edge suited to a subtle overlay.\nLighting/mood: shared adventure, quiet wonder and mystery, cyan stream reflections and violet canopy backlight.\nColor palette: charcoal #0D0F14, slate blue, violet #7C5CFC and teal #3DD6C6. No gold.\nConstraints: one standalone artwork, no text, letters, logos, watermark, UI, border, collage, parchment, leather textures, bulky ornamental armor or generic medieval castle.",
+      "png": "apps/web/public/art/luminous-forest.png",
+      "webp": "apps/web/public/art/luminous-forest.webp",
+      "width": 1671,
+      "height": 941,
+      "webpBytes": 265192
+    },
+    {
+      "slug": "floating-city",
+      "title": "Cidade suspensa",
+      "prompt": "Use case: stylized-concept\nAsset type: wide 16:9 website illustration for campaigns and shared adventures on Paralax RPG.\nInput images: Image 1 is a STYLE REFERENCE only. Preserve its cinematic painterly quality, dramatic world scale, charcoal rock, violet magical light, cyan water, mist and premium modern fantasy mood. Create a distinctly new scene.\nPrimary request: a magnificent suspended city above a mirror lake, a place where many stories can unfold.\nScene/backdrop: a moonlit mountain basin with low rolling mist, a deep starry sky and a luminous violet moon partly veiled by clouds.\nSubject: one great floating island holding an elegant city of angular obsidian towers and open arched terraces, slender bridges connecting smaller floating districts, cyan windows and waterfalls descending from the island toward the dark reflecting lake; restrained architecture, not a conventional medieval castle.\nStyle/medium: cinematic digital concept art, painterly fine detail, premium fantasy environment design, spacious atmosphere.\nComposition/framing: wide 16:9 landscape, island and city clearly framed in the central upper half, water reflection below, strong central silhouette for a card crop; dark lower corners.\nLighting/mood: inviting mystery and adventure; soft violet moonlight with precise cyan accents, distinct planes of depth.\nColor palette: charcoal #0D0F14, slate blue, violet #7C5CFC and teal #3DD6C6, no gold.\nConstraints: one standalone artwork; no text, letters, numbers, logos, watermark, UI, borders, collage, people, parchment, leather, ornate medieval decoration or spaceship aesthetic.",
+      "png": "apps/web/public/art/floating-city.png",
+      "webp": "apps/web/public/art/floating-city.webp",
+      "width": 1672,
+      "height": 941,
+      "webpBytes": 216062
+    }
+  ]
+}

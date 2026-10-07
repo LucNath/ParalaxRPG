@@ -1,0 +1,32 @@
+{
+  "name": "paralax-rpg",
+  "version": "0.1.0",
+  "private": true,
+  "engines": { "node": ">=22.18.0", "npm": ">=10" },
+  "workspaces": ["apps/*", "packages/*"],
+  "scripts": {
+    "setup": "node scripts/setup.mjs",
+    "db:up": "docker compose up -d --wait postgres",
+    "db:down": "docker compose down",
+    "db:generate": "npm run db:generate --workspace @paralax/api",
+    "db:migrate": "npm run db:migrate --workspace @paralax/api",
+    "prepare:dev": "npm run build --workspace @paralax/contracts && npm run db:generate",
+    "dev": "npm run prepare:dev && concurrently -k -n API,WEB \"npm run dev --workspace @paralax/api\" \"npm run dev --workspace @paralax/web\"",
+    "build": "npm run prepare:dev && npm run build --workspace @paralax/api && npm run build --workspace @paralax/web",
+    "typecheck": "npm run prepare:dev && npm run typecheck --workspaces --if-present",
+    "test:api": "npm run prepare:dev && npm run build --workspace @paralax/api && npm run test --workspace @paralax/api",
+    "test:e2e": "npm run prepare:dev && playwright test",
+    "check": "npm run typecheck && npm run test:api"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.63.0",
+    "@types/pg": "8.15.6",
+    "concurrently": "9.2.4",
+    "dotenv": "17.2.3",
+    "prisma": "7.10.0",
+    "pg": "8.16.3",
+    "sharp": "0.35.5",
+    "typescript": "5.9.3"
+  },
+  "overrides": { "deepmerge-ts": "8.0.2", "mysql2": "3.24.5", "shell-quote": "1.12.0" }
+}

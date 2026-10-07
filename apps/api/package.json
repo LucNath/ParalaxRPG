@@ -1,0 +1,42 @@
+{
+  "name": "@paralax/api",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "nest start --watch",
+    "build": "nest build",
+    "start": "node dist/main.js",
+    "typecheck": "tsc --noEmit -p tsconfig.build.json",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate deploy",
+    "test": "node --test test/auth.integration.test.cjs test/systems.integration.test.cjs"
+  },
+  "dependencies": {
+    "@nestjs/common": "12.1.2",
+    "@nestjs/config": "12.0.1",
+    "@nestjs/core": "12.1.2",
+    "@nestjs/jwt": "12.0.2",
+    "@nestjs/platform-express": "12.1.2",
+    "@nestjs/throttler": "6.7.1",
+    "@paralax/contracts": "0.1.0",
+    "@prisma/adapter-pg": "7.10.0",
+    "@prisma/client": "7.10.0",
+    "@vercel/blob": "2.8.1",
+    "argon2": "0.45.1",
+    "cookie-parser": "1.4.7",
+    "dotenv": "17.2.3",
+    "helmet": "8.3.0",
+    "pg": "8.16.3",
+    "reflect-metadata": "0.2.2",
+    "rxjs": "7.8.2",
+    "sharp": "0.35.5"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "12.0.8",
+    "@types/cookie-parser": "1.4.9",
+    "@types/express": "5.0.6",
+    "@types/multer": "2.0.0",
+    "@types/node": "24.10.1",
+    "@types/pg": "8.15.6"
+  }
+}

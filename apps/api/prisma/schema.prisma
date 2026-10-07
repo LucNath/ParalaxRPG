@@ -1,0 +1,77 @@
+generator client {
+  provider = "prisma-client"
+  output = "../src/generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id String @id @default(uuid())
+  email String @unique
+  username String @unique
+  passwordHash String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  profile Profile?
+  refreshSessions RefreshSession[]
+  systems RpgSystem[]
+}
+
+model Profile {
+  userId String @id
+  displayName String
+  bio String @default("")
+  location String @default("")
+  avatarKey String?
+  updatedAt DateTime @updatedAt
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model RefreshSession {
+  id String @id @default(uuid())
+  userId String
+  familyId String
+  tokenHash String @unique
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+  revokedAt DateTime?
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId])
+  @@index([familyId])
+}
+
+enum SystemVisibility {
+  PRIVATE
+  UNLISTED
+  PUBLIC
+}
+
+model RpgSystem {
+  id String @id @default(uuid())
+  ownerId String
+  name String
+  description String @default("")
+  visibility SystemVisibility @default(PRIVATE)
+  revision Int @default(1)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  versions SystemVersion[]
+  @@index([ownerId, updatedAt])
+  @@index([visibility, updatedAt])
+}
+
+model SystemVersion {
+  id String @id @default(uuid())
+  systemId String
+  number Int
+  name String
+  description String
+  definition Json
+  createdAt DateTime @default(now())
+  system RpgSystem @relation(fields: [systemId], references: [id], onDelete: Cascade)
+  @@unique([systemId, number])
+}
