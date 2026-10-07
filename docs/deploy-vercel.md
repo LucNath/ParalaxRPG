@@ -32,11 +32,15 @@ Os projetos devem corresponder aos nomes e à conta acima. Verificar tipos, test
 ```powershell
 npm run check
 npm run build
-vercel deploy --prod --cwd apps/api --scope lucky-8804ce74
-vercel deploy --prod --cwd apps/web --scope lucky-8804ce74
+vercel link --yes --project paralax-rpg-api --scope lucky-8804ce74
+vercel project inspect --non-interactive
+vercel deploy --prod --scope lucky-8804ce74
+vercel link --yes --project paralax-rpg-web --scope lucky-8804ce74
+vercel project inspect --non-interactive
+vercel deploy --prod --scope lucky-8804ce74
 ```
 
-Comandos pressupõem vínculo local existente, autenticação válida e variáveis configuradas. O Node.js no Windows pode precisar de `$env:NODE_USE_SYSTEM_CA = '1'` para usar certificados do sistema, mantendo a verificação TLS.
+Executar os comandos na raiz do repositório, pois o projeto remoto já define `apps/api` ou `apps/web` como Root Directory. Não usar `--cwd apps/api` no deploy: essa versão da CLI repete o prefixo da raiz. Os vínculos dentro dos apps continuam úteis para consultar/configurar variáveis. Comandos pressupõem autenticação válida e variáveis configuradas. O Node.js no Windows pode precisar de `$env:NODE_USE_SYSTEM_CA = '1'` para usar certificados do sistema, mantendo a verificação TLS.
 
 Após publicar, verificar `/api/v1/health/ready` pelo domínio do site e o fluxo cadastro → perfil/avatar → sistema → recarga → publicação → logout/login, com dados sintéticos. Confirmar que uma pessoa sem sessão Vercel consegue abrir a URL.
 

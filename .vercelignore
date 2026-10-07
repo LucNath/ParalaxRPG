@@ -14,3 +14,5 @@ apps/web/public/art/*.png
 docs
 tests
 .github
+**/.agents
+**/skills-lock.json

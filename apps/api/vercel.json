@@ -1,7 +1,7 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "nestjs",
-  "installCommand": "npm ci",
+  "installCommand": "npm ci --include=dev",
   "buildCommand": "npm run build --workspace @paralax/contracts && npm run db:generate --workspace @paralax/api && npm run build --workspace @paralax/api",
   "regions": ["iad1"]
 }
