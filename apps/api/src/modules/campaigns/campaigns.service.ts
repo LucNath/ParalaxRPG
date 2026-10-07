@@ -2,6 +2,7 @@ import { ConflictException, Injectable, NotFoundException } from '@nestjs/common
 import { systemDefinitionSchema, type CampaignDetail, type CampaignSummary, type CreateCampaignInput, type UpdateCampaignInput, type ListSystemsQuery } from '@paralax/contracts';
 import { PrismaService } from '../../database/prisma.service';
 import { Prisma } from '../../generated/prisma/client';
+import { campaignAccess, lockCampaign } from './campaign-access';
 
 const include = { owner: { select: { id: true, username: true, profile: { select: { displayName: true } } } }, systemVersion: true } as const;
 type Row = Prisma.CampaignGetPayload<{ include: typeof include }>;
@@ -17,8 +18,8 @@ export class CampaignsService {
   constructor(private readonly prisma: PrismaService) {}
 
   async list(query: ListSystemsQuery, ownerId?: string) {
-    const where: Prisma.CampaignWhereInput = { ...(ownerId ? { ownerId } : { visibility: 'PUBLIC' }),
-      ...(query.search ? { OR: [{ name: { contains: query.search, mode: 'insensitive' } }, { description: { contains: query.search, mode: 'insensitive' } }] } : {}) };
+    const where: Prisma.CampaignWhereInput = { AND: [ownerId ? campaignAccess(ownerId) : { visibility: 'PUBLIC' },
+      query.search ? { OR: [{ name: { contains: query.search, mode: 'insensitive' } }, { description: { contains: query.search, mode: 'insensitive' } }] } : {}] };
     const [rows, total] = await this.prisma.$transaction([
       this.prisma.campaign.findMany({ where, include, orderBy: [{ updatedAt: 'desc' }, { id: 'asc' }], skip: (query.page - 1) * 20, take: 20 }),
       this.prisma.campaign.count({ where }),
@@ -27,9 +28,9 @@ export class CampaignsService {
   }
 
   private async read(db: Prisma.TransactionClient, id: string, ownerId: string): Promise<CampaignDetail> {
-    const row = await db.campaign.findFirst({ where: { id, ownerId }, include });
+    const row = await db.campaign.findFirst({ where: { id, ...campaignAccess(ownerId) }, include });
     if (!row) throw new NotFoundException();
-    return { ...summary(row), systemVersionId: row.systemVersionId, definition: systemDefinitionSchema.parse(row.systemVersion.definition) };
+    return { ...summary(row), systemVersionId: row.systemVersionId, definition: systemDefinitionSchema.parse(row.systemVersion.definition), role: row.ownerId === ownerId ? 'OWNER' : 'PLAYER' };
   }
 
   detail(id: string, ownerId: string) { return this.read(this.prisma, id, ownerId); }
@@ -55,7 +56,9 @@ export class CampaignsService {
   async update(ownerId: string, id: string, input: UpdateCampaignInput) {
     const { expectedRevision, ...settings } = input;
     return this.prisma.$transaction(async db => {
-      if (!await db.campaign.findFirst({ where: { id, ownerId }, select: { id: true } })) throw new NotFoundException();
+      await lockCampaign(db, id, ownerId);
+      const activePlayers = await db.campaignMember.count({ where: { campaignId: id, status: 'ACTIVE' } });
+      if (settings.maxPlayers < activePlayers) throw new ConflictException({ code: 'CAMPAIGN_CAPACITY_CONFLICT', message: 'A capacidade não pode ser menor que a quantidade atual de jogadores.' });
       const updated = await db.campaign.updateMany({ where: { id, ownerId, revision: expectedRevision }, data: { ...settings, revision: { increment: 1 } } });
       if (!updated.count) throw new ConflictException({ code: 'CAMPAIGN_REVISION_CONFLICT', message: 'Esta campanha foi alterada em outra aba. Carregue a versão atual antes de salvar.' });
       await db.campaignChange.create({ data: { campaignId: id, revision: expectedRevision + 1, actorId: ownerId, snapshot: settings } });

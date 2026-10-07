@@ -122,5 +122,25 @@ export interface CampaignSummary extends CampaignSettings {
   owner: { id: string; username: string; displayName: string };
   system: { name: string; version: number };
 }
-export interface CampaignDetail extends CampaignSummary { systemVersionId: string; definition: SystemDefinition }
+export interface CampaignDetail extends CampaignSummary { systemVersionId: string; definition: SystemDefinition; role: 'OWNER' | 'PLAYER' }
 export interface CampaignsPage { items: CampaignSummary[]; page: number; pageSize: number; total: number }
+
+export const createInvitationSchema = z.object({ username: z.string().trim().toLowerCase().transform(value => value.replace(/^@/, '')).pipe(username) }).strict();
+export const invitationStatusSchema = z.enum(['PENDING', 'ACCEPTED', 'DECLINED', 'REVOKED', 'EXPIRED']);
+export const invitationStatusLabels = { PENDING: 'Pendente', ACCEPTED: 'Aceito', DECLINED: 'Recusado', REVOKED: 'Revogado', EXPIRED: 'Expirado' } as const;
+export const listInvitationsQuerySchema = z.object({ page: z.coerce.number().int().min(1).max(10000).default(1) }).strict();
+export type CreateInvitationInput = z.infer<typeof createInvitationSchema>;
+export type InvitationStatus = z.infer<typeof invitationStatusSchema>;
+export type ListInvitationsQuery = z.infer<typeof listInvitationsQuerySchema>;
+export interface CampaignInvitation {
+  id: string; status: InvitationStatus; createdAt: string; expiresAt: string; respondedAt: string | null; recipientIsMember: boolean;
+  campaign: { id: string; name: string };
+  inviter: { id: string; username: string; displayName: string };
+  recipient: { id: string; username: string; displayName: string };
+}
+export interface InvitationsPage { items: CampaignInvitation[]; page: number; pageSize: number; total: number }
+export interface CampaignMember {
+  user: { id: string; username: string; displayName: string };
+  role: 'OWNER' | 'PLAYER'; joinedAt: string;
+}
+export interface CampaignMembers { items: CampaignMember[]; playerCount: number; maxPlayers: number }

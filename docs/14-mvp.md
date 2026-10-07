@@ -4,7 +4,7 @@
 
 O MVP 1 deve comprovar o fluxo completo da seção 59. Não basta ter telas isoladas: usuários distintos precisam interagir com persistência, autorização e comunicação em tempo real.
 
-A implementação já cobre conta/perfil, sistemas e campanhas básicas: cadastro, login, renovação, logout, avatar e dashboard têm [verificação própria](verification/001-autenticacao-perfil.md); criação/edição, prévia, persistência versionada e visibilidade têm [verificação de sistemas](verification/003-sistemas.md). Campanhas incluem versão fixa, mestre, configuração e apresentação pública/privada, com [verificação própria](verification/005-campanhas.md). Os passos 1–3 do fluxo abaixo estão disponíveis. Exclusão, convites e membros continuam futuros. O fluxo completo do MVP 1 ainda não está implementado.
+A implementação já cobre conta/perfil, sistemas e campanhas: cadastro, login, renovação, logout, avatar e dashboard têm [verificação própria](verification/001-autenticacao-perfil.md); criação/edição, prévia, persistência versionada e visibilidade têm [verificação de sistemas](verification/003-sistemas.md). Campanhas incluem versão fixa, mestre, configuração e apresentação pública/privada, com [verificação própria](verification/005-campanhas.md). Convites por username, aceite/recusa, membros, lotação e remoção estão na [verificação 006](verification/006-convites-e-membros.md). Os passos 1–5 do fluxo abaixo estão disponíveis; o próximo é personagens. Exclusão de campanha e módulos de sessão/tempo real continuam futuros. O fluxo completo do MVP 1 ainda não está implementado.
 
 ## Escopo de origem — MVP 1
 
@@ -38,7 +38,7 @@ RF006 define publicação de sistemas em privado, não listado e público no cat
 
 Da mesma forma, campanha não listada existe no produto geral, mas o MVP 1 especifica pública/privada. É extensão a planejar, não condição original da primeira versão.
 
-Estados PREPARANDO, PAUSADA e CANCELADA podem ser modelados desde o início, mas ações correspondentes não precisam preceder agendar/iniciar/encerrar. Convite por conta existente é uma proposta simples para o MVP; e-mail/link exige DP04.
+Estados PREPARANDO, PAUSADA e CANCELADA podem ser modelados desde o início, mas ações correspondentes não precisam preceder agendar/iniciar/encerrar. Convite por conta existente foi adotado na decisão 004; e-mail/link continuam futuros.
 
 ## Fora do MVP 1
 

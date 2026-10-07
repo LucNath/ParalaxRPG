@@ -19,6 +19,9 @@ model User {
   refreshSessions RefreshSession[]
   systems RpgSystem[]
   campaigns Campaign[]
+  campaignMemberships CampaignMember[]
+  sentInvitations CampaignInvitation[] @relation("Inviter")
+  receivedInvitations CampaignInvitation[] @relation("Recipient")
 }
 
 model Profile {
@@ -107,6 +110,8 @@ model Campaign {
   owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   systemVersion SystemVersion @relation(fields: [systemVersionId], references: [id], onDelete: NoAction)
   changes CampaignChange[]
+  members CampaignMember[]
+  invitations CampaignInvitation[]
   @@index([ownerId, updatedAt])
   @@index([visibility, updatedAt])
   @@index([systemVersionId])
@@ -121,4 +126,48 @@ model CampaignChange {
   createdAt DateTime @default(now())
   campaign Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
   @@unique([campaignId, revision])
+}
+
+enum CampaignMemberStatus {
+  ACTIVE
+  REMOVED
+}
+
+enum InvitationStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+  REVOKED
+  EXPIRED
+}
+
+model CampaignMember {
+  id String @id @default(uuid())
+  campaignId String
+  userId String
+  status CampaignMemberStatus @default(ACTIVE)
+  joinedAt DateTime @default(now())
+  removedAt DateTime?
+  updatedAt DateTime @updatedAt
+  campaign Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@unique([campaignId, userId])
+  @@index([userId, status])
+  @@index([campaignId, status])
+}
+
+model CampaignInvitation {
+  id String @id @default(uuid())
+  campaignId String
+  inviterId String
+  recipientId String
+  status InvitationStatus @default(PENDING)
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+  respondedAt DateTime?
+  campaign Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  inviter User @relation("Inviter", fields: [inviterId], references: [id], onDelete: Cascade)
+  recipient User @relation("Recipient", fields: [recipientId], references: [id], onDelete: Cascade)
+  @@index([recipientId, createdAt])
+  @@index([campaignId, createdAt])
 }

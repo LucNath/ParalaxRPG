@@ -64,6 +64,8 @@ Logs dos deployments finais consultados na janela de uma hora: nenhum HTTP 500; 
 
 ## Limites
 
+Limites deste incremento histórico; convites e membros foram adicionados posteriormente na [verificação 006](006-convites-e-membros.md).
+
 Exclusão, transferência de mestre, sistemas de terceiros, troca/migração de sistema, imagens próprias, campanhas não listadas, membros, convites, personagens e sessões continuam futuros. A capacidade ainda não indica ocupação: não há jogadores cadastrados nesta etapa. O catálogo da interface exige login; apresentação pública por link e API pública dispensam sessão.
 
 Não há autosave, tela de auditoria ou restauração. Avisos de rascunho cobrem recarregar/fechar e cliques em links, mas ainda não histórico do navegador ou logout. Tornar privado impede novas leituras públicas, sem recolher conteúdo já recebido.

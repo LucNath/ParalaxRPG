@@ -1,15 +1,18 @@
 'use client';
 
 import Link from 'next/link';
+import { useState } from 'react';
 import { ArrowRight, ArrowUpRight, BookOpen, CalendarDays, Check, Compass, Sparkles, Users } from 'lucide-react';
 import { useAuth } from '@/components/auth-provider';
 import { Avatar } from '@/components/avatar';
 import { Badge } from '@/components/ui/badge';
 import { EmptyState } from '@/components/ui/empty-state';
 import { CampaignList } from '@/components/campaign-list';
+import { InvitationInbox } from '@/components/invitation-inbox';
 
 export default function Dashboard() {
   const { user } = useAuth();
+  const [campaignRevision, setCampaignRevision] = useState(0);
   if (!user) return null;
   const complete = !!user.bio && !!user.avatarUrl;
   const steps = [
@@ -22,7 +25,8 @@ export default function Dashboard() {
     <section className="welcome-panel"><div className="welcome-panel-copy"><span className="eyebrow">{complete ? 'DÊ FORMA AO SEU UNIVERSO' : 'ANTES DA PRIMEIRA AVENTURA'}</span><h2>{complete ? 'Seu próximo mundo começa pelas regras.' : 'Toda grande história\ncomeça com uma identidade.'}</h2><p>{complete ? 'Crie atributos, perícias, recursos e dados. Seu sistema fica salvo e pronto para as próximas histórias.' : 'Escolha um avatar, compartilhe suas inspirações e prepare seu lugar na comunidade.'}</p><Link className="button" href={complete ? '/sistemas/novo' : '/perfil'}>{complete ? 'Criar meu sistema' : 'Completar meu perfil'} <ArrowRight size={18} /></Link></div><div className="welcome-mark" aria-hidden="true"><Compass size={100} strokeWidth={.8} /></div></section>
     <div className="dashboard-columns">
       <div className="dashboard-main">
-        <section className="panel"><CampaignList compact /></section>
+        <section className="panel"><CampaignList compact refreshRevision={campaignRevision} /></section>
+        <section className="panel"><InvitationInbox compact onAccepted={() => setCampaignRevision(value => value + 1)} /></section>
         <section className="panel"><div className="panel-heading"><h2><CalendarDays size={18} /> Próximas sessões</h2><Badge>Em desenvolvimento</Badge></div><EmptyState icon={<CalendarDays size={25} />} title="O próximo encontro começa aqui">Quando o módulo de sessões estiver disponível, você poderá acompanhar as próximas aventuras da sua mesa.</EmptyState></section>
       </div>
       <aside className="dashboard-aside">

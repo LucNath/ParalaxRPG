@@ -322,7 +322,7 @@ svg { flex-shrink: 0; }
 .public-system { max-width: 960px; margin: 25px auto 65px; padding: 0 32px; }
 .system-public-banner { height: 230px; background: linear-gradient(0deg, #0D0F1440, transparent), url('/art/astral-observatory.webp') center 44% / cover; border: 1px solid var(--border); border-radius: 12px 12px 0 0; }
 .public-system-intro { border-radius: 0 0 12px 12px; padding: 28px 32px; margin-bottom: 24px; }
-.public-system-badges { display: flex; gap: 10px; }
+.public-system-badges { display: flex; flex-wrap: wrap; gap: 10px; }
 .public-system-intro h1 { font-size: 36px; font-weight: 600; margin: 18px 0; overflow-wrap: anywhere; }
 .system-description { color: var(--muted); font-size: 13px; white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.9; }
 .public-system .preview-stats { grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); }
@@ -356,6 +356,44 @@ svg { flex-shrink: 0; }
 .campaign-loading { padding: 24px; }
 @media (max-width: 900px) { .campaign-layout { grid-template-columns: minmax(0, 1fr); } }
 @media (max-width: 650px) { .campaign-settings-grid { grid-template-columns: 1fr; } .campaign-presentation { padding: 22px; } .campaign-compact-list { padding-inline: 22px; } }
+
+/* Invitations and active campaign membership. */
+.campaign-team { margin-top: 24px; }
+.campaign-team .panel-heading { flex-wrap: wrap; }
+.team-content { padding: 26px 28px; }
+.team-members, .sent-invitations { margin: 0; padding: 0; list-style: none; }
+.team-members li, .sent-invitations li { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--border); }
+.team-members li>div, .sent-invitations li>div { min-width: 0; }
+.team-members small, .sent-invitations small { display: block; color: var(--muted); font-size: 11px; margin-top: 5px; overflow-wrap: anywhere; }
+.team-members .subtle-link, .sent-invitations strong { overflow-wrap: anywhere; }
+.team-invite { margin-top: 28px; }
+.team-invite h3 { display: flex; align-items: center; gap: 9px; font-size: 16px; }
+.invite-form { display: flex; align-items: flex-start; gap: 16px; }
+.invite-form .form-field { flex: 1; min-width: 0; }
+.invite-form .button { margin-top: 28px; flex-shrink: 0; }
+.team-sent { margin-top: 26px; }
+.team-sent h3 { font-size: 16px; }
+.invitation-list { padding: 0 26px; }
+.invitation-item { padding: 24px 0; border-bottom: 1px solid var(--border); }
+.invitation-item:last-child { border-bottom: 0; }
+.invitation-item-heading { display: flex; justify-content: space-between; gap: 16px; align-items: center; }
+.invitation-item-heading>div { min-width: 0; }
+.invitation-item .eyebrow { letter-spacing: .04em; overflow-wrap: anywhere; }
+.invitation-item h2 { font-size: 19px; margin: 8px 0 14px; overflow-wrap: anywhere; }
+.invitation-item p { font-size: 12px; }
+.invitation-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.invitation-feedback { margin: 22px 26px; }
+.invitation-pagination { padding: 0 26px 24px; margin: 10px 0 0; }
+@media (max-width: 650px) {
+  .team-content { padding: 22px; }
+  .invite-form { flex-direction: column; gap: 10px; }
+  .invite-form .form-field, .invite-form .button { width: 100%; }
+  .invite-form .button { margin: 0; }
+  .invitation-list { padding-inline: 22px; }
+  .invitation-item-heading { align-items: flex-start; flex-wrap: wrap; gap: 5px; }
+  .invitation-item-heading .badge { margin-bottom: 14px; }
+  .team-members li, .sent-invitations li { flex-wrap: wrap; }
+}
 
 /* Profile editing and public identity. */
 .profile-layout { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(250px, .8fr); gap: 24px; }
@@ -501,7 +539,7 @@ svg { flex-shrink: 0; }
   .workspace { flex-direction: column; padding-bottom: 72px; }
   .sidebar { width: 100%; height: 70px; position: fixed; top: auto; bottom: 0; padding: 7px 16px; border-right: 0; border-top: 1px solid var(--border); flex-direction: row; gap: 10px; }
   .sidebar>.brand, .nav-upcoming { display: none; }
-  .sidebar .side-nav { flex-direction: row; flex: 2; }
+  .sidebar .side-nav { flex-direction: row; flex: 3; }
   .side-nav a, .sidebar-bottom>a { padding: 7px 6px; min-width: 0; gap: 3px; font-size: 10px; }
   .side-nav a { width: 100%; }
   .sidebar .selected:before { display: none; }
@@ -546,6 +584,12 @@ svg { flex-shrink: 0; }
   .public-banner { height: 155px; }
   .public-profile-content { padding: 0 25px 27px; }
   .public-profile h1 { font-size: 28px; }
+}
+@media (max-width: 360px) {
+  .sidebar { padding-inline: 8px; gap: 6px; }
+  .sidebar .side-nav { min-width: 0; gap: 2px; }
+  .side-nav a, .sidebar-bottom>a { padding-inline: 2px; }
+  .sidebar-bottom { gap: 4px; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; }

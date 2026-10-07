@@ -38,7 +38,7 @@ export default function Home() {
           </article>
           <article className="journey-card active">
             <div className="journey-card-art"><Image src="/art/floating-city.webp" alt="" fill sizes="(max-width: 650px) calc(100vw - 44px), (max-width: 1359px) 31vw, 408px" /></div>
-            <div className="journey-card-content"><div className="journey-card-top"><span className="feature-icon"><Users size={23} /></span><Badge tone="success">Campanhas disponíveis</Badge></div><span className="card-number">03 / CONEXÃO</span><h3>Prepare sua próxima história</h3><p>Crie uma campanha com suas regras e apresente sua aventura. Convites e sessões chegam em breve.</p><Link href="/campanhas" className="card-action">Conhecer campanhas <ArrowRight size={17} /></Link></div>
+            <div className="journey-card-content"><div className="journey-card-top"><span className="feature-icon"><Users size={23} /></span><Badge tone="success">Campanhas disponíveis</Badge></div><span className="card-number">03 / CONEXÃO</span><h3>Prepare sua próxima história</h3><p>Crie uma campanha com suas regras e convide jogadores para a aventura. Sessões chegam em breve.</p><Link href="/campanhas" className="card-action">Conhecer campanhas <ArrowRight size={17} /></Link></div>
           </article>
         </div>
       </section>

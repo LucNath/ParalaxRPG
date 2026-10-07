@@ -2,7 +2,7 @@
 
 Este é um modelo **conceitual e lógico proposto**, derivado das entidades das seções 40–41. Não é uma migration, um schema Prisma ou uma decisão definitiva de armazenamento. Campos, enums e restrições devem ser validados junto da implementação.
 
-`User`, `Profile`, `RefreshSession`, `RpgSystem`, `SystemVersion`, `Campaign` e `CampaignChange` já possuem [schema Prisma](../apps/api/prisma/schema.prisma) e migrations versionadas. As demais entidades abaixo continuam propostas para os próximos módulos.
+`User`, `Profile`, `RefreshSession`, `RpgSystem`, `SystemVersion`, `Campaign`, `CampaignChange`, `CampaignMember` e `CampaignInvitation` já possuem [schema Prisma](../apps/api/prisma/schema.prisma) e migrations versionadas. As demais entidades abaixo continuam propostas para os próximos módulos.
 
 ## Recorte implementado de sistemas
 
@@ -16,7 +16,15 @@ A [decisão 002](architecture/decisions/002-sistemas-versionados.md) registra vi
 
 `Campaign` armazena mestre (`ownerId`), versão fixa (`systemVersionId`), nome, descrição, visibilidade pública/privada, estado, capacidade de jogadores, revisão e datas. A versão deve pertencer a um sistema criado pelo mestre; não pode ser alterada pela API. A chave estrangeira impede remover uma versão referenciada. Índices cobrem mestre/atualização, visibilidade/atualização e versão.
 
-`CampaignChange` registra revisão única por campanha, ator, snapshot da configuração e data. Criação/edição e histórico usam a mesma transação, com controle otimista de concorrência. O banco também limita capacidade a 1–20 e revisão positiva. Definição do sistema e histórico não são enviados no DTO público. Membros e convites ainda não existem; responsabilidade usa `ownerId`. A [decisão 003](architecture/decisions/003-campanhas-versionadas.md) registra os limites.
+`CampaignChange` registra revisão única por campanha, ator, snapshot da configuração e data. Criação/edição e histórico usam a mesma transação, com controle otimista de concorrência. O banco também limita capacidade a 1–20 e revisão positiva. Definição do sistema e histórico não são enviados no DTO público. Responsabilidade usa `ownerId`. A [decisão 003](architecture/decisions/003-campanhas-versionadas.md) registra os limites.
+
+## Recorte implementado de convites e membros
+
+`CampaignMember` representa somente jogadores: id, campaignId, userId, status ACTIVE/REMOVED, joinedAt, removedAt e updatedAt. O par campanha/usuário é único; índices cobrem usuário/estado e campanha/estado. O mestre é derivado de `Campaign.ownerId`, exibido no DTO sem duplicar seu vínculo. Reingresso reutiliza a linha e atualiza joinedAt.
+
+`CampaignInvitation` armazena campanha, remetente/destinatário por FK, estado, createdAt, expiresAt e respondedAt. Índices cobrem destinatário/data e campanha/data. Um índice único parcial na migration SQL limita PENDING por campanha/destinatário; não está expresso no schema Prisma. Vencimento também é calculado no DTO, sem job obrigatório. As FKs usam cascata; a API não oferece exclusão de conta/campanha neste recorte.
+
+Aceite, revogação, remoção e edição de capacidade bloqueiam a mesma linha de campanha na transação. Capacidade conta apenas jogadores ativos e não reserva convites. A [decisão 004](architecture/decisions/004-convites-e-membros.md) registra estados, idempotência, acesso e limites; não há tabela separada de permissões individuais ou auditoria completa de vínculos.
 
 ## Convenções propostas
 
@@ -111,8 +119,8 @@ Documentos, diário, criaturas, equipamentos, regras de progressão, permissões
 
 ## Integridade e concorrência
 
-1. Criar campanha e vínculo responsável na mesma transação.
-2. Aceitar convite, consumir convite e verificar capacidade de modo atômico; propostas possíveis: lock da campanha ou isolamento adequado com retry.
+1. Criar campanha com responsável em `ownerId` e histórico na mesma transação; não duplicar o mestre em `CampaignMember`.
+2. Aceitar convite, atualizar seu estado e verificar capacidade de modo atômico, com bloqueio da linha da campanha adotado na decisão 004.
 3. Impedir que valores da ficha referenciem campos de outro sistema/versão.
 4. Proposta: controlar transições da sessão e regra de uma sessão ativa por campanha no banco/serviço, inclusive sob concorrência.
 5. Proposta: exigir `revision` na edição concorrente da ficha, retornando conflito quando obsoleta.

@@ -51,16 +51,37 @@ Prefixo `/api/v1`; schemas em `contracts`. `CreateCampaignInput` contém nome, d
 | --- | --- | --- |
 | `POST /campaigns` | `CreateCampaignInput`; retorna `CampaignDetail`, 201 | Autenticado; sistema de autoria do titular |
 | `PUT /campaigns/:id` | `UpdateCampaignInput`; retorna detalhe atualizado | Mestre; 409 para revisão obsoleta |
-| `GET /campaigns/mine` | `page`, `search`; retorna `CampaignsPage` | Somente campanhas do mestre autenticado |
-| `GET /campaigns/mine/:id` | Configuração e definição da versão vinculada | Mestre; 404 para outro usuário |
+| `GET /campaigns/mine` | `page`, `search`; retorna `CampaignsPage` | Campanhas próprias ou com vínculo de jogador ativo |
+| `GET /campaigns/mine/:id` | Configuração e definição da versão vinculada | Mestre/jogador ativo; 404 para usuário sem vínculo |
 | `GET /campaigns/public` | `page`, `search`; retorna apresentações públicas | Anônimo; somente `PUBLIC` |
 | `GET /campaigns/:id` | `CampaignSummary` com apresentação da campanha | Anônimo; privado retorna 404 |
 
-`CampaignSummary` inclui id, nome, descrição, visibilidade, estado, capacidade, revisão, datas, perfil público do mestre e `system: {name, version}`. A projeção pública não inclui definição nem identificador da versão, e-mail ou auditoria. `CampaignDetail`, exclusivo do mestre, acrescenta `systemVersionId` e `definition`. Sistema privado permanece privado mesmo quando a campanha é pública.
+`CampaignSummary` inclui id, nome, descrição, visibilidade, estado, capacidade, revisão, datas, perfil público do mestre e `system: {name, version}`. A projeção pública não inclui definição nem identificador da versão, e-mail ou auditoria. `CampaignDetail`, disponível ao mestre/jogador ativo, acrescenta `systemVersionId`, `definition` e `role: OWNER | PLAYER`. Sistema privado permanece privado mesmo quando a campanha é pública; a leitura autorizada das regras pela campanha não libera a API privada do sistema ao jogador.
 
 Listas e validação de UUID seguem o padrão de sistemas: 20 itens, página 1–10000, busca de até 80 caracteres, ordenação por atualização/id e `no-store`. Schemas estritos rejeitam campos extras e capacidades fora de 1–20. Erro de versão alheia/inexistente usa 404 `CAMPAIGN_SYSTEM_UNAVAILABLE`; edição concorrente usa 409 `CAMPAIGN_REVISION_CONFLICT`. Escrita e `CampaignChange` são transacionais.
 
-Não há `GET /campaigns`, `PATCH`, exclusão, inscrição, convite ou edição de membros implementados. Veja a [decisão 003](architecture/decisions/003-campanhas-versionadas.md).
+Não há `GET /campaigns`, `PATCH`, exclusão ou inscrição pública implementados. Veja as decisões [003](architecture/decisions/003-campanhas-versionadas.md) e [004](architecture/decisions/004-convites-e-membros.md). Reduzir capacidade abaixo dos jogadores ativos retorna 409 `CAMPAIGN_CAPACITY_CONFLICT`; não é conflito de revisão e o formulário permite corrigir e tentar novamente.
+
+## Contrato implementado — convites e membros
+
+Prefixo `/api/v1`, autenticação Bearer e `Cache-Control: no-store` em todas as rotas. UUID v4 para parâmetros. Identidades e papéis são atribuídos pela sessão, sem confiar em campos enviados pelo cliente.
+
+| Rota | Entrada/saída | Acesso |
+| --- | --- | --- |
+| `GET /users/me/invitations` | `page`; `InvitationsPage` | Somente convites destinados ao titular |
+| `GET /campaigns/:id/invitations` | `page`; `InvitationsPage` | Mestre da campanha |
+| `POST /campaigns/:id/invitations` | `{username}` estrito; `CampaignInvitation`, 201 | Mestre; conta existente |
+| `POST /invitations/:id/accept` | Sem payload; `CampaignInvitation`, 200 | Destinatário; vaga e campanha aberta |
+| `POST /invitations/:id/decline` | Sem payload; `CampaignInvitation`, 200 | Destinatário |
+| `DELETE /campaigns/:id/invitations/:invitationId` | Sem payload, 204 | Mestre; revoga pendente |
+| `GET /campaigns/:id/members` | `CampaignMembers` | Mestre/jogador ativo |
+| `DELETE /campaigns/:id/members/:userId` | Sem payload, 204 | Mestre; remove jogador |
+
+Listas têm 20 itens por página, `page` 1–10000 e ordenação por criação decrescente/id crescente. `CampaignInvitation` inclui id, status, datas ISO UTC, campanha `{id,name}`, remetente/destinatário `{id,username,displayName}` e `recipientIsMember`. Não inclui e-mail ou definição. O estado vencido é retornado como `EXPIRED`, mesmo antes da atualização persistida por um novo envio. Convites aceitos de membros removidos permanecem no histórico sem conceder acesso.
+
+`CampaignMembers` retorna `{items,playerCount,maxPlayers}`; cada item contém identidade pública, `role` e `joinedAt`. Mestre (`OWNER`) aparece na lista mas não conta nas vagas; jogadores ativos usam `PLAYER`. Membros removidos não aparecem na lista atual.
+
+Entrada inválida/convite para si/remoção do mestre: 400. Falta de sessão: 401. Recurso privado, convite alheio ou conta inexistente: 404. Conflitos 409 incluem `INVITATION_PENDING`, `ALREADY_CAMPAIGN_MEMBER`, `INVITATION_LIMIT`, `INVITATION_EXPIRED`, `INVITATION_ALREADY_RESOLVED`, `CAMPAIGN_FULL` e `CAMPAIGN_CLOSED`. Falta de vaga mantém o convite pendente. Aceite repetido enquanto membro ativo, recusa repetida, revogação repetida e remoção repetida são idempotentes. Reingresso após remoção exige novo convite.
 
 ## Rotas de origem
 

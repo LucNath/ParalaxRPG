@@ -2,7 +2,7 @@
 
 ## Status e objetivo
 
-Este documento é o **plano de testes** da plataforma completa. A primeira etapa de conta/perfil já possui testes de integração e navegador executados; resultados estão no [relatório 001](verification/001-autenticacao-perfil.md). Os cenários de sistemas, campanhas e sessões abaixo permanecem planejados.
+Este documento é o **plano de testes** da plataforma completa. Conta/perfil, sistemas, campanhas e convites/membros têm integração com PostgreSQL real e testes de navegador desktop/mobile. Resultados nos relatórios [001](verification/001-autenticacao-perfil.md), [003](verification/003-sistemas.md), [005](verification/005-campanhas.md) e [006](verification/006-convites-e-membros.md). Sessões e tempo real abaixo permanecem planejados.
 
 O objetivo do plano é comprovar o fluxo do MVP 1, persistência, privacidade, acesso por campanha e comunicação em tempo real. Testar o payload recebido é necessário: a tela pode esconder um segredo que o servidor já vazou.
 

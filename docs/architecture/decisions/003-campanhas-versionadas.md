@@ -2,6 +2,8 @@
 
 Status: adotada em 7 de outubro de 2026. Recorte de RF008–RF010 e RB03/RB06–RB09. Convites, membros, exclusão e solicitações de ingresso continuam incrementos separados.
 
+Evolução posterior: a [decisão 004](004-convites-e-membros.md) implementa convites/membros e amplia a leitura privada a jogadores ativos. As limitações abaixo descrevem o incremento original de campanhas.
+
 ## Regras e responsabilidade
 
 Qualquer usuário autenticado cria campanhas usando uma versão de um sistema de sua autoria. A API valida essa autoria no banco, inclusive se o cliente informar uma versão alheia pública. Sistemas de terceiros dependem de política de reutilização/licença e autorizações futuras (DP06).

@@ -32,7 +32,7 @@ Os identificadores RF001–RF025 são os da seção 32 da origem. A coluna de ac
 | RF024 | Controle administrativo da campanha | Mestre administra os elementos disponíveis da própria campanha; acesso cruzado é negado | MVP 1, expandido junto dos módulos |
 | RF025 | Espectadores de sessões públicas | Espectador acompanha sem editar fichas, mapas, personagens, dados ou sessão | MVP 1 |
 
-Estado atual: RF001–RF005 estão implementados no recorte de conta/perfil e editor básico; RF006 foi adotado como complemento, com três visibilidades e catálogo básico. Veja as verificações de [conta/perfil](verification/001-autenticacao-perfil.md) e [sistemas](verification/003-sistemas.md). Os demais RFs continuam no planejamento.
+Estado atual: RF001–RF005 estão implementados no recorte de conta/perfil e editor básico; RF006 foi adotado como complemento, com três visibilidades e catálogo básico. RF007/RF008 incluem criação de campanha e vínculo com versão fixa do sistema. RF009 e o recorte de convites/remoção de RF011 estão disponíveis com aceite/recusa e controle de capacidade; solicitações abertas de ingresso seguem RF010 e continuam futuras. RF024 inclui administração de configuração e membros, com demais módulos futuros. Veja as verificações de [conta/perfil](verification/001-autenticacao-perfil.md), [sistemas](verification/003-sistemas.md), [campanhas](verification/005-campanhas.md) e [convites/membros](verification/006-convites-e-membros.md). Os demais RFs continuam no planejamento.
 
 RF016 descreve o acesso a uma sessão pública. RF025 descreve o papel e suas limitações; ambos devem ser rastreados mesmo quando compartilham implementação.
 

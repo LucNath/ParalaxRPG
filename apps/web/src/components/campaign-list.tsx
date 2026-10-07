@@ -10,7 +10,7 @@ import { Badge } from './ui/badge';
 import { EmptyState } from './ui/empty-state';
 import { errorMessage } from '@/lib/api';
 
-export function CampaignList({ compact = false }: { compact?: boolean }) {
+export function CampaignList({ compact = false, refreshRevision = 0 }: { compact?: boolean; refreshRevision?: number }) {
   const { api } = useAuth();
   const [scope, setScope] = useState<'mine' | 'public'>('mine');
   const [search, setSearch] = useState('');
@@ -26,7 +26,7 @@ export function CampaignList({ compact = false }: { compact?: boolean }) {
         .catch(cause => { if (!abort.signal.aborted) setError(errorMessage(cause)); });
     }, compact ? 0 : 250);
     return () => { clearTimeout(timeout); abort.abort(); };
-  }, [api, scope, search, page, attempt, compact]);
+  }, [api, scope, search, page, attempt, compact, refreshRevision]);
   return <>
     {compact ? <div className="panel-heading"><h2><BookOpen size={18} /> Minhas campanhas</h2><Link className="subtle-link" href="/campanhas">Ver todas <ArrowRight size={15} /></Link></div> : <div className="systems-toolbar"><div className="scope-switch" aria-label="Listagem de campanhas"><button type="button" aria-pressed={scope === 'mine'} className={scope === 'mine' ? 'selected' : ''} onClick={() => { setScope('mine'); setPage(1); }}>Minhas campanhas</button><button type="button" aria-pressed={scope === 'public'} className={scope === 'public' ? 'selected' : ''} onClick={() => { setScope('public'); setPage(1); }}>Campanhas públicas</button></div><div className="system-search"><Search size={17} aria-hidden="true" /><input aria-label="Buscar campanhas" placeholder="Buscar por nome ou descrição" maxLength={80} value={search} onChange={event => { setSearch(event.target.value); setPage(1); }} /></div></div>}
     {error ? <div className="page-state"><p role="alert">{error}</p><button className="button button-secondary" onClick={() => setAttempt(value => value + 1)}>Tentar novamente</button></div> : !result ? <p role="status" className={compact ? 'campaign-loading' : ''}>Carregando campanhas…</p> : result.items.length ? <>
@@ -36,6 +36,6 @@ export function CampaignList({ compact = false }: { compact?: boolean }) {
         {compact ? <Link className="icon-button" href={`/campanhas/${campaign.id}`} aria-label={`Abrir ${campaign.name}`}><ArrowRight size={18} /></Link> : null}
       </article>)}</div>
       {!compact ? <div className="list-pagination"><span className="muted">{result.total} {result.total === 1 ? 'campanha' : 'campanhas'} · Página {page}</span><div><button className="button button-secondary button-small" disabled={page === 1} onClick={() => setPage(value => value - 1)}>Anterior</button><button className="button button-secondary button-small" disabled={page * result.pageSize >= result.total} onClick={() => setPage(value => value + 1)}>Próxima</button></div></div> : null}
-    </> : <div className={compact ? '' : 'panel'}><EmptyState icon={<BookOpen size={25} />} title={search ? 'Nenhuma campanha encontrada' : scope === 'mine' ? 'Dê início à sua próxima história' : 'Novas histórias estão a caminho'}>{search ? 'Tente outro nome ou descrição.' : scope === 'mine' ? 'Escolha um dos seus sistemas e prepare a campanha que você vai mestrar.' : 'Campanhas públicas aparecerão aqui quando forem criadas.'}</EmptyState>{!search && scope === 'mine' ? <div className="empty-state-action"><Link className="button" href="/campanhas/nova"><Plus size={17} />Criar minha primeira campanha</Link></div> : null}</div>}
+    </> : <div className={compact ? '' : 'panel'}><EmptyState icon={<BookOpen size={25} />} title={search ? 'Nenhuma campanha encontrada' : scope === 'mine' ? 'Dê início à sua próxima história' : 'Novas histórias estão a caminho'}>{search ? 'Tente outro nome ou descrição.' : scope === 'mine' ? 'Crie uma campanha com suas regras ou aceite o convite de um mestre para jogar.' : 'Campanhas públicas aparecerão aqui quando forem criadas.'}</EmptyState>{!search && scope === 'mine' ? <div className="empty-state-action"><Link className="button" href="/campanhas/nova"><Plus size={17} />Criar minha primeira campanha</Link></div> : null}</div>}
   </>;
 }

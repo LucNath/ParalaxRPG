@@ -6,7 +6,7 @@ O RBAC de origem combina papéis da plataforma e papéis dentro da campanha. **S
 
 ## Papéis de origem
 
-No recorte de campanhas já implementado, o mestre é o usuário identificado por `Campaign.ownerId`, atribuído pela sessão na criação. Só ele consulta regras pela campanha e edita a configuração. Público lê apenas apresentação de campanhas `PUBLIC`; campanha privada conhecida por ID continua retornando 404 a terceiros. Membros, convites e papéis adicionais ainda não existem. Veja a [decisão 003](architecture/decisions/003-campanhas-versionadas.md).
+No recorte implementado, o mestre é identificado por `Campaign.ownerId`, atribuído pela sessão na criação. Somente ele edita configuração, envia/revoga convites e remove jogadores; não pode remover a si mesmo. Mestre e jogadores com `CampaignMember.status=ACTIVE` leem configuração, membros e regras fixas. Destinatário responde ao próprio convite; pendência não concede participação. Remoção impede novas leituras privadas, inclusive com sessão ainda válida. Público lê apenas apresentação de campanhas `PUBLIC`; ID conhecido continua retornando 404 a terceiros para conteúdo privado. Papéis adicionais e concessões individuais continuam futuros. Veja as decisões [003](architecture/decisions/003-campanhas-versionadas.md) e [004](architecture/decisions/004-convites-e-membros.md).
 
 | Escopo | Papel | Significado |
 | --- | --- | --- |
@@ -24,7 +24,7 @@ No recorte de campanhas já implementado, o mestre é o usuário identificado po
 
 Visitante não é role autenticada. Criador, Mestre e jogador podem ser funções derivadas de autoria/vínculos em vez de flags globais persistidas. A escolha técnica deve preservar o escopo.
 
-Proposta para MVP 1: criar `OWNER` no usuário que abre a campanha, jogadores como `PLAYER` e espectadores como audiência de sessão. GM adicional e ASSISTANT_GM ficam para expansão. Um espectador público não precisa ganhar vínculo permanente de campanha.
+Adotado para o recorte atual: `OWNER` derivado de ownerId e `PLAYER` derivado de vínculo ativo. Espectadores como audiência de sessão, GM adicional e ASSISTANT_GM ficam para expansão. Um espectador público não precisa ganhar vínculo permanente de campanha.
 
 ## Matriz da plataforma
 

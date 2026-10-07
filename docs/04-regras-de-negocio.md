@@ -25,12 +25,14 @@ No MVP 1, o editor define atributos, perícias, recursos e dados. Fórmulas como
 | RB10 | Solicitação de ingresso só se aplica a campanha pública recrutando e exige decisão do Mestre | Origem |
 | RB11 | Convite não equivale a participação: o vínculo é estabelecido na aceitação autorizada | Derivada |
 | RB12 | Capacidade máxima de jogadores deve ser verificada também no aceite, de forma atômica | Derivada da capacidade definida na origem |
-| RB13 | Um usuário possui apenas um vínculo ativo por campanha; remoção revoga acesso e conexão | Proposta de integridade |
-| RB14 | O responsável não pode perder o próprio vínculo sem transferência de responsabilidade ou exclusão definida | Proposta; política de transferência pendente |
+| RB13 | Um usuário possui apenas um vínculo ativo por campanha; remoção revoga acesso e conexão | Vínculo/acesso HTTP adotados na decisão 004; canais futuros |
+| RB14 | O responsável não pode perder o próprio vínculo sem transferência de responsabilidade ou exclusão definida | Proteção do mestre adotada na decisão 004; transferência futura |
 
 Campos de campanha descritos na origem: nome, imagem, banner, descrição, sistema, Mestre, capacidade de jogadores, classificação indicativa, tags, idioma, frequência e status. A obrigatoriedade de cada campo não foi definida. Para o MVP, propõe-se exigir nome, sistema, visibilidade e capacidade; os demais podem ser opcionais.
 
-Estados de campanha: **Planejada, Recrutando, Em andamento, Pausada, Finalizada, Cancelada**. A origem não define o grafo de transição nem impede reabertura. A [decisão 003](architecture/decisions/003-campanhas-versionadas.md) adota seleção de qualquer estado pelo mestre, inclusive reabertura, com registro transacional da configuração. Isso não inicia sessões nem concede ingresso. Neste recorte, criação/edição, nome, descrição, capacidade, estado e visibilidade pública/privada estão disponíveis; demais campos, membros e convites continuam futuros.
+Estados de campanha: **Planejada, Recrutando, Em andamento, Pausada, Finalizada, Cancelada**. A origem não define o grafo de transição nem impede reabertura. A [decisão 003](architecture/decisions/003-campanhas-versionadas.md) adota seleção de qualquer estado pelo mestre, inclusive reabertura, com registro transacional da configuração. Isso não inicia sessões nem concede ingresso. Criação/edição, nome, descrição, capacidade, estado e visibilidade pública/privada estão disponíveis; os demais campos continuam futuros.
+
+Convites e membros seguem a [decisão 004](architecture/decisions/004-convites-e-membros.md): convite por username de conta existente, sete dias de validade, no máximo 50 pendentes e um por destinatário/campanha. Aceitar cria/reativa o vínculo de jogador na mesma transação e verifica a capacidade, excluindo o mestre. Falta de vaga preserva o convite pendente; reduzir capacidade abaixo dos jogadores ativos é proibido. Finalizada/Cancelada bloqueiam novos envios e aceites. Remoção impede novas leituras privadas; retorno exige novo convite. Membros ativos leem regras fixas, sem editar campanha ou sistema original.
 
 ## Visibilidade
 
