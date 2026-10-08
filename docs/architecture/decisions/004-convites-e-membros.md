@@ -1,5 +1,7 @@
 # Decisão 004 — Convites e membros
 
+Personagens e fichas receberam posteriormente a [decisão 005](005-personagens-e-fichas.md) e [verificação 007](../../verification/007-personagens-e-fichas.md). As limitações abaixo registram o estado anterior.
+
 Status: adotada em 7 de outubro de 2026. Complementa a [decisão 003](003-campanhas-versionadas.md), implementando RF009, RF011 e a administração de membros de RF024. Resolve DP04 para o convite por conta existente; e-mail e links continuam futuros.
 
 ## Identidade e ciclo de vida

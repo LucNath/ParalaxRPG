@@ -2,7 +2,7 @@
 
 Este é um modelo **conceitual e lógico proposto**, derivado das entidades das seções 40–41. Não é uma migration, um schema Prisma ou uma decisão definitiva de armazenamento. Campos, enums e restrições devem ser validados junto da implementação.
 
-`User`, `Profile`, `RefreshSession`, `RpgSystem`, `SystemVersion`, `Campaign`, `CampaignChange`, `CampaignMember` e `CampaignInvitation` já possuem [schema Prisma](../apps/api/prisma/schema.prisma) e migrations versionadas. As demais entidades abaixo continuam propostas para os próximos módulos.
+`User`, `Profile`, `RefreshSession`, `RpgSystem`, `SystemVersion`, `Campaign`, `CampaignChange`, `CampaignMember`, `CampaignInvitation`, `Character` e `CharacterChange` já possuem [schema Prisma](../apps/api/prisma/schema.prisma) e migrations versionadas. As demais entidades abaixo continuam propostas para os próximos módulos.
 
 ## Recorte implementado de sistemas
 
@@ -25,6 +25,12 @@ A [decisão 002](architecture/decisions/002-sistemas-versionados.md) registra vi
 `CampaignInvitation` armazena campanha, remetente/destinatário por FK, estado, createdAt, expiresAt e respondedAt. Índices cobrem destinatário/data e campanha/data. Um índice único parcial na migration SQL limita PENDING por campanha/destinatário; não está expresso no schema Prisma. Vencimento também é calculado no DTO, sem job obrigatório. As FKs usam cascata; a API não oferece exclusão de conta/campanha neste recorte.
 
 Aceite, revogação, remoção e edição de capacidade bloqueiam a mesma linha de campanha na transação. Capacidade conta apenas jogadores ativos e não reserva convites. A [decisão 004](architecture/decisions/004-convites-e-membros.md) registra estados, idempotência, acesso e limites; não há tabela separada de permissões individuais ou auditoria completa de vínculos.
+
+## Recorte implementado de personagens
+
+`Character` armazena dono, campanha, versão fixa, nome, descrição, história, nível opcional, values JSON, revisão e datas. A FK composta para `(Campaign.id, Campaign.systemVersionId)` garante a mesma versão. Índices cobrem dono/atualização, campanha/atualização e versão. CHECKs limitam nível e revisão. A aplicação valida UUIDs/categorias exatos, valores inteiros e limites de recursos da definição imutável.
+
+`CharacterChange` registra ator, revisão única por personagem, snapshot e data na mesma transação da gravação. Não há tabelas CharacterAttribute/CharacterSkill/CharacterResource separadas neste recorte. Remoção do membro conserva o personagem e seu histórico; leitura depende de vínculo ativo ou responsabilidade da campanha. Criação/edição usa a mesma trava da campanha que a remoção. Políticas na [decisão 005](architecture/decisions/005-personagens-e-fichas.md).
 
 ## Convenções propostas
 
@@ -142,7 +148,7 @@ Criar índices adicionais com base em consultas reais; o catálogo acima é orie
 
 DP06 adotou versões imutáveis identificadas na decisão 002. Regras de uso por terceiros, cópia/licenciamento e migração explícita de campanhas continuam pendentes. Não haverá migração automática de fichas por simples edição do sistema.
 
-DP08 deve definir o destino de personagens de jogador removido, campanhas excluídas, sistemas usados por campanhas, mensagens e rolagens de conta excluída, arquivos órfãos e backups. Excluir um sistema em uso não deve produzir referências quebradas; bloquear, arquivar ou manter versão é decisão a registrar.
+DP08 já conserva personagens de jogador removido para o mestre, restaurando o acesso após novo ingresso (decisão 005). Continua a definir campanhas/contas excluídas, sistemas usados por campanhas, mensagens e rolagens, arquivos órfãos e backups. Excluir um sistema em uso não deve produzir referências quebradas; bloquear, arquivar ou manter versão é decisão a registrar.
 
 ## Referências
 

@@ -144,3 +144,55 @@ export interface CampaignMember {
   role: 'OWNER' | 'PLAYER'; joinedAt: string;
 }
 export interface CampaignMembers { items: CampaignMember[]; playerCount: number; maxPlayers: number }
+
+const characterFieldValue = z.object({ fieldId: fieldId, value: numberValue }).strict();
+export const characterValuesSchema = z.object({
+  attributes: z.array(characterFieldValue).max(40), skills: z.array(characterFieldValue).max(40), resources: z.array(characterFieldValue).max(40),
+}).strict().superRefine((values, ctx) => {
+  const ids = new Set<string>();
+  for (const category of ['attributes', 'skills', 'resources'] as const) values[category].forEach((entry, index) => {
+    if (ids.has(entry.fieldId)) ctx.addIssue({ code: 'custom', path: [category, index, 'fieldId'], message: 'Cada campo deve aparecer uma única vez.' });
+    ids.add(entry.fieldId);
+  });
+});
+export const characterSettingsSchema = z.object({
+  name: z.string().trim().min(2, 'Use pelo menos 2 caracteres.').max(80, 'Use até 80 caracteres.'),
+  description: z.string().trim().max(2000, 'Use até 2000 caracteres.'),
+  story: z.string().trim().max(4000, 'Use até 4000 caracteres.'),
+  level: z.number().int('Use um nível inteiro.').min(1, 'Use um nível positivo.').max(1000000).nullable(),
+}).strict();
+export const createCharacterSchema = characterSettingsSchema.extend({ values: characterValuesSchema.optional() }).strict();
+export const updateCharacterSchema = characterSettingsSchema.extend({ values: characterValuesSchema, expectedRevision: z.number().int().min(1).max(2147483646) }).strict();
+export const listCharactersQuerySchema = listSystemsQuerySchema;
+export type CharacterValues = z.infer<typeof characterValuesSchema>;
+export type CharacterSettings = z.infer<typeof characterSettingsSchema>;
+export type CreateCharacterInput = z.infer<typeof createCharacterSchema>;
+export type UpdateCharacterInput = z.infer<typeof updateCharacterSchema>;
+export function initialCharacterValues(definition: SystemDefinition): CharacterValues {
+  return Object.fromEntries((['attributes', 'skills', 'resources'] as const).map(category => [category, definition[category].map(field => ({ fieldId: field.id, value: field.defaultValue }))])) as CharacterValues;
+}
+export function characterValuesForDefinitionSchema(definition: SystemDefinition) {
+  return characterValuesSchema.superRefine((values, ctx) => {
+    for (const category of ['attributes', 'skills', 'resources'] as const) {
+      const allowed = new Map(definition[category].map(field => [field.id, field]));
+      const received = new Set(values[category].map(entry => entry.fieldId));
+      if (definition[category].some(field => !received.has(field.id))) ctx.addIssue({ code: 'custom', path: [category], message: 'Preencha todos os campos da versão da campanha.' });
+      values[category].forEach((entry, index) => {
+        const field = allowed.get(entry.fieldId);
+        if (!field) ctx.addIssue({ code: 'custom', path: [category, index, 'fieldId'], message: 'Este campo não pertence a esta categoria e versão.' });
+        if (category === 'resources' && field) {
+          const maximum = definition.resources.find(resource => resource.id === entry.fieldId)!.maxValue;
+          if (entry.value < 0 || (maximum !== null && entry.value > maximum)) ctx.addIssue({ code: 'custom', path: [category, index, 'value'], message: maximum === null ? 'Use um recurso não negativo.' : `Use um valor entre 0 e ${maximum}.` });
+        }
+      });
+    }
+  });
+}
+export interface CharacterSummary extends Omit<CharacterSettings, 'story'> {
+  id: string; revision: number; createdAt: string; updatedAt: string;
+  owner: { id: string; username: string; displayName: string };
+  campaign: { id: string; name: string };
+  system: { name: string; version: number };
+}
+export interface CharacterDetail extends CharacterSummary { story: string; systemVersionId: string; definition: SystemDefinition; values: CharacterValues; canEdit: boolean }
+export interface CharactersPage { items: CharacterSummary[]; page: number; pageSize: number; total: number }

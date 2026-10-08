@@ -15,7 +15,7 @@ Use primeiro a visão do produto, as regras de negócio e o MVP. Em seguida, con
 
 ## Estado da implementação
 
-Conta, autenticação, perfil com avatar, sistemas de RPG, campanhas, convites e membros já estão implementados. Next.js, NestJS, PostgreSQL e Prisma foram adotados conforme a [decisão 001](architecture/decisions/001-base-e-autenticacao.md). Sistemas seguem a [decisão 002](architecture/decisions/002-sistemas-versionados.md); campanhas com versão fixa, mestre, configuração e apresentação pública/privada seguem a [decisão 003](architecture/decisions/003-campanhas-versionadas.md). Convites por username, participação, capacidade e remoção seguem a [decisão 004](architecture/decisions/004-convites-e-membros.md). O ambiente de testes usa [Vercel, Neon e Blob](deploy-vercel.md). Personagens, sessões, Redis e Socket.IO continuam futuros; operação e orçamento da plataforma completa permanecem pendentes.
+Conta, autenticação, perfil com avatar, sistemas de RPG, campanhas, convites, membros, personagens e fichas já estão implementados. Next.js, NestJS, PostgreSQL e Prisma foram adotados conforme a [decisão 001](architecture/decisions/001-base-e-autenticacao.md). Sistemas seguem a [decisão 002](architecture/decisions/002-sistemas-versionados.md); campanhas com versão fixa, mestre, configuração e apresentação pública/privada seguem a [decisão 003](architecture/decisions/003-campanhas-versionadas.md). Convites por username, participação, capacidade e remoção seguem a [decisão 004](architecture/decisions/004-convites-e-membros.md). O ambiente de testes usa [Vercel, Neon e Blob](deploy-vercel.md). Fichas privadas e valores da versão fixa seguem a [decisão 005](architecture/decisions/005-personagens-e-fichas.md). Sessões, Redis e Socket.IO continuam futuros; operação e orçamento da plataforma completa permanecem pendentes.
 
 Consulte as [instruções de execução](../README.md) e os relatórios de [conta/perfil](verification/001-autenticacao-perfil.md), [sistemas](verification/003-sistemas.md), [primeira publicação online](verification/004-publicacao-vercel.md), [campanhas](verification/005-campanhas.md) e [convites/membros](verification/006-convites-e-membros.md). Os documentos de produto continuam descrevendo o escopo completo, sem significar que todas as funcionalidades estão disponíveis.
 
@@ -47,6 +47,8 @@ Consulte as [instruções de execução](../README.md) e os relatórios de [cont
 | [Decisão 001](architecture/decisions/001-base-e-autenticacao.md) | Stack e política de autenticação adotadas na primeira etapa |
 | [Decisão 002](architecture/decisions/002-sistemas-versionados.md) | Definições versionadas, salvamento concorrente e visibilidade dos sistemas |
 | [Decisão 003](architecture/decisions/003-campanhas-versionadas.md) | Campanhas com versão fixa, mestre, apresentação pública/privada e histórico de configuração |
+| [Decisão 005](architecture/decisions/005-personagens-e-fichas.md) | Fichas privadas, versão fixa, valores dinâmicos, revisão e retenção após remoção |
+| [Verificação 007](verification/007-personagens-e-fichas.md) | Personagens/fichas, permissões, concorrência e fluxo desktop/mobile |
 | [Decisão 004](architecture/decisions/004-convites-e-membros.md) | Convites por conta existente, lotação atômica, participação e remoção |
 | [Verificação 001](verification/001-autenticacao-perfil.md) | Evidências do fluxo de conta e perfil |
 | [Verificação 002](verification/002-direcao-visual.md) | Build, fluxos e revisão visual da identidade dark roxo/ciano |
@@ -67,8 +69,8 @@ Estas decisões não impedem a leitura da documentação, mas devem ser resolvid
 | DP04 | Convite por username de conta existente, validade de sete dias e novo convite adotados; e-mail/link futuros | [Decisão 004](architecture/decisions/004-convites-e-membros.md) |
 | DP05 | Acesso anônimo a transmissões e sessão pública em campanha privada/não listada | [Permissões](12-permissoes.md) |
 | DP06 | Versões imutáveis, autoria e visibilidade adotadas na decisão 002; uso por terceiros, licenciamento e migração de campanhas pendentes | [Decisão 002](architecture/decisions/002-sistemas-versionados.md) |
-| DP07 | Edição de ficha por jogador, múltiplos personagens e permissões padrão | [Permissões](12-permissoes.md) |
-| DP08 | Política de exclusão, retenção, exportação e histórico | [Dados](08-modelo-de-dados.md) |
+| DP07 | Dono ativo edita próprias fichas e mestre todas; até 20 por dono/campanha adotados. Concessões individuais futuras | [Decisão 005](architecture/decisions/005-personagens-e-fichas.md) |
+| DP08 | Retenção de ficha após remoção adotada na decisão 005; demais exclusões, retenção, exportação e histórico pendentes | [Dados](08-modelo-de-dados.md) |
 | DP09 | Limites e metas de desempenho, disponibilidade, RPO e RTO | [Requisitos não funcionais](03-requisitos-nao-funcionais.md) |
 | DP10 | Idiomas, classificação indicativa, moderação e conteúdo proibido | [Visão](01-visao-do-produto.md) |
 | DP11 | Anotações, mensagens privadas e informações expostas a espectadores | [Interface](13-interface.md) e [WebSocket](10-websocket.md) |

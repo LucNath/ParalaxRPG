@@ -22,6 +22,7 @@ model User {
   campaignMemberships CampaignMember[]
   sentInvitations CampaignInvitation[] @relation("Inviter")
   receivedInvitations CampaignInvitation[] @relation("Recipient")
+  characters Character[]
 }
 
 model Profile {
@@ -78,6 +79,7 @@ model SystemVersion {
   createdAt DateTime @default(now())
   system RpgSystem @relation(fields: [systemId], references: [id], onDelete: Cascade)
   campaigns Campaign[]
+  characters Character[]
   @@unique([systemId, number])
 }
 
@@ -112,6 +114,8 @@ model Campaign {
   changes CampaignChange[]
   members CampaignMember[]
   invitations CampaignInvitation[]
+  characters Character[]
+  @@unique([id, systemVersionId])
   @@index([ownerId, updatedAt])
   @@index([visibility, updatedAt])
   @@index([systemVersionId])
@@ -170,4 +174,37 @@ model CampaignInvitation {
   recipient User @relation("Recipient", fields: [recipientId], references: [id], onDelete: Cascade)
   @@index([recipientId, createdAt])
   @@index([campaignId, createdAt])
+}
+
+model Character {
+  id String @id @default(uuid())
+  ownerId String
+  campaignId String
+  systemVersionId String
+  name String
+  description String @default("")
+  story String @default("")
+  level Int?
+  values Json
+  revision Int @default(1)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  campaign Campaign @relation(fields: [campaignId, systemVersionId], references: [id, systemVersionId], onDelete: Cascade)
+  systemVersion SystemVersion @relation(fields: [systemVersionId], references: [id], onDelete: NoAction)
+  changes CharacterChange[]
+  @@index([ownerId, updatedAt])
+  @@index([campaignId, updatedAt])
+  @@index([systemVersionId])
+}
+
+model CharacterChange {
+  id String @id @default(uuid())
+  characterId String
+  actorId String
+  revision Int
+  snapshot Json
+  createdAt DateTime @default(now())
+  character Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
+  @@unique([characterId, revision])
 }

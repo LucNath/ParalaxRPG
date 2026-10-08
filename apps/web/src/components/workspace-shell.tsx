@@ -16,7 +16,7 @@ export function WorkspaceShell({ children }: { children: React.ReactNode }) {
   const [leaving, setLeaving] = useState(false);
   const [error, setError] = useState('');
   const campaignPath = path.startsWith('/campanhas');
-  const locationLabel = campaignPath ? path === '/campanhas' ? 'Campanhas' : path === '/campanhas/nova' ? 'Nova campanha' : path.endsWith('/editar') ? 'Editar' : 'Campanha' : path === '/convites' ? 'Convites' : path === '/perfil' ? 'Meu perfil' : path === '/sistemas' ? 'Sistemas' : path === '/sistemas/novo' ? 'Novo sistema' : path.startsWith('/sistemas/') ? 'Editar' : 'Início';
+  const locationLabel = path.startsWith('/personagens') ? path === '/personagens' ? 'Personagens' : path.endsWith('/editar') ? 'Editar ficha' : 'Ficha' : campaignPath ? path.includes('/personagens') ? path.endsWith('/novo') ? 'Novo personagem' : 'Personagens' : path === '/campanhas' ? 'Campanhas' : path === '/campanhas/nova' ? 'Nova campanha' : path.endsWith('/editar') ? 'Editar' : 'Campanha' : path === '/convites' ? 'Convites' : path === '/perfil' ? 'Meu perfil' : path === '/sistemas' ? 'Sistemas' : path === '/sistemas/novo' ? 'Novo sistema' : path.startsWith('/sistemas/') ? 'Editar' : 'Início';
   useEffect(() => { if (!loading && !user && !initializationError) router.replace('/entrar'); }, [loading, user, initializationError, router]);
   if (loading) return <main id="conteudo" className="center-state" role="status"><Brand /><p>Abrindo seu espaço...</p></main>;
   if (initializationError) return <main id="conteudo" className="center-state"><Brand /><p role="alert">{initializationError}</p><button className="button" onClick={retry}>Tentar novamente</button></main>;
@@ -34,7 +34,8 @@ export function WorkspaceShell({ children }: { children: React.ReactNode }) {
         <Link href="/sistemas" className={path.startsWith('/sistemas') ? 'selected' : ''} aria-current={path.startsWith('/sistemas') ? 'page' : undefined}><Sparkles size={21} /><span>Sistemas</span></Link>
         <Link href="/campanhas" className={path.startsWith('/campanhas') ? 'selected' : ''} aria-current={path.startsWith('/campanhas') ? 'page' : undefined}><BookOpen size={21} /><span>Campanhas</span></Link>
         <Link href="/convites" className={path === '/convites' ? 'selected' : ''} aria-current={path === '/convites' ? 'page' : undefined}><Mail size={21} /><span>Convites</span></Link>
-        {[{ icon: Compass, label: 'Explorar' }, { icon: Users, label: 'Personagens' }].map(({ icon: Icon, label }) => <div key={label} className="nav-upcoming" aria-label={`${label}: em desenvolvimento`}><Icon size={21} /><span>{label}</span><span className="nav-tooltip">Em desenvolvimento</span></div>)}
+        <Link href="/personagens" className={`character-nav-link ${path.startsWith('/personagens') ? 'selected' : ''}`} aria-current={path.startsWith('/personagens') ? 'page' : undefined}><Users size={21} /><span>Personagens</span></Link>
+        <div className="nav-upcoming" aria-label="Explorar: em desenvolvimento"><Compass size={21} /><span>Explorar</span><span className="nav-tooltip">Em desenvolvimento</span></div>
       </nav>
       <div className="sidebar-bottom"><Link href="/perfil" className={path === '/perfil' ? 'selected' : ''} aria-current={path === '/perfil' ? 'page' : undefined} aria-label="Meu perfil"><UserRound size={21} /><span>Perfil</span></Link><button className="icon-button" onClick={leave} disabled={leaving} aria-label="Sair da conta" title="Sair da conta"><LogOut size={20} /></button></div>
     </aside>

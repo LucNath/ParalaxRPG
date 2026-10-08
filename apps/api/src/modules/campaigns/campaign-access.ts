@@ -10,8 +10,8 @@ export function campaignAccess(userId: string): Prisma.CampaignWhereInput {
 }
 // Every mutation affecting membership or capacity takes this same row lock first.
 export async function lockCampaign(db: Prisma.TransactionClient, id: string, ownerId?: string) {
-  const rows = await db.$queryRaw<{ id: string; ownerId: string; maxPlayers: number; status: string }[]>(Prisma.sql`
-    SELECT "id", "ownerId", "maxPlayers", "status" FROM "Campaign"
+  const rows = await db.$queryRaw<{ id: string; ownerId: string; systemVersionId: string; maxPlayers: number; status: string }[]>(Prisma.sql`
+    SELECT "id", "ownerId", "systemVersionId", "maxPlayers", "status" FROM "Campaign"
     WHERE "id" = ${id} ${ownerId ? Prisma.sql`AND "ownerId" = ${ownerId}` : Prisma.empty} FOR UPDATE`);
   if (!rows[0]) throw new NotFoundException();
   return rows[0];

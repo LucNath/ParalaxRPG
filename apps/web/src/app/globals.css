@@ -594,3 +594,24 @@ svg { flex-shrink: 0; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
 }
+
+.character-form { border: 0; margin: 0; padding: 0; min-width: 0; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px; align-items: start; }
+.character-fields { display: grid; gap: 20px; margin-block: 24px; min-width: 0; }
+.character-form .character-fields { margin: 0; }
+.character-number { font-size: 26px; color: var(--accent-text); }
+.character-value label { overflow-wrap: anywhere; }
+.character-list-body { padding: 22px; }
+.character-cards { display: grid; gap: 12px; }
+.character-card { display: flex; justify-content: space-between; gap: 16px; padding: 18px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface-soft); min-width: 0; }
+.character-card>div { min-width: 0; }
+.character-card h3 { margin: 0 0 8px; font-size: 17px; overflow-wrap: anywhere; }
+.character-card p { margin: 6px 0; overflow-wrap: anywhere; }
+.character-card-description { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font-size: 13px; }
+.character-card small { color: var(--muted); overflow-wrap: anywhere; }
+.campaign-characters { margin-block: 24px; }
+@media (max-width: 650px) {
+  .sidebar .side-nav .character-nav-link { display: none; }
+  .character-form { grid-template-columns: 1fr; gap: 18px; }
+  .character-list-body { padding: 18px; }
+  .character-card { padding: 14px; }
+}

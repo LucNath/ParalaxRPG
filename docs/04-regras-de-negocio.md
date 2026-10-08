@@ -15,6 +15,8 @@ As regras marcadas como **origem** vêm do anexo. As **derivadas** explicitam co
 
 No MVP 1, o editor define atributos, perícias, recursos e dados. Fórmulas como `Vida Máxima = Constituição * 5 + Nível * 10`, `Defesa = 10 + Destreza + Armadura` e `Ataque = 1d20 + Força + Proficiência` são exemplos futuros, não linguagem de programação já especificada.
 
+Fichas persistidas seguem a [decisão 005](architecture/decisions/005-personagens-e-fichas.md): criador da sessão como dono, versão fixa da campanha, até 20 fichas por dono/campanha, campos exatos e valores inteiros validados contra essa versão. Só dono ativo e mestre leem/editam. Remoção preserva fichas para o mestre; reingresso restaura acesso. Nível é opcional, sem impor progressão a sistemas que não o usam. Campanhas Finalizada/Cancelada não recebem fichas novas, mas permitem edição das existentes.
+
 ## Campanhas e membros
 
 | ID | Regra | Natureza |

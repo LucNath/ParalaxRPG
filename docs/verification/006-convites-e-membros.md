@@ -1,5 +1,7 @@
 # Verificação 006 — Convites e membros
 
+Registro histórico desta entrega. Personagens e fichas foram implementados depois, na [decisão 005](../architecture/decisions/005-personagens-e-fichas.md) e [verificação 007](007-personagens-e-fichas.md).
+
 Entrega de 7 de outubro de 2026. História: o mestre convida uma conta existente; o destinatário responde, ingressa conforme a capacidade e consulta as regras privadas; remoção encerra esse acesso. Políticas na [decisão 004](../architecture/decisions/004-convites-e-membros.md).
 
 ## Entrega

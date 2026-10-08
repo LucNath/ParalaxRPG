@@ -59,9 +59,9 @@ Escala: texto de formulário 13px, labels 12px, corpo 13–14px, título de card
 | Campanha privada | Papel do usuário, regras fixas, lista de membros e ocupação; formulário de convite e remoção/revogação só para o mestre |
 | Convites | Cards com mestre, campanha, status e validade; aceitar/recusar, erros de lotação e histórico paginado |
 
-No desktop, navegação global de 96px com ícone e rótulo. Início, Sistemas, Campanhas, Convites e Perfil são links reais; Explorar/Personagens são indicações indisponíveis com explicação de desenvolvimento. No celular, barra inferior com Início, Sistemas, Campanhas, Convites, Perfil e saída; itens futuros são omitidos. O cabeçalho oferece breadcrumbs e acesso ao perfil público. Configurações terá entrada própria quando houver funcionalidade correspondente.
+No desktop, navegação global de 96px com ícone e rótulo. Início, Sistemas, Campanhas, Convites e Perfil são links reais; Personagens é link real; Explorar permanece indisponível com explicação de desenvolvimento. No celular, barra inferior com Início, Sistemas, Campanhas, Convites, Perfil e saída; itens futuros são omitidos. A lista de fichas é acessível pelo card Seus personagens no dashboard e pela campanha, mantendo os seis controles da barra dentro de 320 px. O cabeçalho oferece breadcrumbs e acesso ao perfil público. Configurações terá entrada própria quando houver funcionalidade correspondente.
 
-“Conhecer campanhas” na landing leva à listagem implementada no painel; leitura de apresentações públicas por link dispensa login. “Conhecer a Paralax” continua levando à apresentação na mesma página. Convites usam o painel autenticado; personagens e sessões permanecem futuros.
+“Conhecer campanhas” na landing leva à listagem implementada no painel; leitura de apresentações públicas por link dispensa login. “Conhecer a Paralax” continua levando à apresentação na mesma página. Convites usam o painel autenticado; personagens/fichas têm leitura privada e edição pelo dono ativo/mestre; sessões permanecem futuras.
 
 ## Base de componentes
 
@@ -78,7 +78,9 @@ Já disponíveis: `Brand`, `Avatar`, `Badge` (neutro, destaque, sucesso), `Empty
 | Feedback | Status de sucesso e alert de erro anunciados por leitores de tela |
 | Navegação | Link semântico, `aria-current`, foco visível, saída como botão |
 
-A próxima expansão adicionará Switch, Tabs genéricos, Dropdown, Modal/Dialog, Tooltip acessível, Toast, CommandMenu, ContextMenu e Skeleton conforme surgirem fluxos reais. Cards de sistema e barras de recurso já têm implementação nas telas atuais, ainda sem componentes genéricos próprios. Componentes futuros de RPG: CampaignCard, CharacterCard, SessionCard, DiceRollMessage, InitiativeTracker, MapToolbar e PermissionBadge. O catálogo é planejamento; componentes não implementados não devem ser tratados como disponíveis.
+A próxima expansão adicionará Switch, Tabs genéricos, Dropdown, Modal/Dialog, Tooltip acessível, Toast, CommandMenu, ContextMenu e Skeleton conforme surgirem fluxos reais. Cards de sistema e barras de recurso já têm implementação nas telas atuais, ainda sem componentes genéricos próprios. Componentes futuros de RPG: CampaignCard, SessionCard, DiceRollMessage, InitiativeTracker, MapToolbar e PermissionBadge. O catálogo é planejamento; componentes não implementados não devem ser tratados como disponíveis.
+
+Fichas atuais mostram identidade/história e seções de atributos, perícias e recursos da versão fixa, sem campos de regras adicionais. Cards de personagens usam dados persistidos, com vazio, busca, paginação e recuperação. Números reais aparecem na leitura; padrões pertencem apenas à criação.
 
 ## Padrões das próximas telas
 

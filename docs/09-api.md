@@ -83,6 +83,24 @@ Listas têm 20 itens por página, `page` 1–10000 e ordenação por criação d
 
 Entrada inválida/convite para si/remoção do mestre: 400. Falta de sessão: 401. Recurso privado, convite alheio ou conta inexistente: 404. Conflitos 409 incluem `INVITATION_PENDING`, `ALREADY_CAMPAIGN_MEMBER`, `INVITATION_LIMIT`, `INVITATION_EXPIRED`, `INVITATION_ALREADY_RESOLVED`, `CAMPAIGN_FULL` e `CAMPAIGN_CLOSED`. Falta de vaga mantém o convite pendente. Aceite repetido enquanto membro ativo, recusa repetida, revogação repetida e remoção repetida são idempotentes. Reingresso após remoção exige novo convite.
 
+## Contrato implementado — personagens
+
+Prefixo `/api/v1`, Bearer, UUID v4 e `Cache-Control: no-store`. Schemas estritos em contracts.
+
+| Rota | Entrada/saída | Acesso |
+| --- | --- | --- |
+| `GET /characters/mine` | page/search; CharactersPage | Próprias fichas com acesso atual |
+| `GET /campaigns/:id/characters` | page/search; CharactersPage | Mestre: todas; jogador ativo: próprias |
+| `POST /campaigns/:id/characters` | name, description, story, level e values opcional; CharacterDetail, 201 | Cria para o titular; mestre/jogador ativo; campanha aberta |
+| `GET /characters/:id` | CharacterDetail | Dono ativo ou mestre |
+| `PUT /characters/:id` | Metadados, values completos, expectedRevision; CharacterDetail | Dono ativo ou mestre |
+
+level é null ou inteiro positivo. values tem arrays attributes/skills/resources com `{fieldId,value}`, todos os campos da versão fixa uma vez. Sem values na criação, o servidor aplica defaults. Identidade, campanha e versão não são campos de entrada. Recursos respeitam máximo da versão e não podem ser negativos. PUT é substituição completa, com revisão otimista e histórico transacional.
+
+Listas têm 20 itens, page 1–10000, search até 80, ordenação atualização/id. Resumos incluem dono/campanha/sistema e apresentação, omitindo história, valores, definição e e-mail. Detalhe autorizado inclui definition, values, systemVersionId e canEdit.
+
+Sessão ausente: 401. Conteúdo inacessível: 404. Payload inválido: 400; valores divergentes da definição: CHARACTER_VALUES_INVALID. Conflitos 409: CHARACTER_REVISION_CONFLICT, CHARACTER_LIMIT (20 por dono/campanha), CHARACTER_CAMPAIGN_CLOSED. Remoção revoga acesso sem apagar fichas. Não há PATCH, DELETE, transferência ou rota pública de personagens. Veja a [decisão 005](architecture/decisions/005-personagens-e-fichas.md).
+
 ## Rotas de origem
 
 | Método e rota | Operação | Autorização esperada |

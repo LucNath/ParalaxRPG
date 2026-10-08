@@ -53,8 +53,8 @@ ADMIN não recebeu poderes detalhados no anexo. Não pressupor acesso irrestrito
 | Convidar, aceitar solicitações e remover membros | Sim | A definir | Não | Não |
 | Criar/iniciar/encerrar sessão | Sim | A definir | Não | Não |
 | Alterar visibilidade da campanha/sessão | Sim | A definir | Não | Não |
-| Criar personagem | Sim, conforme módulo | A definir | Condicional, na própria campanha | Não |
-| Editar ficha própria | Sim | A definir | Conforme permissão | Não |
+| Criar personagem | Próprio, até 20 por campanha aberta | A definir | Próprio, ativo, até 20 por campanha aberta | Não |
+| Editar ficha própria | Sim | A definir | Sim, enquanto ativo | Não |
 | Editar fichas dos jogadores | Sim, como administração | A definir | Somente com concessão específica futura | Não |
 | Enviar chat de participante | Sim, em estado permitido | Condicional | Condicional | Não no MVP 1 |
 | Rolar dados | Sim, em estado permitido | Condicional | Condicional | Não |
@@ -66,6 +66,10 @@ ADMIN não recebeu poderes detalhados no anexo. Não pressupor acesso irrestrito
 | Controlar permissões individuais | Sim, no escopo da campanha | A definir | Não | Não |
 
 OWNER é o responsável administrativo. A origem não distingue em detalhe OWNER e GM em ações destrutivas; a restrição de exclusão ao OWNER acima é proposta. Não tratar a matriz como autorização pronta para ASSISTANT_GM sem resolver a política.
+
+## Fichas implementadas
+
+A [decisão 005](architecture/decisions/005-personagens-e-fichas.md) adota o padrão de DP07: jogador ativo consulta/edita apenas suas fichas; mestre consulta/edita todas da própria campanha. Ambos criam personagens próprios, até 20 por usuário/campanha. Não há leitura entre jogadores, publicação de ficha ou concessão individual. Remoção revoga acesso e conserva a ficha para o mestre; novo ingresso restaura o acesso do dono.
 
 ## Permissões individuais
 
@@ -79,7 +83,7 @@ A origem exemplifica: editar personagem, mover token, criar item, ver NPC secret
 | `npc.viewSecret` | NPCs concedidos ou escopo explicitamente definido |
 | `npc.control` | NPCs concedidos ou escopo explicitamente definido |
 
-Proposta: negar por padrão ações administrativas para jogadores; conceder edição/movimento apenas quando definidos pelo Mestre. Defaults exatos de edição são DP07. Concessões devem especificar ação e recurso, podendo ter alvo individual em vez de abrir todos os NPCs secretos.
+Ações administrativas seguem negadas a jogadores. Edição de ficha própria está concedida por padrão na decisão 005; movimento e concessões individuais continuam propostas. Concessões futuras devem especificar ação e recurso, podendo ter alvo individual em vez de abrir todos os NPCs secretos.
 
 ## Avaliação proposta de acesso
 
