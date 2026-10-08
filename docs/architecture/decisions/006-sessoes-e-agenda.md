@@ -8,7 +8,7 @@ Cada GameSession pertence a uma campanha. O mestre vem de Campaign.ownerId, sem 
 
 Título tem 2–120 caracteres, descrição até 4000, scheduledAt é um instante ISO com offset e timeZone é um fuso IANA válido. A API normaliza o instante para UTC e conserva o fuso; a interface mostra ambos na agenda. A faixa técnica é 2000–2100. Datas passadas são permitidas; o início é manual, sem job automático. Horários locais inexistentes ou ambíguos por mudança de horário são recusados pela conversão do editor: escolher outro horário ou UTC. Edição sem mudar horário/fuso conserva o instante original.
 
-Campanhas Finalizada/Cancelada bloqueiam criação, edição e início de agendas, mas permitem encerrar uma sessão ao vivo ou cancelar uma agenda existente. A campanha não muda de estado automaticamente. Há até 100 sessões AGENDADAS por campanha; finalizar/cancelar conserva histórico e libera a cota. Arquivamento e retenção gerais continuam futuros.
+Campanhas Finalizada/Cancelada bloqueiam criação, edição e início de agendas, mas permitem encerrar uma sessão ao vivo ou cancelar uma agenda existente. A campanha não muda de estado automaticamente. Há até 100 sessões AGENDADAS por campanha; iniciar/cancelar libera essa cota. Encontros finalizados/cancelados conservam histórico. Arquivamento e retenção gerais continuam futuros.
 
 ## Estados e concorrência
 
