@@ -30,3 +30,5 @@ Profile.allCosmeticsUnlocked, default false e indisponível via HTTP, permite si
 Check final aprovado: tipos e 67 testes de integração. Nenhuma alteração de interface ou nova dependência nesta extensão.
 
 Backup antes da nona migration: `.artifacts/backups/before-owner-access-1791481474557.dump`, 53.456 bytes, formato/manifesto conferidos. Migration 20261008040000_cosmetic_access aplicada no Neon; liberação ativada exclusivamente para a conta indicada pelo usuário, conferida por identidade exata. Os quatro itens foram adicionados sem mudar aparência, avatar, biografia ou conquistas. Dados pessoais e seleções anteriores conferidos.
+
+API publicada em `dpl_7xfdRm4FthQMdSivjT4KW5B3Kam2`, código `0656060`, READY e alias atualizado. Teste HTTP online com contas temporárias confirmou ativação administrativa, equipar antes de abrir coleção, sincronização/reposição, conquistas reais preservadas, privacidade e negação para conta comum. Contas temporárias removidas e ausência conferida; somente a conta solicitante manteve liberação permanente. A conta solicitante e sua coleção completa foram conferidas diretamente no Neon, sem alterar sua seleção.
