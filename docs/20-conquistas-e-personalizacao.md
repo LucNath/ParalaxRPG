@@ -1,6 +1,6 @@
 # 20 — Conquistas e personalização do perfil
 
-Solicitação do usuário em 8 de outubro de 2026. Status: primeiro recorte estático implementado, conforme a [decisão 008](architecture/decisions/008-conquistas-e-cosmeticos.md). Há quatro conquistas por marcos de uso, coleção privada, prévia e seleção de fundo/borda no perfil público. Animações e marcos de sessões permanecem futuros. Evidências na [verificação 011](verification/011-conquistas-e-cosmeticos.md). O desenho inicial abaixo registra também as extensões propostas, sem afirmar que já estão disponíveis.
+Solicitação do usuário em 8 de outubro de 2026. Status: recorte estático e expansão animada implementados, conforme a [decisão 008](architecture/decisions/008-conquistas-e-cosmeticos.md). Há quatro conquistas por marcos de uso, coleção privada, prévia e seleção de fundo/borda no perfil público. Duas paisagens e duas bordas animadas ampliam o catálogo para oito itens: [artes e recompensas](animated-profile-cosmetics.md). Marcos de sessões permanecem futuros. Evidências na [verificação 011](verification/011-conquistas-e-cosmeticos.md). O desenho inicial abaixo registra também as extensões propostas, sem afirmar que já estão disponíveis.
 
 ## Experiência solicitada
 
@@ -29,7 +29,7 @@ A conquista pertence à conta do usuário, independentemente do personagem usado
 | Além do portal | Marco de participação a definir | Fundo com portal animado |
 | Histórias compartilhadas | Marco de sessões concluídas a definir | Borda animada com runas |
 
-As quatro primeiras condições foram adotadas na decisão 008: biografia/avatar, criação de ficha, criação de campanha e primeira rolagem válida. Não há classificação de raridade. As duas condições animadas continuam propostas. Feitos como vitória, crítico ou conclusão de aventura dependem de regras do sistema e evidências que o produto ainda não registra. Um d20 máximo não significa crítico em todo sistema de RPG.
+As quatro primeiras condições foram adotadas na decisão 008: biografia/avatar, criação de ficha, criação de campanha e primeira rolagem válida. Não há classificação de raridade. As duas condições adicionais continuam propostas; os itens animados atuais são concedidos pelos quatro marcos existentes. Feitos como vitória, crítico ou conclusão de aventura dependem de regras do sistema e evidências que o produto ainda não registra. Um d20 máximo não significa crítico em todo sistema de RPG.
 
 Para contar sessões concluídas, definir primeiro o que comprova participação: estar na campanha no encerramento, entrar efetivamente na sessão ou ter ações válidas são critérios diferentes. Não inferir presença de um membro só porque ele recebeu convite. Limiares e prevenção de sessões artificiais precisam ser definidos antes de liberar recompensas por contagem.
 
@@ -84,12 +84,12 @@ Critérios de saída: itens bloqueados não equipáveis por chamada direta; reco
 
 ## Decisões pendentes
 
-- Prioridade das animações em relação ao chat e tempo real; recorte estático antecipado por solicitação do usuário.
+- Novas condições de obtenção relacionadas ao chat e tempo real.
 - Ampliação do catálogo e desafios de jogo; os quatro marcos iniciais estão na decisão 008.
 - Catálogo e arte vinculados às próximas recompensas.
 - Retroatividade de condições futuras; marcos iniciais concedidos a partir de fatos existentes.
 - Evidência de participação/conclusão de sessão e limites para marcos cumulativos.
 - Distintivos públicos opcionais: seleção e quantidade.
-- Formato final, orçamento de mídia e processo de geração das animações.
+- Novos formatos de loops em vídeo/GIF; a expansão atual usa WebP/SVG com movimento em CSS.
 
 Origem: pedido adicional do usuário, relacionado a RF003 e às conquistas previstas nas seções 15–16/49 da especificação. Não altera a numeração RF001–RF025 nem declara concluído o módulo social do MVP 4.

@@ -72,7 +72,7 @@ HU05 inclui publicação de sistemas, requisito geral cujo recorte de primeira e
 | HU30 | Como usuário, quero escolher fundos e bordas da minha coleção | Prévia, seleção independente, remoção e persistência; chamadas diretas não equipam itens bloqueados ou de outra categoria |
 | HU31 | Como visitante, quero ver o perfil personalizado | Aparência pública correta, sem progresso/evidências privadas; animações têm pausa e alternativa estática |
 
-HU29/HU30 e a aparência estática de HU31 implementadas no recorte da [decisão 008](architecture/decisions/008-conquistas-e-cosmeticos.md). Animações seguem futuras, com condições e catálogo de expansão em [20](20-conquistas-e-personalizacao.md). Não promove os demais recursos sociais do MVP 4.
+HU29/HU30 e a aparência estática de HU31 implementadas no recorte da [decisão 008](architecture/decisions/008-conquistas-e-cosmeticos.md). Animações de fundo/borda disponíveis com pausa e movimento reduzido: [expansão](animated-profile-cosmetics.md). Marcos cumulativos seguem futuros em [20](20-conquistas-e-personalizacao.md). Não promove os demais recursos sociais do MVP 4.
 
 ## Ordem e definição de pronto
 

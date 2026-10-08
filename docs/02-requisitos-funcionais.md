@@ -57,7 +57,7 @@ Não foram criados novos números RF para estas funcionalidades. Elas permanecem
 
 ## Ampliação solicitada: conquistas cosméticas
 
-Em 8 de outubro de 2026, o usuário solicitou conquistas que desbloqueiam fundos e bordas de avatar estáticos/animados. O recorte estático amplia RF003: quatro marcos de uso, concessão persistente, coleção, prévia e seleção no perfil público, conforme a [decisão 008](architecture/decisions/008-conquistas-e-cosmeticos.md). Fundos/bordas animados e marcos cumulativos permanecem futuros. Veja [20 — Conquistas e personalização](20-conquistas-e-personalizacao.md).
+Em 8 de outubro de 2026, o usuário solicitou conquistas que desbloqueiam fundos e bordas de avatar estáticos/animados. O recorte estático amplia RF003: quatro marcos de uso, concessão persistente, coleção, prévia e seleção no perfil público, conforme a [decisão 008](architecture/decisions/008-conquistas-e-cosmeticos.md). Fundos e bordas animados implementados na [expansão do catálogo](animated-profile-cosmetics.md); marcos cumulativos permanecem futuros. Veja [20 — Conquistas e personalização](20-conquistas-e-personalizacao.md).
 
 ## Validação transversal
 

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none">
+  <defs><linearGradient id="ember" x1="15" y1="12" x2="108" y2="115" gradientUnits="userSpaceOnUse"><stop stop-color="#ffe8a5"/><stop offset=".4" stop-color="#f6af47"/><stop offset=".7" stop-color="#e54f36"/><stop offset="1" stop-color="#ffd07b"/></linearGradient></defs>
+  <circle cx="64" cy="64" r="57" stroke="#5b2117" stroke-width="6"/>
+  <circle cx="64" cy="64" r="57" stroke="url(#ember)" stroke-width="2.5"/>
+  <circle cx="64" cy="64" r="53" stroke="#ffd188" stroke-opacity=".7" stroke-dasharray="14 7"/>
+  <path d="M64 1 69 7 67 13 61 13 59 7Z M115 24 117 33 110 38 108 30Z M124 74 119 81 112 78 117 72Z M87 119 78 119 76 112 84 112Z M25 115 25 107 33 108 32 117Z M2 55 9 49 15 54 9 60Z M27 9 36 10 37 17 29 17Z" fill="url(#ember)"/>
+  <circle cx="106" cy="104" r="2.5" fill="#fff0c0"/><circle cx="20" cy="32" r="2" fill="#ff8e54"/>
+</svg>

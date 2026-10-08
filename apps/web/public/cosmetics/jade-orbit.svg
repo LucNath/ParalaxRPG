@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none">
+  <defs><linearGradient id="jade" x1="16" y1="20" x2="112" y2="108" gradientUnits="userSpaceOnUse"><stop stop-color="#baffda"/><stop offset=".4" stop-color="#2ee6be"/><stop offset=".75" stop-color="#158b9d"/><stop offset="1" stop-color="#a9fff1"/></linearGradient></defs>
+  <circle cx="64" cy="64" r="58" stroke="#073d39" stroke-width="5"/>
+  <circle cx="64" cy="64" r="58" stroke="url(#jade)" stroke-width="2"/>
+  <circle cx="64" cy="64" r="54" stroke="#8bffe0" stroke-opacity=".7" stroke-dasharray="23 9 2 9"/>
+  <path d="M64 1 70 7 64 13 58 7Z M121 58 127 64 121 70 115 64Z M64 115 70 121 64 127 58 121Z M7 58 13 64 7 70 1 64Z" fill="url(#jade)"/>
+  <circle cx="104" cy="23" r="3" fill="#d8ffeb"/><circle cx="23" cy="104" r="3" fill="#54eaca"/>
+</svg>

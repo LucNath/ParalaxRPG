@@ -30,7 +30,7 @@ describe('Conquistas e cosméticos com PostgreSQL real', { concurrency: false },
   it('conta nova mantém aparência padrão e catálogo privado; não aceita concessão pelo cliente', async () => {
     const actor = await register(); assert.equal(actor.user.background, null); assert.equal(actor.user.avatarFrame, null);
     const response = await request('/users/me/achievements', actor); assert.equal(response.headers.get('cache-control'), 'no-store'); const achievements = await response.json(); assert.equal(achievements.items.length, 4); assert.ok(achievements.items.every(item => item.progress === 0 && item.target === 1 && item.earnedAt === null));
-    const collection = await json('/users/me/cosmetics', actor, 'GET', undefined, 200); assert.equal(collection.items.length, 4); assert.ok(collection.items.every(item => !item.unlocked));
+    const collection = await json('/users/me/cosmetics', actor, 'GET', undefined, 200); assert.equal(collection.items.length, 8); assert.ok(collection.items.every(item => !item.unlocked));
     for (const route of ['/users/me/achievements', '/users/me/cosmetics']) assert.equal((await request(route)).status, 401);
     for (const data of [{ earnedAt: new Date().toISOString() }, { achievementId: 'first-roll' }, { userId: actor.user.id, backgroundId: null }, { backgroundId: 'https://example.test/fake.webp' }]) assert.equal((await request('/users/me', actor, 'PATCH', data)).status, 400);
     assert.equal((await request('/users/me/achievements', actor, 'POST', { achievementId: 'identity' })).status, 404);
@@ -46,7 +46,7 @@ describe('Conquistas e cosméticos com PostgreSQL real', { concurrency: false },
     const rolls = await Promise.all(Array.from({ length: 3 }, () => json(`/sessions/${scheduled.id}/rolls`, actor, 'POST', input)));
     assert.ok(rolls.every(roll => roll.id === rolls[0].id)); await patch(actor, { bio: 'Uma história para contar.' }); await avatar(actor);
     const result = await json('/users/me/achievements', actor, 'GET', undefined, 200); assert.ok(result.items.every(item => item.progress === 1 && item.earnedAt));
-    assert.equal(await prisma.userAchievement.count({ where: { userId: actor.user.id } }), 4); assert.equal(await prisma.userCosmetic.count({ where: { userId: actor.user.id } }), 4);
+    assert.equal(await prisma.userAchievement.count({ where: { userId: actor.user.id } }), 4); assert.equal(await prisma.userCosmetic.count({ where: { userId: actor.user.id } }), 8);
   });
   it('avatar antes da biografia também libera identidade; remover a biografia não retira o item', async () => {
     const actor = await register(); await avatar(actor); assert.equal(await prisma.userAchievement.count({ where: { userId: actor.user.id } }), 0);
@@ -57,7 +57,7 @@ describe('Conquistas e cosméticos com PostgreSQL real', { concurrency: false },
   });
   it('itens bloqueados, de outra conta e da categoria errada são rejeitados sem alterar perfil', async () => {
     const owner = await register(), other = await register(); await campaign(owner);
-    for (const data of [{ backgroundId: 'floating-citadel' }, { avatarFrameId: 'dice-path' }, { avatarFrameId: 'floating-citadel' }, { backgroundId: 'missing' }]) assert.equal((await request('/users/me', other, 'PATCH', data)).status, 400);
+    for (const data of [{ backgroundId: 'jade-sanctuary' }, { avatarFrameId: 'ember-crown' }, { backgroundId: 'floating-citadel' }, { avatarFrameId: 'dice-path' }, { avatarFrameId: 'floating-citadel' }, { backgroundId: 'missing' }]) assert.equal((await request('/users/me', other, 'PATCH', data)).status, 400);
     assert.equal((await request('/users/me', owner, 'PATCH', { avatarFrameId: 'floating-citadel' })).status, 400);
     assert.equal((await json('/users/me', other, 'GET', undefined, 200)).background, null);
     await assert.rejects(prisma.profile.update({ where: { userId: other.user.id }, data: { backgroundId: 'floating-citadel' } }));
@@ -71,7 +71,7 @@ describe('Conquistas e cosméticos com PostgreSQL real', { concurrency: false },
     for (const forbidden of ['email','achievements','earnedAt','cosmetics','campaignId','progress','events']) assert.ok(!Object.hasOwn(publicUser, forbidden));
     const cleared = await patch(actor, { backgroundId: null }); assert.equal(cleared.background, null); assert.equal(cleared.avatarFrame.id, 'violet-portal');
     assert.equal((await patch(actor, { avatarFrameId: null })).avatarFrame, null);
-    assert.equal(await prisma.userCosmetic.count({ where: { userId: actor.user.id } }), 2);
+    assert.equal(await prisma.userCosmetic.count({ where: { userId: actor.user.id } }), 4);
   });
   it('concessão concorrente é única; rollback não deixa prêmio; exclusão cascata com itens equipados funciona', async () => {
     const actor = await register(); const mesa = await campaign(actor);
@@ -106,6 +106,19 @@ describe('Conquistas e cosméticos com PostgreSQL real', { concurrency: false },
       assert.equal((await client.query('SELECT * FROM "UserAchievement" WHERE "userId"=$1', ['newcomer'])).rowCount, 0);
       assert.equal((await client.query(`SELECT to_char("earnedAt", 'YYYY-MM-DD HH24:MI:SS') AS earned FROM "UserAchievement" WHERE "achievementId"=$1`, ['first-character'])).rows[0].earned, '2026-01-02 00:00:00');
       const profiles = (await client.query('SELECT "backgroundId", "avatarFrameId" FROM "Profile"')).rows; assert.ok(profiles.every(row => row.backgroundId === null && row.avatarFrameId === null));
+      await client.query(await readFile(resolve('prisma/migrations/20261008040000_cosmetic_access/migration.sql'), 'utf8'));
+      await client.query(`UPDATE "Profile" SET "backgroundId"='forest-refuge',"avatarFrameId"='dice-path' WHERE "userId"='veteran'; UPDATE "Profile" SET "allCosmeticsUnlocked"=true WHERE "userId"='newcomer'`);
+      const oldRewards = (await client.query('SELECT * FROM "UserCosmetic" ORDER BY "cosmeticId"')).rows;
+      await client.query('SET CONSTRAINTS ALL IMMEDIATE');
+      // Keep the migration inside this isolated test transaction so ROLLBACK removes the schema.
+      const expansion = (await readFile(resolve('prisma/migrations/20261008050000_animated_cosmetics/migration.sql'), 'utf8')).replace(/^BEGIN;\s*/, '').replace(/COMMIT;\s*$/, '');
+      await client.query(expansion); await client.query(expansion);
+      assert.equal((await client.query('SELECT * FROM "UserCosmetic" WHERE "userId"=$1', ['veteran'])).rowCount, 8);
+      assert.equal((await client.query('SELECT * FROM "UserCosmetic" WHERE "userId"=$1', ['newcomer'])).rowCount, 8);
+      assert.equal((await client.query('SELECT * FROM "UserAchievement" WHERE "userId"=$1', ['newcomer'])).rowCount, 0);
+      assert.deepEqual((await client.query('SELECT * FROM "UserCosmetic" WHERE "cosmeticId"=ANY($1::text[]) AND "userId"=$2 ORDER BY "cosmeticId"', [oldRewards.map(row => row.cosmeticId), 'veteran'])).rows, oldRewards);
+      assert.deepEqual((await client.query('SELECT "backgroundId","avatarFrameId" FROM "Profile" WHERE "userId"=$1', ['veteran'])).rows[0], { backgroundId: 'forest-refuge', avatarFrameId: 'dice-path' });
+      assert.equal((await client.query(`SELECT c."earnedAt"=a."earnedAt" AS same FROM "UserCosmetic" c JOIN "UserAchievement" a USING ("userId") WHERE c."cosmeticId"='jade-sanctuary' AND a."achievementId"='first-character'`)).rows[0].same, true);
     } finally { await client.query('ROLLBACK'); client.release(); await pool.end(); }
   });
   it('liberação permanente fica na conta, não altera conquistas e não pode ser ativada por HTTP', async () => {
@@ -113,7 +126,8 @@ describe('Conquistas e cosméticos com PostgreSQL real', { concurrency: false },
     assert.equal((await request('/users/me', actor, 'PATCH', { allCosmeticsUnlocked: true })).status, 400);
     await prisma.profile.update({ where: { userId: actor.user.id }, data: { allCosmeticsUnlocked: true } });
     // PATCH also grants a newly catalogued item without requiring a collection visit first.
-    assert.equal((await patch(actor, { backgroundId: 'floating-citadel', avatarFrameId: 'dice-path' })).background.id, 'floating-citadel');
+    const equipped = await patch(actor, { backgroundId: 'jade-sanctuary', avatarFrameId: 'ember-crown' });
+    assert.equal(equipped.background.animation, 'jade'); assert.equal(equipped.avatarFrame.animation, 'ember');
     let collection = await json('/users/me/cosmetics', actor, 'GET', undefined, 200); assert.ok(collection.items.every(item => item.unlocked));
     const original = await prisma.userCosmetic.findMany({ where: { userId: actor.user.id }, orderBy: { cosmeticId: 'asc' } });
     await json('/users/me/cosmetics', actor, 'GET', undefined, 200); assert.deepEqual(await prisma.userCosmetic.findMany({ where: { userId: actor.user.id }, orderBy: { cosmeticId: 'asc' } }), original);

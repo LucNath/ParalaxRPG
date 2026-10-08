@@ -5,7 +5,7 @@ import type { Prisma } from '../../generated/prisma/client';
 export async function grantAchievement(db: Prisma.TransactionClient, userId: string, achievementId: AchievementId) {
   const definition = achievementDefinitions.find(item => item.id === achievementId)!;
   await db.userAchievement.createMany({ data: [{ userId, achievementId }], skipDuplicates: true });
-  await db.userCosmetic.createMany({ data: [{ userId, cosmeticId: definition.cosmeticId }], skipDuplicates: true });
+  await db.userCosmetic.createMany({ data: definition.cosmeticIds.map(cosmeticId => ({ userId, cosmeticId })), skipDuplicates: true });
 }
 export async function grantIdentity(db: Prisma.TransactionClient, userId: string) {
   const profile = await db.profile.findUniqueOrThrow({ where: { userId }, select: { bio: true, avatarKey: true } });
@@ -25,7 +25,7 @@ export async function achievements(db: Prisma.TransactionClient, userId: string)
   return { items: achievementDefinitions.map(item => {
     const earnedAt = obtained.find(row => row.achievementId === item.id)?.earnedAt.toISOString() ?? null;
     return { id: item.id, name: item.name, description: item.description, earnedAt, progress: earnedAt ? 1 : 0, target: 1,
-      rewards: profileCosmetics.filter(cosmetic => cosmetic.id === item.cosmeticId) };
+      rewards: profileCosmetics.filter(cosmetic => (item.cosmeticIds as readonly string[]).includes(cosmetic.id)) };
   }) };
 }
 export async function cosmetics(db: Prisma.TransactionClient, userId: string): Promise<CosmeticsPage> {
@@ -35,5 +35,5 @@ export async function cosmetics(db: Prisma.TransactionClient, userId: string): P
     db.profile.findUniqueOrThrow({ where: { userId }, select: { backgroundId: true, avatarFrameId: true } }),
   ]);
   return { ...profile, items: profileCosmetics.map(item => ({ ...item, unlocked: owned.some(row => row.cosmeticId === item.id),
-    achievementId: achievementDefinitions.find(definition => definition.cosmeticId === item.id)!.id })) };
+    achievementId: achievementDefinitions.find(definition => (definition.cosmeticIds as readonly string[]).includes(item.id))!.id })) };
 }

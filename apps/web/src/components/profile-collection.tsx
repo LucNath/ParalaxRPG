@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Check, LockKeyhole, Sparkles, Trophy } from 'lucide-react';
 import { achievementDefinitions, profileCosmetics, type AchievementsPage, type CosmeticsPage, type CurrentUser } from '@paralax/contracts';
 import { useAuth } from './auth-provider';
-import { ProfileBanner, ProfilePortrait } from './profile-appearance';
+import { ProfileBanner, ProfilePortrait, ProfileMotion } from './profile-appearance';
 import { errorMessage } from '@/lib/api';
 
 export function ProfileCollection() {
@@ -56,10 +56,10 @@ export function ProfileCollection() {
         {data.cosmetics.items.filter(item => item.category === category).map(item => <label key={item.id} className={`cosmetic-option ${item.unlocked ? '' : 'locked'}`}>
           <span className={`cosmetic-art ${category === 'AVATAR_FRAME' ? 'frame-art' : ''}`}><img src={item.imageUrl} alt="" width={200} height={80} loading="lazy" /></span>
           <span className="cosmetic-label"><input type="radio" aria-label={item.name} name={category} value={item.id} disabled={!item.unlocked} checked={category === 'BACKGROUND' ? backgroundId === item.id : frameId === item.id} onChange={() => { setMessage(''); if (category === 'BACKGROUND') setBackground(item.id); else setFrame(item.id); }} /><span>{item.name}</span></span>
-          <small>{item.unlocked ? 'Desbloqueado' : `Bloqueado · ${achievementDefinitions.find(achievement => achievement.id === item.achievementId)?.name}`}</small>
+          <small>{item.animation ? 'Animado ? ' : ''}{item.unlocked ? 'Desbloqueado' : `Bloqueado · ${achievementDefinitions.find(achievement => achievement.id === item.achievementId)?.name}`}</small>
         </label>)}
       </fieldset>)}</div>
-      <h3>Prévia do perfil público</h3><div className="appearance-preview"><ProfileBanner background={preview.background} /><div className="appearance-preview-content"><ProfilePortrait user={preview} /><h3>{user.displayName}</h3><p className="muted">@{user.username}</p><p>{user.bio || 'Sua próxima história começa aqui.'}</p></div></div>
+      <h3>Prévia do perfil público</h3><div className="appearance-preview"><ProfileMotion animated={Boolean(preview.background?.animation || preview.avatarFrame?.animation)}><ProfileBanner background={preview.background} /><div className="appearance-preview-content"><ProfilePortrait user={preview} /><h3>{user.displayName}</h3><p className="muted">@{user.username}</p><p>{user.bio || 'Sua próxima história começa aqui.'}</p></div></ProfileMotion></div>
       <div className="form-actions"><span className="muted">Experimente e salve a combinação que combina com você.</span><button className="button" disabled={!dirty || saving} onClick={() => void save()}>{saving ? 'Salvando…' : 'Salvar personalização'}</button></div></> : null}
     </div>
   </section>;

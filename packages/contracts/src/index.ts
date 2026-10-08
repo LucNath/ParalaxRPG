@@ -39,18 +39,22 @@ export interface PublicProfile {
   avatarFrame: ProfileCosmetic | null;
 }
 
-export interface ProfileCosmetic { id: string; name: string; category: 'BACKGROUND' | 'AVATAR_FRAME'; imageUrl: string; position: string }
+export interface ProfileCosmetic { id: string; name: string; category: 'BACKGROUND' | 'AVATAR_FRAME'; imageUrl: string; position: string; animation?: 'jade' | 'ember' }
 export const profileCosmetics: readonly ProfileCosmetic[] = [
   { id: 'forest-refuge', name: 'Refúgio luminoso', category: 'BACKGROUND', imageUrl: '/art/luminous-forest.webp', position: 'center 55%' },
   { id: 'floating-citadel', name: 'Cidadela flutuante', category: 'BACKGROUND', imageUrl: '/art/floating-city.webp', position: 'center 48%' },
   { id: 'violet-portal', name: 'Portal violeta', category: 'AVATAR_FRAME', imageUrl: '/cosmetics/violet-portal.svg', position: 'center' },
   { id: 'dice-path', name: 'Caminho dos dados', category: 'AVATAR_FRAME', imageUrl: '/cosmetics/dice-path.svg', position: 'center' },
+  { id: 'jade-sanctuary', name: 'Santuário de jade', category: 'BACKGROUND', imageUrl: '/art/jade-sanctuary.webp', position: 'center 50%', animation: 'jade' },
+  { id: 'ember-citadel', name: 'Cidadela das brasas', category: 'BACKGROUND', imageUrl: '/art/ember-citadel.webp', position: 'center 50%', animation: 'ember' },
+  { id: 'jade-orbit', name: 'Órbita de jade', category: 'AVATAR_FRAME', imageUrl: '/cosmetics/jade-orbit.svg', position: 'center', animation: 'jade' },
+  { id: 'ember-crown', name: 'Coroa das brasas', category: 'AVATAR_FRAME', imageUrl: '/cosmetics/ember-crown.svg', position: 'center', animation: 'ember' },
 ];
 export const achievementDefinitions = [
-  { id: 'identity', name: 'Uma identidade na Paralax', description: 'Salve uma biografia e uma imagem de avatar.', cosmeticId: 'violet-portal' },
-  { id: 'first-character', name: 'Primeiro personagem', description: 'Crie sua primeira ficha de personagem.', cosmeticId: 'forest-refuge' },
-  { id: 'first-campaign', name: 'Primeira mesa', description: 'Crie sua primeira campanha.', cosmeticId: 'floating-citadel' },
-  { id: 'first-roll', name: 'Primeiros dados', description: 'Faça sua primeira rolagem em uma sessão ao vivo.', cosmeticId: 'dice-path' },
+  { id: 'identity', name: 'Uma identidade na Paralax', description: 'Salve uma biografia e uma imagem de avatar.', cosmeticIds: ['violet-portal', 'jade-orbit'] },
+  { id: 'first-character', name: 'Primeiro personagem', description: 'Crie sua primeira ficha de personagem.', cosmeticIds: ['forest-refuge', 'jade-sanctuary'] },
+  { id: 'first-campaign', name: 'Primeira mesa', description: 'Crie sua primeira campanha.', cosmeticIds: ['floating-citadel', 'ember-citadel'] },
+  { id: 'first-roll', name: 'Primeiros dados', description: 'Faça sua primeira rolagem em uma sessão ao vivo.', cosmeticIds: ['dice-path', 'ember-crown'] },
 ] as const;
 export type AchievementId = typeof achievementDefinitions[number]['id'];
 export interface AchievementItem { id: AchievementId; name: string; description: string; earnedAt: string | null; progress: 0 | 1; target: 1; rewards: ProfileCosmetic[] }
