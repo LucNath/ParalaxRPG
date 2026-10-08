@@ -15,4 +15,12 @@ Porta web padrão ocupada por outro aplicativo: testes deste incremento usaram l
 
 ## Publicação
 
-Resultados de publicação e conferência no ambiente online serão acrescentados após concluir.
+Migration aplicada no Neon PostgreSQL 18.6 após backup custom de 43.998 bytes, com cabeçalho e manifesto conferidos via `pg_restore --list`. Cópia local ignorada em `.artifacts/backups/before-dice-1791478032621.dump`; não foi realizado ensaio de restauração. O cliente PostgreSQL 18 recebeu os certificados CA necessários, mantendo `verify-full`. Os IDs anteriores de onze tabelas foram conferidos após a migration e preservados; sete migrations concluídas.
+
+Código publicado: `77fdf967684e10114e9eddd19cc3f5dff2aada44`. API `dpl_2oYsTjDSrLaSy7oy5yQjGdcxbSav` e web `dpl_3C66w8BkBrPHbZLGquCQb2Fy3NRw`, builds aprovados, estado READY e aliases `paralax-rpg-api.vercel.app` / `paralax-rpg-web.vercel.app` atualizados.
+
+Teste online com Chromium em desktop e Pixel 7, reduzido a 320 px durante o formulário ao vivo: duas contas por cenário, convite e aceite, ficha com perícia +7, rolagem 2d6 com adicional −3, resultado final com modificador +4 e soma conferida. Mestre recebeu o histórico e rolou 1d20−2, recebido pelo jogador. Reenvio do mesmo pedido retornou exatamente a primeira rolagem, sem nova linha. Encerramento bloqueou novas rolagens, recarga preservou as duas existentes e remoção do jogador eliminou o conteúdo privado da tela. Visitante anônimo viu somente a apresentação; endpoints de histórico/opções retornaram 401. SQL no Neon confirmou autor, campo, resultados, total e sequência.
+
+Capturas online desktop/móvel salvas em `.artifacts/online-*-rolagens*.png`; captura móvel ao vivo inspecionada, sem overflow e com logout visível. Sem erros JavaScript nas páginas. Contas sintéticas e seus dados associados removidos por IDs/e-mails/nomes exatos; ausência confirmada no banco.
+
+Consulta dos dois deployments após os testes, janela de uma hora: nenhum HTTP 500, nenhum registro web de nível error. API apresentou seis registros com aviso existente de depreciação de `sslmode` na inicialização do driver, todos associados a HTTP 200, sem falha de conexão. Portanto, não se afirma ausência de logs de erro da API. Os arquivos de logs ficam ignorados em `.artifacts/rolls-*.jsonl`.
