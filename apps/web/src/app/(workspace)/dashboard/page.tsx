@@ -2,9 +2,10 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import { ArrowRight, ArrowUpRight, BookOpen, Check, Compass, Sparkles, Users } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, BookOpen, Check, Sparkles, Users } from 'lucide-react';
 import { useAuth } from '@/components/auth-provider';
 import { Avatar } from '@/components/avatar';
+import { BrandMark } from '@/components/brand';
 import { Badge } from '@/components/ui/badge';
 import { SessionList } from '@/components/session-list';
 import { CampaignList } from '@/components/campaign-list';
@@ -22,7 +23,7 @@ export default function Dashboard() {
   ];
   return <>
     <div className="page-heading heading-with-action"><div><span className="eyebrow">BEM-VINDO AO SEU UNIVERSO</span><h1>Olá, {user.displayName.split(' ')[0]}.</h1><p>Seu ponto de partida para a próxima aventura.</p></div><Badge tone="accent">Seu espaço</Badge></div>
-    <section className="welcome-panel"><div className="welcome-panel-copy"><span className="eyebrow">{complete ? 'DÊ FORMA AO SEU UNIVERSO' : 'ANTES DA PRIMEIRA AVENTURA'}</span><h2>{complete ? 'Seu próximo mundo começa pelas regras.' : 'Toda grande história\ncomeça com uma identidade.'}</h2><p>{complete ? 'Crie atributos, perícias, recursos e dados. Seu sistema fica salvo e pronto para as próximas histórias.' : 'Escolha um avatar, compartilhe suas inspirações e prepare seu lugar na comunidade.'}</p><Link className="button" href={complete ? '/sistemas/novo' : '/perfil'}>{complete ? 'Criar meu sistema' : 'Completar meu perfil'} <ArrowRight size={18} /></Link></div><div className="welcome-mark" aria-hidden="true"><Compass size={100} strokeWidth={.8} /></div></section>
+    <section className="welcome-panel"><div className="welcome-panel-copy"><span className="eyebrow">{complete ? 'DÊ FORMA AO SEU UNIVERSO' : 'ANTES DA PRIMEIRA AVENTURA'}</span><h2>{complete ? 'Seu próximo mundo começa pelas regras.' : 'Toda grande história\ncomeça com uma identidade.'}</h2><p>{complete ? 'Crie atributos, perícias, recursos e dados. Seu sistema fica salvo e pronto para as próximas histórias.' : 'Escolha um avatar, compartilhe suas inspirações e prepare seu lugar na comunidade.'}</p><Link className="button" href={complete ? '/sistemas/novo' : '/perfil'}>{complete ? 'Criar meu sistema' : 'Completar meu perfil'} <ArrowRight size={18} /></Link></div><div className="welcome-mark" aria-hidden="true"><BrandMark size={128} /></div></section>
     <div className="dashboard-columns">
       <div className="dashboard-main">
         <section className="panel"><CampaignList compact refreshRevision={campaignRevision} /></section>

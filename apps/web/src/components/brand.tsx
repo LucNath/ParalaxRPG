@@ -1,9 +1,12 @@
 import Link from 'next/link';
-import { Compass } from 'lucide-react';
+import Image from 'next/image';
+
+export function BrandMark({ size = 44 }: { size?: number }) {
+  return <Image src="/brand/paralax-mark.svg" alt="" width={size} height={size} className="brand-mark" unoptimized loading="eager" />;
+}
 
 export function Brand({ compact = false }: { compact?: boolean }) {
   return <Link href="/" className="brand" aria-label="Paralax RPG — início">
-    <span className="brand-symbol"><Compass size={27} strokeWidth={1.5} aria-hidden="true" /></span>
-    {compact ? null : <span>PARALAX<span className="brand-sub">RPG</span></span>}
+    {compact ? <BrandMark /> : <Image src="/brand/paralax-logo.svg" alt="" width={180} height={40} className="brand-wordmark" unoptimized loading="eager" />}
   </Link>;
 }

@@ -51,9 +51,9 @@ svg { flex-shrink: 0; }
 .badge, .pill { display: inline-flex; align-items: center; width: fit-content; border: 1px solid #3A4353; border-radius: 6px; padding: 3px 8px; color: var(--muted); background: #A7B0BF08; font-size: 10px; line-height: 1.6; font-weight: 500; white-space: nowrap; }
 .badge-accent { color: var(--accent-text); background: #7C5CFC16; border-color: #7C5CFC40; }
 .badge-success { color: #72DDA4; background: #3CCB7F12; border-color: #3CCB7F38; }
-.brand { display: inline-flex; align-items: center; gap: 11px; line-height: 1; font-size: 17px; font-weight: 700; letter-spacing: .12em; }
-.brand-symbol { display: grid; place-items: center; color: var(--text); width: 39px; height: 39px; border: 1px solid #7C5CFC66; background: #7C5CFC20; border-radius: 10px; }
-.brand-sub { display: block; font-size: 8px; margin-top: 6px; color: var(--muted); letter-spacing: .36em; }
+.brand { display: inline-flex; align-items: center; flex-shrink: 0; line-height: 1; }
+.brand-mark { display: block; flex-shrink: 0; }
+.brand-wordmark { display: block; width: 180px; height: 40px; }
 
 /* Public entry: art provides fantasy; controls stay quiet and consistent. */
 .landing-header { height: 84px; max-width: 1360px; margin: auto; padding: 0 48px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
@@ -116,6 +116,8 @@ svg { flex-shrink: 0; }
 .small-rule { height: 2px; background: var(--mint); width: 38px; margin: 28px 0; }
 .auth-story-copy small, .auth-story-footer { font-size: 9px; color: #BBC4D3; letter-spacing: .14em; }
 .auth-form-panel { display: flex; flex-direction: column; padding: 44px 64px; }
+.auth-form-header { display: flex; flex-direction: column; align-items: flex-start; gap: 22px; }
+.auth-mobile-brand { display: none; }
 .back-link { color: var(--muted); font-size: 12px; width: fit-content; }
 .back-link:hover { color: var(--text); }
 .auth-form-inner { width: 100%; max-width: 390px; margin: auto; padding: 34px 0; }
@@ -503,8 +505,7 @@ svg { flex-shrink: 0; }
   .public-system-intro { padding: 25px; }
   .public-system-intro h1 { font-size: 29px; }
   .landing-header { height: 76px; padding: 0 22px; gap: 12px; }
-  .brand { font-size: 14px; gap: 9px; }
-  .brand-symbol { width: 34px; height: 34px; }
+  .brand-wordmark { width: 162px; height: 36px; }
   .landing-header nav { gap: 16px; font-size: 12px; }
   .landing-header .button-small { font-size: 11px; padding: 8px 10px; }
   .hero { min-height: 570px; align-items: flex-start; }
@@ -531,6 +532,7 @@ svg { flex-shrink: 0; }
   .landing-footer>a:last-child { font-size: 10px; }
   .auth-layout { grid-template-columns: 1fr; }
   .auth-story { display: none; }
+  .auth-mobile-brand { display: block; }
   .auth-form-panel { padding: 26px 24px; min-height: 100dvh; }
   .auth-form-inner { margin: auto; padding: 38px 0; }
   .auth-form-inner h2 { font-size: 29px; }
@@ -618,6 +620,11 @@ svg { flex-shrink: 0; }
 .public-sessions { padding-bottom: 45px; }
 .public-sessions .page-heading>.badge { display: inline-flex; }
 .session-list-heading .editor-actions { flex-wrap: wrap; }
+@media (max-width: 360px) {
+  .landing-header { padding-inline: 16px; }
+  .landing-header .brand-wordmark { width: 120px; height: auto; }
+  .landing-header nav { gap: 8px; }
+}
 @media (max-width: 650px) {
   .sidebar .side-nav .character-nav-link { display: none; }
   .character-form { grid-template-columns: 1fr; gap: 18px; }

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 128" width="576" height="128" role="img" aria-labelledby="title">
+  <title id="title">Paralax RPG</title>
+  <path fill="#F2F4F7" d="M17 37 45 21 85 44V74L60 89V110L50 116V81L74 67V52L46 36 34 43V104L17 94Z"/>
+  <path fill="#F2F4F7" d="M55 18 66 12 110 38V95L69 119V105L98 88V45Z"/>
+  <path fill="#F2F4F7" d="M50 48 72 61 50 74Z"/>
+  <g fill="#F2F4F7" fill-rule="evenodd" transform="translate(150 24)">
+    <path d="M0 0H34L44 10V30L34 40H12V64H0ZM12 12V28H29L32 25V15L29 12Z"/>
+    <path transform="translate(54)" d="M0 64 22 0H34L56 64H43L38 49H18L13 64ZM22 37H34L28 18Z"/>
+    <path transform="translate(118)" d="M0 0H34L44 10V30L32 40 46 64H32L17 40H12V64H0ZM12 12V28H29L32 25V15L29 12Z"/>
+    <path transform="translate(172)" d="M0 64 22 0H34L56 64H43L38 49H18L13 64ZM22 37H34L28 18Z"/>
+    <path transform="translate(236)" d="M0 0H12V52H42V64H0Z"/>
+    <path transform="translate(286)" d="M0 64 22 0H34L56 64H43L38 49H18L13 64ZM22 37H34L28 18Z"/>
+    <path transform="translate(350)" d="M0 0H15L28 21 41 0H56L35 32 56 64H41L28 43 15 64H0L21 32Z"/>
+  </g>
+  <g fill="#F2F4F7" fill-rule="evenodd" transform="translate(150 100) scale(.24)">
+    <path d="M0 0H34L44 10V30L32 40 46 64H32L17 40H12V64H0ZM12 12V28H29L32 25V15L29 12Z"/>
+    <path transform="translate(80)" d="M0 0H34L44 10V30L34 40H12V64H0ZM12 12V28H29L32 25V15L29 12Z"/>
+    <path transform="translate(160)" d="M44 14 34 0H10L0 10V54L10 64H34L44 54V30H24V42H32V49L29 52H15L12 49V15L15 12H29L32 15Z"/>
+  </g>
+</svg>

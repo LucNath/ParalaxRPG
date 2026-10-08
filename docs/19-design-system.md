@@ -41,7 +41,7 @@ Fonte executável: `apps/web/src/app/globals.css`, seção `:root`. CSS comparti
 
 O tom claro `--accent-text` é um detalhamento de implementação para legibilidade de links pequenos sobre fundos escuros. Botões primários usam texto escuro `#050608` no roxo-base/hover e branco no pressionado, para manter contraste de texto acima de 4,5:1 nesses estados. O roxo-base se concentra em ações, seleção e foco; não colore todas as áreas. Sucesso/erro incluem texto, além da cor. Vermelho ao vivo é reservado à transmissão quando implementada.
 
-Geist Sans é servido localmente pelo pacote `geist` e `next/font`, sem requisições a fontes externas em tempo de execução. UI, formulários e conteúdo usam a mesma família, incluindo sistemas. Cinzel fica reservado, conforme a origem, a títulos específicos de campanha/sistema; essa fonte ainda não foi adicionada. Ícones Lucide usam tamanhos 14–25px, com o símbolo da marca em SVG.
+Geist Sans é servido localmente pelo pacote `geist` e `next/font`, sem requisições a fontes externas em tempo de execução. UI, formulários e conteúdo usam a mesma família, incluindo sistemas. Cinzel fica reservado, conforme a origem, a títulos específicos de campanha/sistema; essa fonte ainda não foi adicionada. Ícones de interface usam Lucide em 14–25px. A marca própria usa um portal P em SVG e lettering desenhado em paths, substituindo a bússola provisória. [Kit de logos e favicon](design/logo-paralax.md).
 
 Escala: texto de formulário 13px, labels 12px, corpo 13–14px, título de card 14–21px, página 30–34px, hero 36–64px. Espaçamento predominante 8/12/16/20/24/28/32px; o conteúdo mantém largura limitada em telas grandes.
 

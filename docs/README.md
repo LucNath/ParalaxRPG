@@ -43,6 +43,8 @@ Consulte as [instruções de execução](../README.md) e os relatórios de [cont
 | [18 — Contribuição](18-contribuicao.md) | Convenções, revisão e mudanças |
 | [19 — Design system](19-design-system.md) | Direção visual adotada, tokens, navegação, componentes e padrões para os próximos módulos |
 | [Artes do site](design/artes-do-site.md) | Coleção de imagens, arquivos originais/WebP, aplicações e prompts de geração |
+| [Logo Paralax](design/logo-paralax.md) | Kit SVG/PNG, variantes, ícones, aplicação e prompt de criação |
+| [Verificação 009](verification/009-logo-e-favicon.md) | Logo própria, favicon, navegador e publicação |
 | [Publicação Vercel](deploy-vercel.md) | Projetos, banco de testes, avatares persistentes e atualização do ambiente online |
 | [Decisão 001](architecture/decisions/001-base-e-autenticacao.md) | Stack e política de autenticação adotadas na primeira etapa |
 | [Decisão 002](architecture/decisions/002-sistemas-versionados.md) | Definições versionadas, salvamento concorrente e visibilidade dos sistemas |
