@@ -13,4 +13,12 @@ Fluxo: ação válida → transação/concessão → coleção privada → prév
 
 ## Publicação
 
-Build, check consolidado, backup, migration e conferência online serão registrados após concluir a publicação.
+Código de aplicação: `3c69315d4909f6a03b1531898a6a102d945a51f3`. Backup custom de 48.168 bytes em `.artifacts/backups/before-cosmetics-1791480416095.dump`, cabeçalho e manifesto conferidos com PostgreSQL 18 e verify-full; nenhum ensaio de restauração. Migration oitava aplicada no Neon após o backup. IDs das doze tabelas anteriores e campos originais dos perfis conferidos e preservados. Concessão retroativa comparada aos fatos existentes: uma conquista e um item; seleções permaneceram nulas.
+
+API `dpl_9BYmgCfu5VKnXLjThykfD6MDKYw6` e web `dpl_EMcSrXNqeg4S4aXeuEDJnqzzSTpM`: builds aprovados, READY e aliases `paralax-rpg-api.vercel.app` / `paralax-rpg-web.vercel.app` atualizados.
+
+Chromium online, desktop e Pixel 7 reduzido a 320 px: conta nova com 0/4, item bloqueado rejeitado por HTTP e indisponível na UI, biografia/avatar via formulário e Blob, criação real de campanha/ficha/sessão LIVE/rolagem, coleção 4/4, prévia sem escrita, salvar fundo/borda, editar biografia preservando seleção e recarregar. Visitante viu a aparência equipada sem conquistas/e-mail, e GET privado retornou 401. Falha simulada da imagem retomou o banner padrão. Restaurar padrão removeu apenas a seleção, mantendo quatro itens na coleção. SQL Neon confirmou seleção e concessão.
+
+Captura online do perfil público móvel inspecionada; sem overflow. Logout visível na área privada de 320 px. Contas sintéticas e dados associados excluídos por IDs/e-mails/nomes exatos, ausência confirmada; apenas os dois avatares produzidos pelo teste foram removidos do Blob e sua ausência foi confirmada com leitura privada.
+
+Logs dos deployments após o teste, janela de uma hora: nenhum HTTP 500 e nenhum registro web de nível error. API apresentou cinco registros de aviso existente sobre depreciação de sslmode, associados a quatro HTTP 200 e um HTTP 201; sem falha de conexão. Não se afirma ausência de logs de erro da API. Capturas, backups e logs permanecem ignorados em `.artifacts/`.
