@@ -2,7 +2,7 @@
 
 Este é um modelo **conceitual e lógico proposto**, derivado das entidades das seções 40–41. Não é uma migration, um schema Prisma ou uma decisão definitiva de armazenamento. Campos, enums e restrições devem ser validados junto da implementação.
 
-`User`, `Profile`, `RefreshSession`, `RpgSystem`, `SystemVersion`, `Campaign`, `CampaignChange`, `CampaignMember`, `CampaignInvitation`, `Character`, `CharacterChange`, `GameSession` e `GameSessionChange` já possuem [schema Prisma](../apps/api/prisma/schema.prisma) e migrations versionadas. As demais entidades abaixo continuam propostas para os próximos módulos.
+`User`, `Profile`, `RefreshSession`, `RpgSystem`, `SystemVersion`, `Campaign`, `CampaignChange`, `CampaignMember`, `CampaignInvitation`, `Character`, `CharacterChange`, `GameSession`, `GameSessionChange` e `DiceRoll` já possuem [schema Prisma](../apps/api/prisma/schema.prisma) e migrations versionadas. As demais entidades abaixo continuam propostas para os próximos módulos.
 
 ## Recorte implementado de sistemas
 
@@ -37,6 +37,12 @@ Aceite, revogação, remoção e edição de capacidade bloqueiam a mesma linha 
 GameSession armazena campaignId, título, descrição, scheduledAt UTC, timeZone IANA, visibilidade, estado SCHEDULED/LIVE/ENDED/CANCELLED, revisão, startedAt/endedAt/cancelledAt, durationSeconds e criação/atualização. Mestre deriva da campanha. Índices cobrem campanha/agenda e estado/visibilidade/início. CHECKs protegem revisão e coerência de estado/datas/duração; índice SQL parcial GameSession_one_live_per_campaign limita LIVE por campanha.
 
 GameSessionChange guarda sessão, ator, revisão única, snapshot e data junto da escrita. Migration aditiva 20261008010000_sessions. Não há SessionParticipant/SessionSpectator: acesso privado deriva de mestre ou jogador ativo da campanha, sem seleção ou presença. [Decisão 006](architecture/decisions/006-sessoes-e-agenda.md). O diagrama completo abaixo permanece conceitual.
+
+## Recorte implementado de rolagens
+
+DiceRoll armazena sessão por FK, sequência crescente por encontro, actorId autenticado, requestId e payload normalizado, snapshots de autor e ficha/campo, count/sides, modificadores adicional/da ficha/final, resultados inteiros, total e createdAt. Unicidades por sessão/sequência e sessão/ator/tentativa. CHECKs limitam quantidade/faces/modificadores e garantem total exato com a função SQL imutável dice_roll_sum. Índice de sequência atende consultas por cursor. Não há expressão livre, seleção kh ou FK da ficha no recorte atual.
+
+Migration aditiva 20261008020000_dice_rolls; nenhum registro anterior é alterado. Snapshots preservam nomes/valores/revisão do instante da rolagem. FK de sessão usa cascata, e não há API de exclusão. Autorização vem da campanha, revalidada antes de ler ou recuperar tentativas; novas escritas compartilham a trava de Campaign. [Decisão 007](architecture/decisions/007-rolagens-e-historico.md).
 
 ## Convenções propostas
 

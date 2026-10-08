@@ -620,6 +620,31 @@ svg { flex-shrink: 0; }
 .public-sessions { padding-bottom: 45px; }
 .public-sessions .page-heading>.badge { display: inline-flex; }
 .session-list-heading .editor-actions { flex-wrap: wrap; }
+.session-rolls { margin-top: 24px; padding: 28px; }
+.rolls-heading { display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; }
+.rolls-heading h2 { display: flex; align-items: center; gap: 10px; margin: 0; font-size: 20px; }
+.rolls-heading p { margin: 10px 0; font-size: 12px; }
+.roll-form { margin-top: 22px; border-block: 1px solid var(--border); padding-block: 24px; }
+.roll-fields { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin-bottom: 18px; }
+.roll-character-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.roll-fields select { width: 100%; min-width: 0; }
+.roll-note { font-size: 12px; color: var(--muted); margin-block: 18px; }
+.roll-result-confirmation { padding: 16px; background: #7C5CFC16; border-radius: 8px; overflow-wrap: anywhere; }
+.roll-history-heading { margin-block: 24px 16px; }
+.roll-history-heading h3 { margin: 0 0 6px; font-size: 16px; }
+.roll-history-heading span { font-size: 11px; }
+.roll-history { list-style: none; padding: 0; margin: 0; }
+.roll-entry { display: flex; justify-content: space-between; gap: 20px; padding: 20px 0; border-top: 1px solid var(--border); }
+.roll-entry-main { min-width: 0; }
+.roll-entry-author { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 13px; overflow-wrap: anywhere; }
+.roll-entry-author .muted { font-size: 11px; }
+.roll-expression { margin: 12px 0 8px; font-size: 20px; overflow-wrap: anywhere; }
+.roll-expression span { color: var(--muted); padding-inline: 6px; }
+.roll-expression strong { color: var(--accent-text); }
+.roll-values { margin: 0; font-size: 12px; color: var(--muted); overflow-wrap: anywhere; }
+.roll-entry time { color: var(--muted); font-size: 11px; flex-shrink: 0; }
+.roll-entry time small { display: block; margin-top: 6px; text-align: right; }
+.roll-pagination { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 20px; }
 @media (max-width: 360px) {
   .landing-header { padding-inline: 16px; }
   .landing-header .brand-wordmark { width: 120px; height: auto; }
@@ -633,4 +658,9 @@ svg { flex-shrink: 0; }
   .sidebar .side-nav .desktop-nav-link { display: none; }
   .session-list-heading { flex-direction: column; align-items: flex-start; }
   .session-list-heading .editor-actions { width: auto; }
+  .session-rolls { padding: 22px; }
+  .rolls-heading { flex-direction: column; gap: 8px; }
+  .roll-fields, .roll-character-fields { grid-template-columns: 1fr; }
+  .roll-entry { flex-direction: column; gap: 12px; }
+  .roll-entry time small { text-align: left; }
 }

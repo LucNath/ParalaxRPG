@@ -122,6 +122,20 @@ Listas retornam items/page/pageSize/total, 20 itens, page 1–10000 e search at�
 
 Sem Bearer privado: 401. Inacessível ou sem elegibilidade pública: 404. Entrada inválida: 400. Conflitos 409: SESSION_REVISION_CONFLICT, SESSION_STATE_CONFLICT, SESSION_ALREADY_LIVE, SESSION_PUBLIC_CAMPAIGN_REQUIRED, SESSION_CAMPAIGN_CLOSED e SESSION_LIMIT. Finalizar/cancelar campanha com LIVE retorna CAMPAIGN_LIVE_SESSION. Repetir comando no mesmo estado destino é idempotente, sem nova revisão. Sem endpoint de histórico/restauração. [Decisão 006](architecture/decisions/006-sessoes-e-agenda.md).
 
+## Contrato implementado — rolagens
+
+Prefixo `/api/v1`, Bearer, UUID v4 de sessão e `Cache-Control: no-store`. Mestre/jogador ativo acessa todas as rotas; público e removido não acessam o histórico mesmo em uma sessão pública.
+
+| Rota | Entrada / saída |
+| --- | --- |
+| `GET /sessions/:id/rolls/options` | `DiceRollOptions`: faces da versão fixa e fichas elegíveis (id/nome) |
+| `GET /sessions/:id/rolls` | `before` opcional, sequência exclusiva; `{items, nextCursor}`, até 20 em ordem decrescente |
+| `POST /sessions/:id/rolls` | `CreateDiceRollInput`; retorna `DiceRoll`, 201 após persistência |
+
+Entrada estrita: requestId UUID, count 1–50, sides 2–1000 configurado na campanha, modifier inteiro ±1.000.000 (padrão 0), characterId/fieldId UUID ou null (padrão null). fieldId exige characterId e deve ser atributo/perícia da ficha elegível. O valor salvo do campo é somado ao modifier adicional. Jogador usa próprias fichas; mestre pode usar fichas dos participantes ativos. Novas rolagens só em LIVE.
+
+Saída inclui id, sessionId, sequence, requestId, createdAt, autor público, snapshot de ficha/campo ou null, count, sides, manualModifier, modifier final, results e total. Repetir a mesma tentativa/payload retorna a mesma resposta, inclusive após encerramento, com acesso atual revalidado. Payload diferente com a mesma chave retorna 409 ROLL_REQUEST_CONFLICT. Outros erros: 400 para schema, ROLL_DIE_NOT_ALLOWED/ROLL_FIELD_NOT_ALLOWED; 401 sem sessão; 404 sem acesso/ficha elegível; 409 ROLL_SESSION_NOT_LIVE/ROLL_LIMIT; 429 por frequência. Sem PUT/DELETE, parser de expressões ou histórico anônimo nesta entrega. [Decisão 007](architecture/decisions/007-rolagens-e-historico.md).
+
 ## Rotas de origem
 
 | Método e rota | Operação | Autorização esperada |

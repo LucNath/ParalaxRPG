@@ -235,6 +235,7 @@ model GameSession {
   updatedAt DateTime @updatedAt
   campaign Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
   changes GameSessionChange[]
+  rolls DiceRoll[]
   @@index([campaignId, scheduledAt])
   @@index([status, visibility, startedAt])
 }
@@ -248,4 +249,26 @@ model GameSessionChange {
   createdAt DateTime @default(now())
   session GameSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
   @@unique([sessionId, revision])
+}
+
+model DiceRoll {
+  id String @id @default(uuid())
+  sessionId String
+  sequence Int
+  actorId String
+  requestId String
+  request Json
+  actor Json
+  character Json?
+  count Int
+  sides Int
+  manualModifier Int
+  fieldModifier Int
+  modifier Int
+  results Int[]
+  total Int
+  createdAt DateTime @default(now())
+  session GameSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  @@unique([sessionId, sequence])
+  @@unique([sessionId, actorId, requestId])
 }

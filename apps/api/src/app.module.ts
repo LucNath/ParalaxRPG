@@ -14,11 +14,12 @@ import { SystemsModule } from './modules/systems/systems.module';
 import { CampaignsModule } from './modules/campaigns/campaigns.module';
 import { CharactersModule } from './modules/characters/characters.module';
 import { SessionsModule } from './modules/sessions/sessions.module';
+import { RollsModule } from './modules/rolls/rolls.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, ignoreEnvFile: !!process.env.VERCEL, envFilePath: resolve(projectRoot(), '.env'), validate: validateEnvironment }),
-    DatabaseModule, AuthModule, UsersModule, SystemsModule, CampaignsModule, CharactersModule, SessionsModule,
+    DatabaseModule, AuthModule, UsersModule, SystemsModule, CampaignsModule, CharactersModule, SessionsModule, RollsModule,
     ThrottlerModule.forRoot([{ name: 'default', ttl: 60000, limit: 120 }]),
   ],
   controllers: [HealthController],

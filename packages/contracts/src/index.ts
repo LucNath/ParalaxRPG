@@ -230,6 +230,30 @@ export interface SessionsPage { items: GameSession[]; page: number; pageSize: nu
 export type PublicGameSession = Pick<GameSession, 'id' | 'title' | 'description' | 'scheduledAt' | 'timeZone' | 'owner' | 'system'> & { status: 'LIVE'; startedAt: string; campaign: { id: string; name: string } };
 export interface PublicSessionsPage { items: PublicGameSession[]; page: number; pageSize: number; total: number }
 
+export const createDiceRollSchema = z.object({
+  requestId: z.uuid().transform(value => value.toLowerCase()),
+  count: z.number().int('Use uma quantidade inteira.').min(1, 'Role pelo menos 1 dado.').max(50, 'Use até 50 dados.'),
+  sides: z.number().int().min(2).max(1000),
+  modifier: numberValue.default(0),
+  characterId: z.uuid().transform(value => value.toLowerCase()).nullable().default(null),
+  fieldId: z.uuid().transform(value => value.toLowerCase()).nullable().default(null),
+}).strict().refine(value => !value.fieldId || !!value.characterId, { path: ['fieldId'], message: 'Escolha uma ficha para usar este campo.' });
+export const listDiceRollsQuerySchema = z.object({ before: z.coerce.number().int().min(1).max(2147483647).optional() }).strict();
+export type CreateDiceRollInput = z.infer<typeof createDiceRollSchema>;
+export type ListDiceRollsQuery = z.infer<typeof listDiceRollsQuerySchema>;
+export interface DiceRollCharacter {
+  id: string; name: string; revision: number;
+  field: { id: string; name: string; category: 'attributes' | 'skills'; value: number } | null;
+}
+export interface DiceRoll {
+  id: string; sessionId: string; sequence: number; requestId: string; createdAt: string;
+  actor: { id: string; username: string; displayName: string };
+  character: DiceRollCharacter | null;
+  count: number; sides: number; manualModifier: number; modifier: number; results: number[]; total: number;
+}
+export interface DiceRollsPage { items: DiceRoll[]; nextCursor: number | null }
+export interface DiceRollOptions { dice: number[]; characters: { id: string; name: string }[] }
+
 // Convert agenda wall time explicitly; never use the server/browser's implicit timezone.
 export function sessionLocalTime(instant: string, timeZone: string): string {
   const parts = new Intl.DateTimeFormat('en', { timeZone, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).formatToParts(new Date(instant));

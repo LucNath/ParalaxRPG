@@ -7,6 +7,7 @@ import { sessionStatusLabels, type CampaignDetail, type GameSession, type Public
 import { useAuth } from './auth-provider';
 import { SessionEditor } from './session-editor';
 import { SessionList } from './session-list';
+import { SessionRolls } from './session-rolls';
 import { Badge } from './ui/badge';
 import { ApiError, errorMessage } from '@/lib/api';
 import { sessionDate, sessionDuration } from '@/lib/session-date';
@@ -48,8 +49,8 @@ export function SessionWorkspace({ create = false, edit = false }: { create?: bo
     {actionError ? <div className="feedback error" role="alert"><p>{actionError}</p><button className="button button-secondary button-small" disabled={saving} onClick={() => setAttempt(value => value + 1)}>Atualizar sessão</button></div> : null}
     <section className="panel campaign-presentation"><h2>O encontro</h2><p className="system-description">{session.description || 'Sem descrição.'}</p><dl className="session-facts"><div><dt>Agendada para</dt><dd><time dateTime={session.scheduledAt}>{sessionDate(session.scheduledAt, session.timeZone)}</time> · {session.timeZone}</dd></div><div><dt>Visibilidade</dt><dd>{session.visibility === 'PUBLIC' ? 'Pública quando ao vivo em campanha pública' : 'Privada — mestre e jogadores ativos'}</dd></div>{session.startedAt ? <div><dt>Iniciada em</dt><dd><time dateTime={session.startedAt}>{sessionDate(session.startedAt, session.timeZone)}</time></dd></div> : null}{session.endedAt ? <div><dt>Encerrada em</dt><dd><time dateTime={session.endedAt}>{sessionDate(session.endedAt, session.timeZone)}</time> · duração {sessionDuration(session.durationSeconds!)}</dd></div> : null}{session.cancelledAt ? <div><dt>Cancelada em</dt><dd>{sessionDate(session.cancelledAt, session.timeZone)}</dd></div> : null}</dl>
       <Link className="subtle-link" href={`/campanhas/${session.campaign.id}`}>Abrir campanha e fichas</Link>{session.status === 'LIVE' && session.visibility === 'PUBLIC' && session.campaign.visibility === 'PUBLIC' ? <Link className="button button-secondary" href={`/ao-vivo/${session.id}`} target="_blank" rel="noopener noreferrer">Ver apresentação pública</Link> : null}
-      <p className="campaign-rules-note">Todos os jogadores ativos desta campanha podem acompanhar o encontro. Chat e rolagens estarão disponíveis na próxima etapa.</p>
-    </section></>;
+      <p className="campaign-rules-note">Todos os jogadores ativos desta campanha podem acompanhar o encontro e consultar o histórico de rolagens.</p>
+    </section><SessionRolls key={session.id} session={session} onAccessLost={accessLost} /></>;
 }
 
 export function CampaignSessions() {
@@ -73,5 +74,5 @@ export function PublicSession() {
   }, [api, id, attempt]);
   if (error) return <section className="panel page-state"><p role="alert">{error}</p><button className="button button-secondary" onClick={() => setAttempt(value => value + 1)}>Tentar novamente</button><Link className="subtle-link" href="/ao-vivo">Voltar ao catálogo</Link></section>;
   if (!session) return <p role="status">Carregando apresentação…</p>;
-  return <><div className="page-heading"><Badge tone="accent">Ao vivo</Badge><h1>{session.title}</h1><p>{session.campaign.name} · Mestre: {session.owner.displayName}</p></div><section className="panel campaign-presentation"><p className="system-description">{session.description || 'Uma aventura está acontecendo.'}</p><p>Iniciada em {sessionDate(session.startedAt, session.timeZone)} · {session.timeZone}</p><p>{session.system.name} · versão {session.system.version}</p><Link className="subtle-link" href={`/c/${session.campaign.id}`}>Conhecer campanha</Link><p className="campaign-rules-note">Esta página apresenta o encontro. Chat, rolagens e acompanhamento da mesa chegarão na próxima etapa.</p></section></>;
+  return <><div className="page-heading"><Badge tone="accent">Ao vivo</Badge><h1>{session.title}</h1><p>{session.campaign.name} · Mestre: {session.owner.displayName}</p></div><section className="panel campaign-presentation"><p className="system-description">{session.description || 'Uma aventura está acontecendo.'}</p><p>Iniciada em {sessionDate(session.startedAt, session.timeZone)} · {session.timeZone}</p><p>{session.system.name} · versão {session.system.version}</p><Link className="subtle-link" href={`/c/${session.campaign.id}`}>Conhecer campanha</Link><p className="campaign-rules-note">Esta página apresenta o encontro. As fichas e o histórico de rolagens ficam disponíveis para o mestre e os jogadores ativos da campanha.</p></section></>;
 }
