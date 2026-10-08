@@ -4,6 +4,7 @@ import { characterValuesForDefinitionSchema, systemDefinitionSchema, type Create
 import { PrismaService } from '../../database/prisma.service';
 import { Prisma, type DiceRoll as Row } from '../../generated/prisma/client';
 import { campaignAccess, lockCampaign, publicUser, publicUserSelect } from '../campaigns/campaign-access';
+import { grantAchievement } from '../users/achievements';
 
 function detail(row: Row): DiceRoll {
   return { id: row.id, sessionId: row.sessionId, sequence: row.sequence, requestId: row.requestId, createdAt: row.createdAt.toISOString(),
@@ -72,6 +73,7 @@ export class RollsService {
       const saved = await db.diceRoll.create({ data: { sessionId: id, sequence: (latest?.sequence ?? 0) + 1, actorId: userId, requestId: input.requestId,
         request: input, actor, character: character ? { ...character } as unknown as Prisma.InputJsonObject : Prisma.DbNull,
         count: input.count, sides: input.sides, manualModifier: input.modifier, fieldModifier, modifier, results, total: results.reduce((sum, value) => sum + value, modifier) } });
+      await grantAchievement(db, userId, 'first-roll');
       return detail(saved);
     });
   }

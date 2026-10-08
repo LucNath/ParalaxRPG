@@ -6,6 +6,8 @@ Este documento é o **plano de testes** da plataforma completa. Conta/perfil, si
 
 O objetivo do plano é comprovar o fluxo do MVP 1, persistência, privacidade, acesso por campanha e comunicação em tempo real. Testar o payload recebido é necessário: a tela pode esconder um segredo que o servidor já vazou.
 
+O incremento de conquistas acrescenta sete testes de API, incluindo execução da migration real em schema isolado para retroatividade, e um cenário E2E por dispositivo. Verificam concessão atômica, duplicatas, itens bloqueados, categoria, permanência, PATCH parcial, privacidade, cascata, prévia, seleção, recarga, padrão e fallback de mídia. Evidências na [verificação 011](verification/011-conquistas-e-cosmeticos.md).
+
 ## Níveis propostos
 
 | Nível | Foco | Exemplos |

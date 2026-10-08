@@ -15,7 +15,7 @@ Todas as rotas abaixo usam o prefixo `/api/v1`. Schemas e DTOs reais estão em [
 | `POST /auth/refresh` | Cookie refresh e Origin confiável; rota a sessão | Cookie válido; 200 |
 | `POST /auth/logout` | Cookie refresh e Origin confiável; revoga a família e limpa cookie | Idempotente; 204 |
 | `GET /users/me` | Perfil do titular, incluindo e-mail | Bearer válido |
-| `PATCH /users/me` | displayName, bio e location opcionais; ao menos uma alteração | Titular; campos extras rejeitados |
+| `PATCH /users/me` | displayName, bio, location, backgroundId e avatarFrameId opcionais; ao menos uma alteração | Titular; campos extras rejeitados; cosméticos só obtidos e da categoria correta; null remove |
 | `POST /users/me/avatar` | Multipart, campo `file`; retorna avatarUrl | Titular; até 2 MB; 201 |
 | `GET /users/:username` | Perfil público, sem e-mail ou credenciais | Público |
 | `GET /avatars/:key` | Imagem WebP validada | Público |
@@ -135,6 +135,12 @@ Prefixo `/api/v1`, Bearer, UUID v4 de sessão e `Cache-Control: no-store`. Mestr
 Entrada estrita: requestId UUID, count 1–50, sides 2–1000 configurado na campanha, modifier inteiro ±1.000.000 (padrão 0), characterId/fieldId UUID ou null (padrão null). fieldId exige characterId e deve ser atributo/perícia da ficha elegível. O valor salvo do campo é somado ao modifier adicional. Jogador usa próprias fichas; mestre pode usar fichas dos participantes ativos. Novas rolagens só em LIVE.
 
 Saída inclui id, sessionId, sequence, requestId, createdAt, autor público, snapshot de ficha/campo ou null, count, sides, manualModifier, modifier final, results e total. Repetir a mesma tentativa/payload retorna a mesma resposta, inclusive após encerramento, com acesso atual revalidado. Payload diferente com a mesma chave retorna 409 ROLL_REQUEST_CONFLICT. Outros erros: 400 para schema, ROLL_DIE_NOT_ALLOWED/ROLL_FIELD_NOT_ALLOWED; 401 sem sessão; 404 sem acesso/ficha elegível; 409 ROLL_SESSION_NOT_LIVE/ROLL_LIMIT; 429 por frequência. Sem PUT/DELETE, parser de expressões ou histórico anônimo nesta entrega. [Decisão 007](architecture/decisions/007-rolagens-e-historico.md).
+
+## Contrato implementado — conquistas e cosméticos
+
+GET /users/me/achievements retorna AchievementsPage com quatro condições, progresso 0/1, target=1, earnedAt e recompensas. GET /users/me/cosmetics retorna CosmeticsPage com catálogo, estado unlocked e backgroundId/avatarFrameId atuais. Ambas exigem autenticação, retornam no-store e não aceitam concessões via POST.
+
+PATCH /users/me aceita backgroundId/avatarFrameId opcionais e anuláveis; item desconhecido, não obtido ou de categoria errada retorna 400 COSMETIC_UNAVAILABLE. Campos omitidos preservam o valor atual. PublicProfile/CurrentUser incluem background/avatarFrame, com metadados de catálogo ou null. Perfil público não inclui conquistas, progresso, origem privada ou e-mail. [Decisão 008](architecture/decisions/008-conquistas-e-cosmeticos.md).
 
 ## Rotas de origem
 

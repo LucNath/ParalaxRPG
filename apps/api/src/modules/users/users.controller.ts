@@ -1,14 +1,15 @@
 import { Body, Controller, Get, Param, Patch, Post, Res, StreamableFile, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Throttle } from '@nestjs/throttler';
-import { NotFoundException } from '@nestjs/common';
-import { updateProfileSchema, type UpdateProfileInput } from '@paralax/contracts';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { profileCosmetics, updateProfileSchema, type UpdateProfileInput } from '@paralax/contracts';
 import type { Response } from 'express';
 import { PrismaService } from '../../database/prisma.service';
 import { SchemaPipe } from '../../common/schema.pipe';
 import { AuthIdentity, Identity, Public } from '../auth/auth.decorators';
 import { currentProfile, currentUserSelect, publicProfile, publicUserSelect } from './profile.mapper';
 import { AvatarService } from './avatar.service';
+import { achievements, cosmetics, grantIdentity } from './achievements';
 
 @Controller('users')
 export class UsersController {
@@ -24,9 +25,27 @@ export class UsersController {
   async update(@Identity() identity: AuthIdentity, @Body(new SchemaPipe(updateProfileSchema)) input: UpdateProfileInput,
     @Res({ passthrough: true }) response: Response) {
     response.setHeader('Cache-Control', 'no-store');
-    await this.prisma.profile.update({ where: { userId: identity.userId }, data: input });
-    const user = await this.prisma.user.findUniqueOrThrow({ where: { id: identity.userId }, select: currentUserSelect });
-    return currentProfile(user);
+    return this.prisma.$transaction(async db => {
+      for (const [field, category] of [['backgroundId', 'BACKGROUND'], ['avatarFrameId', 'AVATAR_FRAME']] as const) {
+        const id = input[field];
+        if (id != null && (!profileCosmetics.some(item => item.id === id && item.category === category)
+          || !await db.userCosmetic.findUnique({ where: { userId_cosmeticId: { userId: identity.userId, cosmeticId: id } } })))
+          throw new BadRequestException({ code: 'COSMETIC_UNAVAILABLE', message: 'Escolha um item desbloqueado da categoria correta.' });
+      }
+      await db.profile.update({ where: { userId: identity.userId }, data: input });
+      await grantIdentity(db, identity.userId);
+      return currentProfile(await db.user.findUniqueOrThrow({ where: { id: identity.userId }, select: currentUserSelect }));
+    });
+  }
+  @Get('me/achievements')
+  async achievements(@Identity() identity: AuthIdentity, @Res({ passthrough: true }) response: Response) {
+    response.setHeader('Cache-Control', 'no-store');
+    return achievements(this.prisma, identity.userId);
+  }
+  @Get('me/cosmetics')
+  async cosmetics(@Identity() identity: AuthIdentity, @Res({ passthrough: true }) response: Response) {
+    response.setHeader('Cache-Control', 'no-store');
+    return cosmetics(this.prisma, identity.userId);
   }
   @Post('me/avatar')
   @Throttle({ default: { limit: 10, ttl: 60000 } })

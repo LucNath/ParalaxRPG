@@ -3,6 +3,7 @@ import { systemDefinitionSchema, type CampaignDetail, type CampaignSummary, type
 import { PrismaService } from '../../database/prisma.service';
 import { Prisma } from '../../generated/prisma/client';
 import { campaignAccess, lockCampaign } from './campaign-access';
+import { grantAchievement } from '../users/achievements';
 
 const include = { owner: { select: { id: true, username: true, profile: { select: { displayName: true } } } }, systemVersion: true } as const;
 type Row = Prisma.CampaignGetPayload<{ include: typeof include }>;
@@ -49,6 +50,7 @@ export class CampaignsService {
       if (!version) throw new NotFoundException({ code: 'CAMPAIGN_SYSTEM_UNAVAILABLE', message: 'Escolha uma versão de um sistema criado por você.' });
       const row = await db.campaign.create({ data: { ownerId, systemVersionId, ...settings,
         changes: { create: { revision: 1, actorId: ownerId, snapshot: { ...settings, systemVersionId } } } } });
+      await grantAchievement(db, ownerId, 'first-campaign');
       return this.read(db, row.id, ownerId);
     });
   }

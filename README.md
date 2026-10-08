@@ -10,6 +10,8 @@ O ambiente online de testes está disponível em **[paralax-rpg-web.vercel.app](
 
 Rolagens estão disponíveis dentro de uma sessão **Ao vivo**: escolha quantidade, dado da campanha e modificador adicional. Opcionalmente selecione uma ficha e um atributo/perícia; o servidor soma o valor salvo do campo, calcula os dados e registra autor, horário, resultados e total. Mestre e jogadores ativos compartilham o histórico, inclusive depois do encerramento. Ele atualiza ao recuperar foco, manualmente ou a cada 30 segundos. Expressões livres e chat/entrega por socket continuam futuros; veja a [decisão 007](docs/architecture/decisions/007-rolagens-e-historico.md) e a [verificação 010](docs/verification/010-rolagens-e-historico.md).
 
+Em **Perfil**, as áreas **Conquistas** e **Personalizar perfil** mostram quatro marcos que liberam fundos e bordas estáticos. Complete sua biografia e avatar, crie uma campanha/ficha ou faça sua primeira rolagem para obter os itens correspondentes. Escolha os desbloqueados, confira a prévia e clique em **Salvar personalização**. Os itens permanecem na coleção e só a combinação equipada aparece publicamente. O fundo padrão segue disponível; animações são futuras. Veja a [decisão 008](docs/architecture/decisions/008-conquistas-e-cosmeticos.md).
+
 ## Executar localmente
 
 Pré-requisitos: Node.js 22.18 ou superior, npm 10 ou superior e Docker com Compose. A implementação foi verificada em Windows com Node.js 26.5.0.

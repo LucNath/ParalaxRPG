@@ -1,6 +1,6 @@
 # 20 — Conquistas e personalização do perfil
 
-Solicitação do usuário em 8 de outubro de 2026. Status: funcionalidade solicitada; desenho de implementação proposto. Ainda não há desbloqueios, coleção, cosméticos selecionáveis ou animações implementados.
+Solicitação do usuário em 8 de outubro de 2026. Status: primeiro recorte estático implementado, conforme a [decisão 008](architecture/decisions/008-conquistas-e-cosmeticos.md). Há quatro conquistas por marcos de uso, coleção privada, prévia e seleção de fundo/borda no perfil público. Animações e marcos de sessões permanecem futuros. Evidências na [verificação 011](verification/011-conquistas-e-cosmeticos.md). O desenho inicial abaixo registra também as extensões propostas, sem afirmar que já estão disponíveis.
 
 ## Experiência solicitada
 
@@ -24,20 +24,20 @@ A conquista pertence à conta do usuário, independentemente do personagem usado
 | --- | --- | --- |
 | Uma identidade na Paralax | Salvar uma apresentação e um avatar | Borda estática de portal violeta |
 | Primeiro personagem | Criar a primeira ficha válida | Fundo estático de refúgio do aventureiro |
-| Primeira mesa | Criar a primeira campanha | Fundo estático de biblioteca do mestre |
+| Primeira mesa | Criar a primeira campanha | Fundo estático de cidadela flutuante |
 | Primeiros dados | Registrar a primeira rolagem válida | Borda estática com detalhes de dados |
 | Além do portal | Marco de participação a definir | Fundo com portal animado |
 | Histórias compartilhadas | Marco de sessões concluídas a definir | Borda animada com runas |
 
-Nomes, condições, quantidades, recompensas e eventual classificação de raridade são propostas, não regras aprovadas. Marcos de uso são verificáveis com os módulos existentes; feitos como vitória, crítico ou conclusão de aventura dependem de regras do sistema e evidências que o produto ainda não registra. Um d20 máximo não significa crítico em todo sistema de RPG.
+As quatro primeiras condições foram adotadas na decisão 008: biografia/avatar, criação de ficha, criação de campanha e primeira rolagem válida. Não há classificação de raridade. As duas condições animadas continuam propostas. Feitos como vitória, crítico ou conclusão de aventura dependem de regras do sistema e evidências que o produto ainda não registra. Um d20 máximo não significa crítico em todo sistema de RPG.
 
 Para contar sessões concluídas, definir primeiro o que comprova participação: estar na campanha no encerramento, entrar efetivamente na sessão ou ter ações válidas são critérios diferentes. Não inferir presença de um membro só porque ele recebeu convite. Limiares e prevenção de sessões artificiais precisam ser definidos antes de liberar recompensas por contagem.
 
 ## Integração com o projeto atual
 
-Hoje `Profile` salva apresentação, localização e chave do avatar. O banner público é fixo em CSS (`/art/paralax-world.webp`), e `PublicProfile` não possui seleções cosméticas. Portanto, a funcionalidade precisa de persistência e autorização além do editor visual.
+Antes deste incremento, `Profile` salvava apresentação, localização e chave do avatar, e o banner público era fixo. Agora há referências a fundo/borda obtidos pela própria conta, e `PublicProfile` entrega os metadados equipados. O banner original (`/art/paralax-world.webp`) é o padrão.
 
-Modelo proposto:
+Modelo conceitual proposto para expansão. O recorte adotado usa catálogo em código e apenas UserAchievement/UserCosmetic, com referências no Profile; não há eventos ou definições de catálogo em tabelas neste incremento.
 
 | Entidade | Responsabilidade e integridade |
 | --- | --- |
@@ -53,12 +53,12 @@ Desbloqueio calculado no servidor a partir de ações confirmadas no banco. Regi
 
 Aplicar cosmético valida no servidor a propriedade e a categoria. O cliente envia IDs do catálogo, sem poder conceder conquistas, registrar progresso ou fornecer URLs arbitrárias. PATCH do perfil deve atualizar os campos enviados sem limpar escolhas omitidas. Recompensas desativadas precisam de política explícita; mídia indisponível usa a aparência padrão sem corromper a seleção.
 
-Contratos HTTP propostos, ainda inexistentes:
+Contratos HTTP implementados (a exposição opcional de distintivos permanece futura):
 
 - `GET /users/me/achievements`: catálogo, progresso privado, obtidas e recompensas.
 - `GET /users/me/cosmetics`: coleção, itens bloqueados e seleções atuais.
 - `PATCH /users/me`: ampliar contrato com `backgroundId` e `avatarFrameId`, incluindo `null` para remover.
-- `GET /users/:username`: ampliar perfil público com a aparência equipada e somente as conquistas escolhidas para exibição. Progresso, eventos, IDs de campanhas/sessões, títulos privados e origem da recompensa não são públicos.
+- `GET /users/:username`: perfil público inclui aparência equipada; conquistas não são expostas. Progresso, eventos, IDs de campanhas/sessões, títulos privados e origem da recompensa não são públicos.
 
 Proposta de privacidade: exibição de conquistas é opcional e começa desativada, pois até um distintivo de participação pode revelar atividade. Cosméticos equipados são públicos por definição. Definir seleção e limite de distintivos na primeira etapa de interface.
 
@@ -84,10 +84,10 @@ Critérios de saída: itens bloqueados não equipáveis por chamada direta; reco
 
 ## Decisões pendentes
 
-- Prioridade deste incremento em relação ao chat e tempo real.
-- Critérios: marcos de uso, desafios de jogo ou combinação; exemplos acima precisam de definição.
-- Catálogo inicial, nomes, marcos e arte vinculada a cada recompensa.
-- Concessão retroativa para contas atuais, por conquista.
+- Prioridade das animações em relação ao chat e tempo real; recorte estático antecipado por solicitação do usuário.
+- Ampliação do catálogo e desafios de jogo; os quatro marcos iniciais estão na decisão 008.
+- Catálogo e arte vinculados às próximas recompensas.
+- Retroatividade de condições futuras; marcos iniciais concedidos a partir de fatos existentes.
 - Evidência de participação/conclusão de sessão e limites para marcos cumulativos.
 - Distintivos públicos opcionais: seleção e quantidade.
 - Formato final, orçamento de mídia e processo de geração das animações.

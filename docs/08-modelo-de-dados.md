@@ -44,6 +44,10 @@ DiceRoll armazena sessão por FK, sequência crescente por encontro, actorId aut
 
 Migration aditiva 20261008020000_dice_rolls; nenhum registro anterior é alterado. Snapshots preservam nomes/valores/revisão do instante da rolagem. FK de sessão usa cascata, e não há API de exclusão. Autorização vem da campanha, revalidada antes de ler ou recuperar tentativas; novas escritas compartilham a trava de Campaign. [Decisão 007](architecture/decisions/007-rolagens-e-historico.md).
 
+## Recorte implementado de conquistas e cosméticos
+
+Catálogo versionado em código, quatro condições binárias. UserAchievement (userId/achievementId únicos, earnedAt, ruleVersion) e UserCosmetic (userId/cosmeticId únicos, earnedAt), ambas por FK de conta com cascata. Profile guarda backgroundId/avatarFrameId opcionais; FKs compostas limitam aos itens da conta e CHECKs validam categoria. Concessão na mesma transação da ação; sem eventos/contadores neste recorte. Migration 20261008030000_achievement_cosmetics inclui retroatividade de fatos existentes e mantém seleção nula. [Decisão 008](architecture/decisions/008-conquistas-e-cosmeticos.md).
+
 ## Convenções propostas
 
 - IDs opacos, estáveis e gerados pelo servidor; timestamps UTC.

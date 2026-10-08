@@ -23,6 +23,8 @@ model User {
   sentInvitations CampaignInvitation[] @relation("Inviter")
   receivedInvitations CampaignInvitation[] @relation("Recipient")
   characters Character[]
+  achievements UserAchievement[]
+  cosmetics UserCosmetic[]
 }
 
 model Profile {
@@ -31,8 +33,31 @@ model Profile {
   bio String @default("")
   location String @default("")
   avatarKey String?
+  backgroundId String?
+  avatarFrameId String?
   updatedAt DateTime @updatedAt
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  background UserCosmetic? @relation("ProfileBackground", fields: [userId, backgroundId], references: [userId, cosmeticId], onDelete: NoAction)
+  avatarFrame UserCosmetic? @relation("ProfileFrame", fields: [userId, avatarFrameId], references: [userId, cosmeticId], onDelete: NoAction)
+}
+
+model UserAchievement {
+  userId String
+  achievementId String
+  earnedAt DateTime @default(now())
+  ruleVersion Int @default(1)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@id([userId, achievementId])
+}
+
+model UserCosmetic {
+  userId String
+  cosmeticId String
+  earnedAt DateTime @default(now())
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  backgrounds Profile[] @relation("ProfileBackground")
+  frames Profile[] @relation("ProfileFrame")
+  @@id([userId, cosmeticId])
 }
 
 model RefreshSession {

@@ -105,7 +105,7 @@ Perfil completo futuro: banner, localização opcional, links, sistemas favorito
 
 ### Personalização por conquistas — solicitação adicional
 
-Proposta de navegação: **Perfil → Conquistas / Personalizar**, com catálogo, condição/progresso, recompensas, coleção de fundos/bordas, prévia e seleção persistente. O banner atual é o padrão; imagens/loops e bordas são itens obtidos. Conquistas públicas são opcionais; evidências privadas não são exibidas. Ainda não implementado. Veja [20 — Conquistas e personalização](20-conquistas-e-personalizacao.md).
+Área **Perfil → Conquistas / Personalizar perfil** implementada com quatro marcos, coleção de fundos/bordas estáticos, prévia e seleção persistente. O banner anterior permanece padrão; conquistas/progresso são privados e o perfil público recebe só a aparência equipada. Animações e distintivos públicos opcionais são futuros. Veja [20 — Conquistas e personalização](20-conquistas-e-personalizacao.md).
 
 ## Ferramentas da mesa nas etapas posteriores
 

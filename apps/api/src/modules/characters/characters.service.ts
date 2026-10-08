@@ -3,6 +3,7 @@ import { characterValuesForDefinitionSchema, initialCharacterValues, systemDefin
 import { PrismaService } from '../../database/prisma.service';
 import { Prisma } from '../../generated/prisma/client';
 import { campaignAccess, lockCampaign, publicUser, publicUserSelect } from '../campaigns/campaign-access';
+import { grantAchievement } from '../users/achievements';
 
 const include = { owner: { select: publicUserSelect }, campaign: { select: { id: true, name: true, ownerId: true } }, systemVersion: true } as const;
 type Row = Prisma.CharacterGetPayload<{ include: typeof include }>;
@@ -55,6 +56,7 @@ export class CharactersService {
       const values = validateValues(definition, supplied || initialCharacterValues(definition));
       const row = await db.character.create({ data: { ...settings, values, ownerId: userId, campaignId, systemVersionId: campaign.systemVersionId,
         changes: { create: { actorId: userId, revision: 1, snapshot: { ...settings, values } } } }, include });
+      await grantAchievement(db, userId, 'first-character');
       return detail(row, userId);
     });
   }

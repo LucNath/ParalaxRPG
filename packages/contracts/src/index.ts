@@ -23,6 +23,8 @@ export const updateProfileSchema = z.object({
   displayName: displayName.optional(),
   bio: z.string().trim().max(500, 'Use até 500 caracteres.').optional(),
   location: z.string().trim().max(80, 'Use até 80 caracteres.').optional(),
+  backgroundId: z.string().min(1).max(60).nullable().optional(),
+  avatarFrameId: z.string().min(1).max(60).nullable().optional(),
 }).strict().refine(value => Object.keys(value).length > 0, 'Informe uma alteração.');
 
 export interface PublicProfile {
@@ -33,7 +35,27 @@ export interface PublicProfile {
   location: string;
   avatarUrl: string | null;
   joinedAt: string;
+  background: ProfileCosmetic | null;
+  avatarFrame: ProfileCosmetic | null;
 }
+
+export interface ProfileCosmetic { id: string; name: string; category: 'BACKGROUND' | 'AVATAR_FRAME'; imageUrl: string; position: string }
+export const profileCosmetics: readonly ProfileCosmetic[] = [
+  { id: 'forest-refuge', name: 'Refúgio luminoso', category: 'BACKGROUND', imageUrl: '/art/luminous-forest.webp', position: 'center 55%' },
+  { id: 'floating-citadel', name: 'Cidadela flutuante', category: 'BACKGROUND', imageUrl: '/art/floating-city.webp', position: 'center 48%' },
+  { id: 'violet-portal', name: 'Portal violeta', category: 'AVATAR_FRAME', imageUrl: '/cosmetics/violet-portal.svg', position: 'center' },
+  { id: 'dice-path', name: 'Caminho dos dados', category: 'AVATAR_FRAME', imageUrl: '/cosmetics/dice-path.svg', position: 'center' },
+];
+export const achievementDefinitions = [
+  { id: 'identity', name: 'Uma identidade na Paralax', description: 'Salve uma biografia e uma imagem de avatar.', cosmeticId: 'violet-portal' },
+  { id: 'first-character', name: 'Primeiro personagem', description: 'Crie sua primeira ficha de personagem.', cosmeticId: 'forest-refuge' },
+  { id: 'first-campaign', name: 'Primeira mesa', description: 'Crie sua primeira campanha.', cosmeticId: 'floating-citadel' },
+  { id: 'first-roll', name: 'Primeiros dados', description: 'Faça sua primeira rolagem em uma sessão ao vivo.', cosmeticId: 'dice-path' },
+] as const;
+export type AchievementId = typeof achievementDefinitions[number]['id'];
+export interface AchievementItem { id: AchievementId; name: string; description: string; earnedAt: string | null; progress: 0 | 1; target: 1; rewards: ProfileCosmetic[] }
+export interface AchievementsPage { items: AchievementItem[] }
+export interface CosmeticsPage { items: (ProfileCosmetic & { unlocked: boolean; achievementId: AchievementId })[]; backgroundId: string | null; avatarFrameId: string | null }
 export interface CurrentUser extends PublicProfile { email: string }
 export interface AuthResponse { accessToken: string; expiresIn: number; user: CurrentUser }
 export interface ApiErrorBody {

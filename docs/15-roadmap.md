@@ -22,7 +22,7 @@ Estado atual: conta/perfil, sistemas básicos e campanhas vinculadas a uma vers�
 
 ## Incremento solicitado: conquistas e personalização
 
-O usuário solicitou fundos e bordas de avatar desbloqueados por conquistas, com versões estáticas e animadas. A [proposta 20](20-conquistas-e-personalizacao.md) organiza critérios, catálogo, concessão persistente, coleção/editor e produção de animações. Recomenda-se implementar primeiro o fluxo com itens estáticos, depois integrar os animados. A prioridade em relação ao chat/tempo real e as condições de obtenção permanecem pendentes; a solicitação antecipa parte das conquistas originalmente previstas no MVP 4, sem antecipar todo o módulo social.
+O recorte estático foi antecipado por solicitação do usuário: quatro conquistas de conta, concessão persistente, retroatividade comprovável, coleção/editor com prévia e aparência pública, conforme a [decisão 008](architecture/decisions/008-conquistas-e-cosmeticos.md). Fundos/bordas animados e novos marcos seguem em [20](20-conquistas-e-personalizacao.md); prioridade dessas extensões em relação ao chat/tempo real permanece pendente. O incremento antecipa parte das conquistas originalmente previstas no MVP 4, sem antecipar todo o módulo social.
 
 ## Prioridade técnica de origem
 

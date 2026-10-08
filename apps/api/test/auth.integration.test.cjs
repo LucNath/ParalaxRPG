@@ -95,7 +95,8 @@ describe('Autenticação e perfil com PostgreSQL real', { concurrency: false }, 
     assert.equal(publicResponse.status, 200);
     const profile = await publicResponse.json();
     assert.equal(profile.username, a.input.username);
-    assert.deepEqual(Object.keys(profile).sort(), ['id','username','displayName','bio','location','avatarUrl','joinedAt'].sort());
+    assert.deepEqual(Object.keys(profile).sort(), ['id','username','displayName','bio','location','avatarUrl','joinedAt','background','avatarFrame'].sort());
+    assert.equal(profile.background, null); assert.equal(profile.avatarFrame, null);
     assert.equal(profile.email, undefined); assert.equal(profile.passwordHash, undefined);
   });
   it('edita somente o próprio perfil e persiste; não permite mudar identidade ou editar outro usuário', async () => {

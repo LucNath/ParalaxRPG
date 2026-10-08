@@ -7,6 +7,7 @@ import sharp from 'sharp';
 import { del, get, put } from '@vercel/blob';
 import { projectRoot } from '../../common/environment';
 import { PrismaService } from '../../database/prisma.service';
+import { grantIdentity } from './achievements';
 
 @Injectable()
 export class AvatarService {
@@ -33,7 +34,10 @@ export class AvatarService {
     }
     try {
       // Old avatars are kept until a retention policy is chosen; concurrent saves cannot delete the winning image.
-      await this.prisma.profile.update({ where: { userId }, data: { avatarKey: key } });
+      await this.prisma.$transaction(async db => {
+        await db.profile.update({ where: { userId }, data: { avatarKey: key } });
+        await grantIdentity(db, userId);
+      });
     } catch (error) {
       if (this.blob) await del(`avatars/${key}`).catch(() => undefined);
       else await unlink(resolve(this.directory, key)).catch(() => undefined);
