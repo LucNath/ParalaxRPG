@@ -34,7 +34,33 @@ Uma primeira checagem ajustou o seletor do teste ao nome acessível do link. Uma
 
 ## Publicação
 
-A atualização do ambiente de testes existente e suas evidências online serão registradas após a publicação.
+Publicado em **[Paralax RPG — Personagens](https://paralax-rpg-web.vercel.app/personagens)**, código `fc8f70b`, pelos projetos Vercel existentes, sem envio ao GitHub. Target `production`, usado como endereço estável de testes.
+
+| Campo | Web | API |
+| --- | --- | --- |
+| Framework / status | Next.js / READY | NestJS / READY |
+| Build remoto | 42 segundos | 33 segundos |
+| Deployment | `dpl_3nFmq3kzgTrZnKc5UxUxZ3KKSdPR` | `dpl_Dao6MiW93VHfPkjUgSzVKta7nQ4q` |
+| Inspeção | [Web](https://vercel.com/lucky-8804ce74/paralax-rpg-web/3nFmq3kzgTrZnKc5UxUxZ3KKSdPR) | [API](https://vercel.com/lucky-8804ce74/paralax-rpg-api/Dao6MiW93VHfPkjUgSzVKta7nQ4q) |
+
+Quinta migration aplicada por conexão direta ao Neon após confirmar as quatro anteriores, equipe/projeto e ambiente de testes. IDs anteriores de usuários, sistemas, versões, campanhas, histórico, membros e convites preservados. Sem reset, seed ou cópia local. Schema aditivo permite retornar ao código anterior sem apagar as fichas; suporte a personagens fica indisponível nesse caso até restaurar o código novo.
+
+## Verificação online e observabilidade
+
+Smoke pelo domínio público, sem login Vercel ou bypass, passou em Chromium desktop e Pixel 7 com mestre e jogador em contextos separados por dispositivo:
+
+- Cadastro real e convite/aceite pela interface.
+- Campanha privada vinculada à versão 1; edição do sistema original para versão 2 não alterou defaults ou máximo da ficha criada depois.
+- Criação com valores, rejeição de recurso acima do máximo, recarga e leitura persistida.
+- Edição pelo mestre, detecção de revisão nova no jogador, rascunho preservado e recarga consentida antes de salvar.
+- Remoção com editor aberto limpou o conteúdo privado; novo convite aceito recuperou a mesma ficha com seus valores.
+- Lista pessoal acessível pelo início em ambos os dispositivos; leitura de ficha sem Bearer retornou 401.
+- SQL no Neon confirmou versão original, nível nulo, recurso final, revisão 3, atores jogador/mestre/jogador e vínculo reativado.
+- Sem erros de página; sem overflow horizontal nas telas verificadas.
+
+Capturas `.artifacts/online-{desktop,mobile}-ficha-{personagem,conflito}.png` inspecionadas. Quatro contas sintéticas e seus dados foram removidos por id, e-mail e username exatos. TLS permaneceu verificado com certificados do sistema no Node local.
+
+Consultas aos dois deployments finais, janela de uma hora e limite de 100 registros por consulta: zero eventos de nível error e zero HTTP 500 retornados nos dois projetos. Não foram adicionados drains ou monitoramento externo contínuo. Essas evidências cobrem os fluxos executados e a janela consultada, sem teste de carga ou garantia de disponibilidade contínua.
 
 ## Limites
 
