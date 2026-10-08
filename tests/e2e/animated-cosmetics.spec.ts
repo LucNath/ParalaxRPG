@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { randomUUID } from 'node:crypto';
 import { Pool } from 'pg';
+import { hash, argon2id } from 'argon2';
 
 test('visuais animados: equipar, persistir, pausar, retomar, reduzir movimento e falha de imagem', async ({ page, browser }, testInfo) => {
   test.setTimeout(90000);
@@ -13,10 +14,14 @@ test('visuais animados: equipar, persistir, pausar, retomar, reduzir movimento e
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
   try {
-    const response = await page.request.post('/api/v1/auth/register', { headers: { Origin: origin }, data: { username, email: `${username}@example.test`, displayName: 'Viajante das auroras', password: 'Uma-senha-de-teste-123!' } });
-    expect(response.status()).toBe(201);
-    const account = await response.json(); id = account.user.id;
-    await pool.query('UPDATE "Profile" SET "allCosmeticsUnlocked"=true WHERE "userId"=$1', [id]);
+    // This story tests cosmetics. Seed its account so parallel stories keep the real signup limit.
+    id = randomUUID();
+    const password = 'Uma-senha-de-teste-123!';
+    const passwordHash = await hash(password, { type: argon2id, memoryCost: 65536, timeCost: 3, parallelism: 1 });
+    await pool.query('INSERT INTO "User" (id,email,username,"passwordHash","updatedAt") VALUES ($1,$2,$3,$4,CURRENT_TIMESTAMP)', [id, `${username}@example.test`, username, passwordHash]);
+    await pool.query('INSERT INTO "Profile" ("userId","displayName","allCosmeticsUnlocked","updatedAt") VALUES ($1,$2,true,CURRENT_TIMESTAMP)', [id, 'Viajante das auroras']);
+    const response = await page.request.post('/api/v1/auth/login', { headers: { Origin: origin }, data: { email: `${username}@example.test`, password } });
+    expect(response.status()).toBe(200);
     await page.goto('/perfil');
     await expect(page.getByRole('radio', { name: 'Santuário de jade', exact: true })).toBeEnabled();
     await page.getByRole('radio', { name: 'Santuário de jade', exact: true }).check();
