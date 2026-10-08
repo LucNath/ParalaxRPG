@@ -48,6 +48,8 @@ Executar os comandos na raiz do repositório, pois o projeto remoto já define `
 
 Após publicar, verificar `/api/v1/health/ready` pelo domínio do site e o fluxo cadastro → perfil/avatar → sistema → recarga → publicação → logout/login, com dados sintéticos. Confirmar que uma pessoa sem sessão Vercel consegue abrir a URL.
 
+Para convites/membros, usar contas distintas e verificar envio, recusa/aceite, lotação, remoção com campanha aberta e revogação. Confirmar estado no banco, limpar somente dados sintéticos e consultar logs dos deployments finais. O [relatório 006](verification/006-convites-e-membros.md) registra a execução local e online deste incremento.
+
 ## Custos e limites
 
 Neon foi provisionado no plano gratuito, sem contratação de plano pago. Vercel Functions e Blob seguem as franquias e a cobrança da conta existente; esta configuração não altera o plano. Consulte [uso da Vercel](https://vercel.com/dashboard/lucky-8804ce74/usage), [preços do Blob](https://vercel.com/docs/vercel-blob/usage-and-pricing) e [plano Neon](https://neon.tech/pricing) antes de ampliar os testes.

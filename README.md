@@ -6,7 +6,7 @@ Já estão disponíveis **cadastro, login, renovação de sessão, logout, dashb
 
 A interface adota fantasia moderna com tema escuro, roxo/ciano e Geist. O [design system](docs/19-design-system.md) registra a direção fornecida, os componentes atuais, a proveniência da arte e os padrões para os próximos módulos.
 
-O ambiente online de testes está disponível em **[paralax-rpg-web.vercel.app](https://paralax-rpg-web.vercel.app)**. Use **Criar conta** para começar. Ele usa Vercel, PostgreSQL Neon separado do banco local e Blob para avatares persistentes. O [procedimento de publicação](docs/deploy-vercel.md) registra configuração e comandos de atualização; consulte as verificações da [primeira publicação](docs/verification/004-publicacao-vercel.md) e de [campanhas locais/online](docs/verification/005-campanhas.md).
+O ambiente online de testes está disponível em **[paralax-rpg-web.vercel.app](https://paralax-rpg-web.vercel.app)**. Use **Criar conta** para começar. Ele usa Vercel, PostgreSQL Neon separado do banco local e Blob para avatares persistentes. O [procedimento de publicação](docs/deploy-vercel.md) registra configuração e comandos de atualização; consulte as verificações da [primeira publicação](docs/verification/004-publicacao-vercel.md), de [campanhas locais/online](docs/verification/005-campanhas.md) e de [convites/membros](docs/verification/006-convites-e-membros.md).
 
 ## Executar localmente
 

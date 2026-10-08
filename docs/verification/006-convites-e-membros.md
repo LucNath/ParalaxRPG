@@ -36,6 +36,38 @@ As primeiras execuções direcionadas corrigiram a preparação de fixtures e as
 
 Capturas de jogador, membros/convites e caixa de convites em `.artifacts/{desktop,mobile}-*.png` foram inspecionadas, além de `.artifacts/convites-320px.png` e `.artifacts/navegacao-320px.png`. A revisão visual identificou saída cortada na largura mínima; o espaçamento foi corrigido e a nova checagem exige visibilidade integral dos seis controles. A barra fixa pode aparecer no meio da captura completa por composição de screenshot.
 
+## Publicação
+
+Publicado em **[Paralax RPG — Convites](https://paralax-rpg-web.vercel.app/convites)**, código `0335695`, pelos projetos Vercel existentes, sem envio ao GitHub. Target `production`, usado como endereço estável de testes.
+
+| Campo | Web | API |
+| --- | --- | --- |
+| Framework / status | Next.js / `READY` | NestJS / `READY` |
+| Build | 32 segundos | 34 segundos |
+| Deployment | `dpl_DKvadQz5x5mM2VUjC41EjKgutxxQ` | `dpl_BozrsQWgQLFxWxZGsW1jDsU6HrQk` |
+| Inspeção | [Web](https://vercel.com/lucky-8804ce74/paralax-rpg-web/DKvadQz5x5mM2VUjC41EjKgutxxQ) | [API](https://vercel.com/lucky-8804ce74/paralax-rpg-api/BozrsQWgQLFxWxZGsW1jDsU6HrQk) |
+
+Quarta migration aplicada por conexão direta ao Neon após confirmar as três anteriores, IDs da equipe/projeto e ambiente online de testes. IDs de usuários, sistemas, versões, campanhas e histórico anteriores conferidos antes/depois e preservados. Sem reset, seed ou cópia do banco local. Readiness da API pública confirmou banco conectado e a nova rota de inbox retornou 401 sem autenticação. A adição de tabelas permite retornar ao código anterior sem desfazer o schema; nesse caso o suporte a jogadores/convites fica indisponível até restaurar o código novo.
+
+## Verificação online e observabilidade
+
+Smoke test pelo domínio público, sem login Vercel ou bypass, passou em Chromium desktop e Pixel 7, com três contas distintas por dispositivo:
+
+- Cadastro e campanha privada vinculada a um sistema próprio.
+- Jogador sem vínculo recebe 404 antes do aceite.
+- Recusa, novo envio e aceite pela interface, com leitura das regras privadas e ausência de controles administrativos no jogador.
+- Sistema original privado continua inacessível pela sua API pública.
+- Segundo jogador encontra mesa lotada e mantém convite pendente.
+- Remoção confirmada pelo mestre, seguida de foco na tela já aberta do jogador, remove o conteúdo privado e mostra perda de acesso.
+- Vaga liberada permite o aceite do outro jogador.
+- Novo convite ao removido revogado; histórico aceito anterior não oferece acesso à campanha.
+- Recarga mantém histórico e remoção; SQL no Neon confirma estados dos convites e vínculos ACTIVE/REMOVED.
+- Sem erros de página e sem overflow horizontal nas telas verificadas.
+
+Capturas online de jogador, administração e histórico em `.artifacts/online-{desktop,mobile}-{jogador,convites-mestre,convites-revogados}.png` foram inspecionadas. Contas sintéticas e seus dados foram removidos ao final por id, e-mail e username exatos. TLS permaneceu verificado com certificados do sistema no Node.js local.
+
+Logs dos dois deployments finais consultados na janela de uma hora: nenhum HTTP 500, zero eventos de nível `error` no web. API apresentou três avisos do driver PostgreSQL sobre `sslmode`, todos em respostas 200; nenhum outro evento de erro. O limite de consulta foi 100 registros e os resultados ficaram abaixo dele. Não foram adicionados drains nem monitoramento externo contínuo. As evidências cobrem o fluxo e a janela consultados, sem teste de carga ou garantia de disponibilidade contínua.
+
 ## Limites
 
 Personagens, sessões, WebSocket, solicitações públicas, e-mail/link de convite, saída voluntária, mestre auxiliar e permissões individuais continuam futuros. Não há push: membros/convites atualizam ao recuperar foco e a cada 30 segundos enquanto a tela está visível. Remoção bloqueia novas requisições imediatamente; dados já recebidos não podem ser recolhidos. Histórico dos convites e último estado/datas do vínculo não representam auditoria completa de todas as ações.
