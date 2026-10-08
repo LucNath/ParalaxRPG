@@ -1,5 +1,9 @@
 # 12 — Permissões
 
+## Sessões disponíveis
+
+Somente mestre agenda, edita, inicia, encerra e cancela. Mestre e jogador ACTIVE consultam todos os encontros da campanha; removido, pendente ou terceiro recebe 404. Rotas privadas sem Bearer recebem 401. Visitante lê metadados LIVE/PUBLIC em campanha PUBLIC nas rotas públicas, sem regras, fichas, membros ou auditoria. Telas limpam conteúdo perdido na próxima verificação de foco/intervalo. Sem seleção de participantes ou presença. [Decisão 006](architecture/decisions/006-sessoes-e-agenda.md).
+
 ## Princípio
 
 O RBAC de origem combina papéis da plataforma e papéis dentro da campanha. **Ser Mestre em uma campanha não concede autoridade em outra.** O controle do Mestre cobre todos os módulos disponíveis do próprio ambiente, sem alterar recursos originais pertencentes a terceiros.
@@ -36,7 +40,7 @@ Adotado para o recorte atual: `OWNER` derivado de ownerId e `PLAYER` derivado de
 | Criar sistema/campanha | Não | Sim | Sim |
 | Editar sistema | Não | Não, se não for autor | Sim |
 | Publicar/excluir sistema | Não | Não, se não for autor | Sim, com regras de dependência |
-| Assistir sessão pública | DP05 | Sim, se elegível | Sim, se elegível |
+| Ler apresentação pública elegível | Sim, somente metadados | Sim, se elegível | Sim, se elegível |
 | Seguir usuários | Não | Etapa social | Etapa social |
 
 ADMIN não recebeu poderes detalhados no anexo. Não pressupor acesso irrestrito a mensagens privadas ou conteúdo secreto; definir operações administrativas e auditoria separadamente.
@@ -106,7 +110,7 @@ Proposta de precedência: vínculo removido ou recurso inacessível nega acesso 
 - Convite pendente: não permite usar permissões de jogador antes do aceite.
 - Link de privado: identificador conhecido não dispensa vínculo.
 
-DP05 deve resolver visitantes em transmissões e sessões públicas de campanhas não públicas. Enquanto pendente, a proposta conservadora está nas [regras de negócio](04-regras-de-negocio.md).
+A decisão 006 adota apresentação anônima somente LIVE/PUBLIC em campanha PUBLIC. DP05 permanece para audiência/transmissão e campanhas não listadas. Apresentação nunca concede conteúdo privado.
 
 ## Referências
 

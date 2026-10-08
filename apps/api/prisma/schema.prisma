@@ -116,6 +116,7 @@ model Campaign {
   invitations CampaignInvitation[]
   characters Character[]
   @@unique([id, systemVersionId])
+  sessions GameSession[]
   @@index([ownerId, updatedAt])
   @@index([visibility, updatedAt])
   @@index([systemVersionId])
@@ -207,4 +208,44 @@ model CharacterChange {
   createdAt DateTime @default(now())
   character Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
   @@unique([characterId, revision])
+}
+
+enum GameSessionStatus {
+  SCHEDULED
+  LIVE
+  ENDED
+  CANCELLED
+}
+
+model GameSession {
+  id String @id @default(uuid())
+  campaignId String
+  title String
+  description String @default("")
+  scheduledAt DateTime
+  timeZone String
+  visibility CampaignVisibility @default(PRIVATE)
+  status GameSessionStatus @default(SCHEDULED)
+  revision Int @default(1)
+  startedAt DateTime?
+  endedAt DateTime?
+  cancelledAt DateTime?
+  durationSeconds Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  campaign Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  changes GameSessionChange[]
+  @@index([campaignId, scheduledAt])
+  @@index([status, visibility, startedAt])
+}
+
+model GameSessionChange {
+  id String @id @default(uuid())
+  sessionId String
+  actorId String
+  revision Int
+  snapshot Json
+  createdAt DateTime @default(now())
+  session GameSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  @@unique([sessionId, revision])
 }

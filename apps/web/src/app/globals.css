@@ -609,9 +609,21 @@ svg { flex-shrink: 0; }
 .character-card-description { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font-size: 13px; }
 .character-card small { color: var(--muted); overflow-wrap: anywhere; }
 .campaign-characters { margin-block: 24px; }
+.session-card h3 { margin-top: 12px; }
+.session-card>svg { flex-shrink: 0; }
+.session-facts { display: grid; gap: 18px; margin: 22px 0; }
+.session-facts dt { color: var(--muted); font-size: 12px; }
+.session-facts dd { margin: 4px 0 0; overflow-wrap: anywhere; }
+.session-editor { max-width: 960px; }
+.public-sessions { padding-bottom: 45px; }
+.public-sessions .page-heading>.badge { display: inline-flex; }
+.session-list-heading .editor-actions { flex-wrap: wrap; }
 @media (max-width: 650px) {
   .sidebar .side-nav .character-nav-link { display: none; }
   .character-form { grid-template-columns: 1fr; gap: 18px; }
   .character-list-body { padding: 18px; }
   .character-card { padding: 14px; }
+  .sidebar .side-nav .desktop-nav-link { display: none; }
+  .session-list-heading { flex-direction: column; align-items: flex-start; }
+  .session-list-heading .editor-actions { width: auto; }
 }

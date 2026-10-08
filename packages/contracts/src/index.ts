@@ -196,3 +196,58 @@ export interface CharacterSummary extends Omit<CharacterSettings, 'story'> {
 }
 export interface CharacterDetail extends CharacterSummary { story: string; systemVersionId: string; definition: SystemDefinition; values: CharacterValues; canEdit: boolean }
 export interface CharactersPage { items: CharacterSummary[]; page: number; pageSize: number; total: number }
+
+export const sessionStatusSchema = z.enum(['SCHEDULED', 'LIVE', 'ENDED', 'CANCELLED']);
+export const sessionStatusLabels = { SCHEDULED: 'Agendada', LIVE: 'Ao vivo', ENDED: 'Finalizada', CANCELLED: 'Cancelada' } as const;
+export const timeZoneSchema = z.string().trim().min(1).max(80).refine(value => {
+  try { new Intl.DateTimeFormat('en', { timeZone: value }); return true; } catch { return false; }
+}, 'Escolha um fuso horário válido.');
+export const sessionSettingsSchema = z.object({
+  title: z.string().trim().min(2, 'Use pelo menos 2 caracteres.').max(120, 'Use até 120 caracteres.'),
+  description: z.string().trim().max(4000, 'Use até 4000 caracteres.'),
+  scheduledAt: z.iso.datetime({ offset: true }).refine(value => Date.parse(value) >= Date.UTC(2000, 0, 1) && Date.parse(value) < Date.UTC(2101, 0, 1), 'Escolha uma data entre 2000 e 2100.'),
+  timeZone: timeZoneSchema,
+  visibility: campaignVisibilitySchema,
+}).strict();
+export const createSessionSchema = sessionSettingsSchema;
+export const sessionActionSchema = z.object({ expectedRevision: z.number().int().min(1).max(2147483646) }).strict();
+export const updateSessionSchema = sessionSettingsSchema.extend({ expectedRevision: sessionActionSchema.shape.expectedRevision }).strict();
+export const listSessionsQuerySchema = listSystemsQuerySchema.extend({ filter: z.enum(['ALL', 'UPCOMING']).default('ALL') }).strict();
+export type SessionSettings = z.infer<typeof sessionSettingsSchema>;
+export type UpdateSessionInput = z.infer<typeof updateSessionSchema>;
+export type SessionActionInput = z.infer<typeof sessionActionSchema>;
+export type ListSessionsQuery = z.infer<typeof listSessionsQuerySchema>;
+export type SessionStatus = z.infer<typeof sessionStatusSchema>;
+export interface GameSession extends SessionSettings {
+  id: string; revision: number; status: SessionStatus;
+  startedAt: string | null; endedAt: string | null; cancelledAt: string | null; durationSeconds: number | null;
+  createdAt: string; updatedAt: string; canManage: boolean;
+  campaign: { id: string; name: string; visibility: CampaignVisibility; status: CampaignStatus };
+  owner: { id: string; username: string; displayName: string };
+  system: { name: string; version: number };
+}
+export interface SessionsPage { items: GameSession[]; page: number; pageSize: number; total: number }
+export type PublicGameSession = Pick<GameSession, 'id' | 'title' | 'description' | 'scheduledAt' | 'timeZone' | 'owner' | 'system'> & { status: 'LIVE'; startedAt: string; campaign: { id: string; name: string } };
+export interface PublicSessionsPage { items: PublicGameSession[]; page: number; pageSize: number; total: number }
+
+// Convert agenda wall time explicitly; never use the server/browser's implicit timezone.
+export function sessionLocalTime(instant: string, timeZone: string): string {
+  const parts = new Intl.DateTimeFormat('en', { timeZone, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).formatToParts(new Date(instant));
+  const get = (kind: string) => parts.find(part => part.type === kind)!.value;
+  return `${get('year')}-${get('month')}-${get('day')}T${get('hour')}:${get('minute')}`;
+}
+export function sessionInstant(local: string, timeZone: string): string {
+  if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(local) || !timeZoneSchema.safeParse(timeZone).success) throw new Error('Informe a data, o horário e um fuso válido.');
+  const guess = Date.parse(`${local}:00Z`);
+  if (!Number.isFinite(guess) || new Date(guess).toISOString().slice(0, 16) !== local) throw new Error('Informe uma data e um horário válidos.');
+  const candidates = new Set<number>();
+  for (const delta of [-86400000, 0, 86400000]) {
+    const probe = guess + delta;
+    const offset = Date.parse(`${sessionLocalTime(new Date(probe).toISOString(), timeZone)}:00Z`) - probe;
+    const candidate = guess - offset;
+    if (sessionLocalTime(new Date(candidate).toISOString(), timeZone) === local) candidates.add(candidate);
+  }
+  if (!candidates.size) throw new Error('Este horário não existe nesse fuso devido à mudança de horário. Escolha outro horário.');
+  if (candidates.size > 1) throw new Error('Este horário ocorre duas vezes nesse fuso. Escolha outro horário ou informe o instante no fuso UTC.');
+  return new Date([...candidates][0]).toISOString();
+}

@@ -64,4 +64,4 @@ Consultas aos dois deployments finais, janela de uma hora e limite de 100 regist
 
 ## Limites
 
-Sem retrato, inventário, notas privadas, fórmulas, autosave ou WebSocket. Histórico persistido não tem tela de consulta/restauração. Criação é própria, sem transferência de dono. Acesso é reavaliado no servidor a cada operação; telas de consulta/edição verificam foco e intervalo de 30 segundos enquanto visíveis. Dados já recebidos não podem ser recolhidos. Sessões são o próximo incremento; o MVP completo ainda está em andamento.
+Sem retrato, inventário, notas privadas, fórmulas, autosave ou WebSocket. Histórico persistido não tem tela de consulta/restauração. Criação é própria, sem transferência de dono. Acesso é reavaliado no servidor a cada operação; telas de consulta/edição verificam foco e intervalo de 30 segundos enquanto visíveis. Dados já recebidos não podem ser recolhidos. Sessões foram entregues depois, na [verificação 008](008-sessoes-e-agenda.md); o MVP completo ainda está em andamento.

@@ -32,7 +32,7 @@ Fichas persistidas seguem a [decisão 005](architecture/decisions/005-personagen
 
 Campos de campanha descritos na origem: nome, imagem, banner, descrição, sistema, Mestre, capacidade de jogadores, classificação indicativa, tags, idioma, frequência e status. A obrigatoriedade de cada campo não foi definida. Para o MVP, propõe-se exigir nome, sistema, visibilidade e capacidade; os demais podem ser opcionais.
 
-Estados de campanha: **Planejada, Recrutando, Em andamento, Pausada, Finalizada, Cancelada**. A origem não define o grafo de transição nem impede reabertura. A [decisão 003](architecture/decisions/003-campanhas-versionadas.md) adota seleção de qualquer estado pelo mestre, inclusive reabertura, com registro transacional da configuração. Isso não inicia sessões nem concede ingresso. Criação/edição, nome, descrição, capacidade, estado e visibilidade pública/privada estão disponíveis; os demais campos continuam futuros.
+Estados de campanha: **Planejada, Recrutando, Em andamento, Pausada, Finalizada, Cancelada**. A origem não define o grafo de transição nem impede reabertura. A [decisão 003](architecture/decisions/003-campanhas-versionadas.md) adota seleção de qualquer estado pelo mestre, inclusive reabertura, com registro transacional da configuração. Isso não inicia sessões nem concede ingresso. A decisão 006 impede finalizar/cancelar campanha com uma LIVE; encerrá-la primeiro. Criação/edição, nome, descrição, capacidade, estado e visibilidade pública/privada estão disponíveis; os demais campos continuam futuros.
 
 Convites e membros seguem a [decisão 004](architecture/decisions/004-convites-e-membros.md): convite por username de conta existente, sete dias de validade, no máximo 50 pendentes e um por destinatário/campanha. Aceitar cria/reativa o vínculo de jogador na mesma transação e verifica a capacidade, excluindo o mestre. Falta de vaga preserva o convite pendente; reduzir capacidade abaixo dos jogadores ativos é proibido. Finalizada/Cancelada bloqueiam novos envios e aceites. Remoção impede novas leituras privadas; retorno exige novo convite. Membros ativos leem regras fixas, sem editar campanha ou sistema original.
 
@@ -45,7 +45,7 @@ Convites e membros seguem a [decisão 004](architecture/decisions/004-convites-e
 
 Um identificador ou link de campanha privada não concede autorização. Para recursos não listados, a implementação deve definir se o link é apenas localização ou uma credencial de acesso limitada (DP04/DP05/DP06). Não listar não equivale a tornar privado.
 
-Para sistemas, a [decisão 002](architecture/decisions/002-sistemas-versionados.md) já define essa política: público aparece no catálogo; não listado permite leitura completa a qualquer pessoa com o link; privado é acessível somente ao autor. Autorizações adicionais privadas ainda não existem. Apenas o autor edita, e cada salvamento gera uma versão imutável. Políticas de campanha e sessão continuam pendentes.
+Para sistemas, a [decisão 002](architecture/decisions/002-sistemas-versionados.md) já define essa política: público aparece no catálogo; não listado permite leitura completa a qualquer pessoa com o link; privado é acessível somente ao autor. Autorizações adicionais privadas ainda não existem. Apenas o autor edita, e cada salvamento gera uma versão imutável. Campanhas seguem a decisão 003; sessões seguem a decisão 006.
 
 Sessões têm privacidade própria: **pública ou privada**. Não há visibilidade “não listada” de sessão definida na origem.
 
@@ -56,13 +56,17 @@ Sessões têm privacidade própria: **pública ou privada**. Não há visibilida
 | Privada | Privada | Apenas membros autorizados |
 | Privada ou não listada | Pública | Não exemplificado na origem; decisão DP05 |
 
-**Proposta provisória para DP05:** permitir sessão pública somente em campanha pública. Validar essa escolha antes da implementação. Metadados privados nunca devem ser publicados por consequência de uma sessão ao vivo.
+**Adotado na decisão 006:** sessão pública somente em campanha pública; apresentação anônima e descoberta exigem LIVE/PUBLIC e campanha PUBLIC. Privatização e encerramento ocultam nas novas consultas. Audiência/ingresso de espectadores permanecem futuros. Metadados privados nunca devem ser publicados por consequência de uma sessão ao vivo.
 
 ## Sessões
 
 Uma sessão contém título, descrição, data, horário, participantes, duração, status e privacidade. O Mestre cria, inicia e encerra sessões. Participantes e espectadores são categorias distintas.
 
 Estados de origem: **AGENDADA, PREPARANDO, AO VIVO, PAUSADA, FINALIZADA, CANCELADA**. O contrato técnico propõe `SCHEDULED`, `PREPARING`, `LIVE`, `PAUSED`, `ENDED` e `CANCELLED`, com rótulos em português na interface.
+
+### Recorte implementado
+
+A [decisão 006](architecture/decisions/006-sessoes-e-agenda.md) adota SCHEDULED → LIVE → ENDED e SCHEDULED → CANCELLED. Só agendas aceitam edição; terminais exigem outra sessão. Somente mestre escreve com expectedRevision e auditoria transacional; comandos repetidos no mesmo destino são idempotentes. Até 100 agendas e uma LIVE por campanha, com trava e índice parcial. Agenda guarda UTC e fuso IANA; início/fim reais vêm do servidor. Duração é fim menos início em segundos. Jogadores ativos consultam todos os encontros da campanha. Seleção por sessão, preparação e pausas seguem futuras; a tabela abaixo preserva planejamento completo.
 
 ### Transições propostas
 

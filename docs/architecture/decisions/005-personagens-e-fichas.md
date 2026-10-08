@@ -28,4 +28,4 @@ Cada gravação incrementa a revisão e cria `CharacterChange` na mesma transaç
 
 ## Limites
 
-Sem retrato/upload, inventário, notas privadas, fórmulas, autosave ou tempo real. Sessões são o próximo incremento. Contratos em [API](../../09-api.md); evidências em [verificação 007](../../verification/007-personagens-e-fichas.md).
+Sem retrato/upload, inventário, notas privadas, fórmulas, autosave ou tempo real. Sessões foram entregues posteriormente; consulte a decisão 006 e a verificação 008 no índice da documentação. Contratos em [API](../../09-api.md); evidências em [verificação 007](../../verification/007-personagens-e-fichas.md).

@@ -1,5 +1,9 @@
 # 19 — Design system
 
+## Sessões atuais
+
+SessionList/SessionEditor usam cards com badge textual, título, campanha, data/fuso e descrição. Detalhe mostra estado e datas reais; mestre vê ações pertinentes. Formulário empilha no celular e trata horário inválido, erros, conflito e descarte. Público reutiliza tema/arte existente, sem contagem inventada de espectadores. Preparação, pausa, mesa e chat nas diretrizes abaixo permanecem futuros.
+
 ## Direção adotada
 
 Fonte: [direção visual original do usuário](referencias/direcao-visual-original.md), preservada integralmente. Complementa a [interface funcional](13-interface.md).
@@ -47,7 +51,7 @@ Escala: texto de formulário 13px, labels 12px, corpo 13–14px, título de card
 | --- | --- |
 | Início | Arte panorâmica, headline fornecida, cadastro e apresentação da plataforma; cartões de identidade/criação/conexão distinguem disponibilidade |
 | Cadastro e login | Arte lateral no desktop; formulário com foco, validação, envio e mensagem de erro; formulário prioritário no celular |
-| Dashboard | Identidade, primeiros passos, campanhas reais e convites recebidos; sessões explicitamente futuras, sem contadores inventados |
+| Dashboard | Identidade, primeiros passos, campanhas reais e convites recebidos; próximas sessões reais com estado e fuso, sem contadores inventados |
 | Perfil | Editor, avatar, feedback de salvamento, link público e dados privados separados |
 | Perfil público | Banner padrão, avatar, nome, username, biografia, localização e data de entrada; sem atribuir papéis ou estatísticas inexistentes |
 | Sistemas | Cards com observatório astral, busca, abas meus/públicos, visibilidade e versão; estados de carregamento, vazio e erro |
@@ -59,9 +63,9 @@ Escala: texto de formulário 13px, labels 12px, corpo 13–14px, título de card
 | Campanha privada | Papel do usuário, regras fixas, lista de membros e ocupação; formulário de convite e remoção/revogação só para o mestre |
 | Convites | Cards com mestre, campanha, status e validade; aceitar/recusar, erros de lotação e histórico paginado |
 
-No desktop, navegação global de 96px com ícone e rótulo. Início, Sistemas, Campanhas, Convites e Perfil são links reais; Personagens é link real; Explorar permanece indisponível com explicação de desenvolvimento. No celular, barra inferior com Início, Sistemas, Campanhas, Convites, Perfil e saída; itens futuros são omitidos. A lista de fichas é acessível pelo card Seus personagens no dashboard e pela campanha, mantendo os seis controles da barra dentro de 320 px. O cabeçalho oferece breadcrumbs e acesso ao perfil público. Configurações terá entrada própria quando houver funcionalidade correspondente.
+No desktop, navegação global de 96px com ícone e rótulo. Início, Sistemas, Campanhas, Convites e Perfil são links reais; Personagens, Sessões e Ao vivo são links reais. No celular, barra inferior com Início, Sistemas, Campanhas, Convites, Perfil e saída; itens futuros são omitidos. Fichas e sessões são acessíveis pelos cards do dashboard e pela campanha, mantendo os seis controles da barra dentro de 320 px. O cabeçalho oferece breadcrumbs e acesso ao perfil público. Configurações terá entrada própria quando houver funcionalidade correspondente.
 
-“Conhecer campanhas” na landing leva à listagem implementada no painel; leitura de apresentações públicas por link dispensa login. “Conhecer a Paralax” continua levando à apresentação na mesma página. Convites usam o painel autenticado; personagens/fichas têm leitura privada e edição pelo dono ativo/mestre; sessões permanecem futuras.
+“Conhecer campanhas” na landing leva à listagem implementada no painel; leitura de apresentações públicas por link dispensa login. “Conhecer a Paralax” continua levando à apresentação na mesma página. Convites usam o painel autenticado; personagens/fichas têm leitura privada e edição pelo dono ativo/mestre; sessões oferecem agenda/estado; Ao vivo agora no rodapé abre apresentação pública sem login.
 
 ## Base de componentes
 
@@ -78,7 +82,7 @@ Já disponíveis: `Brand`, `Avatar`, `Badge` (neutro, destaque, sucesso), `Empty
 | Feedback | Status de sucesso e alert de erro anunciados por leitores de tela |
 | Navegação | Link semântico, `aria-current`, foco visível, saída como botão |
 
-A próxima expansão adicionará Switch, Tabs genéricos, Dropdown, Modal/Dialog, Tooltip acessível, Toast, CommandMenu, ContextMenu e Skeleton conforme surgirem fluxos reais. Cards de sistema e barras de recurso já têm implementação nas telas atuais, ainda sem componentes genéricos próprios. Componentes futuros de RPG: CampaignCard, SessionCard, DiceRollMessage, InitiativeTracker, MapToolbar e PermissionBadge. O catálogo é planejamento; componentes não implementados não devem ser tratados como disponíveis.
+A próxima expansão adicionará Switch, Tabs genéricos, Dropdown, Modal/Dialog, Tooltip acessível, Toast, CommandMenu, ContextMenu e Skeleton conforme surgirem fluxos reais. Cards de sistema e barras de recurso já têm implementação nas telas atuais, ainda sem componentes genéricos próprios. Componentes futuros de RPG: CampaignCard genérico, DiceRollMessage, InitiativeTracker, MapToolbar e PermissionBadge. O catálogo é planejamento; componentes não implementados não devem ser tratados como disponíveis.
 
 Fichas atuais mostram identidade/história e seções de atributos, perícias e recursos da versão fixa, sem campos de regras adicionais. Cards de personagens usam dados persistidos, com vazio, busca, paginação e recuperação. Números reais aparecem na leitura; padrões pertencem apenas à criação.
 
@@ -97,7 +101,7 @@ Fichas atuais mostram identidade/história e seções de atributos, perícias e 
 | Perfil completo | Abas de campanhas/sistemas/personagens/estatísticas quando houver dados; papéis vêm de vínculos reais |
 | Temas | Dark global primeiro; personalização futura limitada ao conteúdo da campanha, preservando navegação e legibilidade |
 
-Estas diretrizes de apresentação não antecipam módulos do roadmap, como mapas e combate. Convites, próximas sessões e ações “Jogar” entram no painel quando seus fluxos existirem.
+Estas diretrizes de apresentação não antecipam módulos do roadmap, como mapas e combate. Convites e próximas sessões já mostram dados persistidos. Jogar, chat e contagem de espectadores entram quando seus fluxos existirem.
 
 ## Acessibilidade e verificação
 

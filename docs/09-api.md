@@ -101,6 +101,27 @@ Listas têm 20 itens, page 1–10000, search até 80, ordenação atualização/
 
 Sessão ausente: 401. Conteúdo inacessível: 404. Payload inválido: 400; valores divergentes da definição: CHARACTER_VALUES_INVALID. Conflitos 409: CHARACTER_REVISION_CONFLICT, CHARACTER_LIMIT (20 por dono/campanha), CHARACTER_CAMPAIGN_CLOSED. Remoção revoga acesso sem apagar fichas. Não há PATCH, DELETE, transferência ou rota pública de personagens. Veja a [decisão 005](architecture/decisions/005-personagens-e-fichas.md).
 
+## Contrato implementado — sessões
+
+Prefixo `/api/v1`, UUID v4, schemas estritos e `Cache-Control: no-store`. Criação/edição recebem title (2–120), description (até 4000), scheduledAt ISO com offset, timeZone IANA e visibility PRIVATE/PUBLIC. Datas na faixa técnica 2000–2100, sem início automático. Edição acrescenta expectedRevision; comandos recebem somente expectedRevision. Autoria, estado e datas reais vêm do servidor.
+
+| Rota | Acesso / resultado |
+| --- | --- |
+| GET /sessions/mine | Mestre/jogador ativo; lista privada |
+| GET /campaigns/:id/sessions | Mestre/jogador ativo dessa campanha |
+| POST /campaigns/:id/sessions | Mestre; 201 SCHEDULED |
+| GET /sessions/:id | Mestre/jogador ativo; detalhe com canManage |
+| PUT /sessions/:id | Mestre; SCHEDULED e campanha aberta |
+| POST /sessions/:id/start | Mestre; SCHEDULED → LIVE |
+| POST /sessions/:id/end | Mestre; LIVE → ENDED |
+| POST /sessions/:id/cancel | Mestre; SCHEDULED → CANCELLED |
+| GET /sessions/public | Anônimo; LIVE/PUBLIC em campanha PUBLIC |
+| GET /sessions/public/:id | Anônimo; mesma elegibilidade |
+
+Listas retornam items/page/pageSize/total, 20 itens, page 1–10000 e search até 80 caracteres por título/descrição. Privadas aceitam filter ALL (padrão, agenda decrescente/id) ou UPCOMING (LIVE primeiro, agenda crescente/id). Públicas ordenam início decrescente/id. Projeção pública inclui título/descrição, agenda/fuso, campanha id/nome, mestre público, nome/versão do sistema e início real; omite definição, fichas, membros, revisão e auditoria.
+
+Sem Bearer privado: 401. Inacessível ou sem elegibilidade pública: 404. Entrada inválida: 400. Conflitos 409: SESSION_REVISION_CONFLICT, SESSION_STATE_CONFLICT, SESSION_ALREADY_LIVE, SESSION_PUBLIC_CAMPAIGN_REQUIRED, SESSION_CAMPAIGN_CLOSED e SESSION_LIMIT. Finalizar/cancelar campanha com LIVE retorna CAMPAIGN_LIVE_SESSION. Repetir comando no mesmo estado destino é idempotente, sem nova revisão. Sem endpoint de histórico/restauração. [Decisão 006](architecture/decisions/006-sessoes-e-agenda.md).
+
 ## Rotas de origem
 
 | Método e rota | Operação | Autorização esperada |
@@ -161,7 +182,7 @@ O roteamento deve distinguir caminhos estáticos (`/users/me`, `/sessions/live`)
 
 ## Payloads ilustrativos
 
-Valores e IDs são fictícios. O exemplo de sistema corresponde ao contrato implementado; campanha, sessão e ficha continuam propostas.
+Valores e IDs são fictícios. Sistema e sessão correspondem ao contrato atual; exemplos antigos de campanha/ficha são ilustrativos e devem seguir seus contratos implementados acima. Rotas de origem e complementares preservam propostas; descoberta de sessões adotada usa /sessions/public, sem /sessions/live.
 
 ### Criar sistema
 
@@ -203,7 +224,7 @@ Não exigir Força ou Vida como campos fixos. O servidor gera IDs de sistema/ver
 }
 ```
 
-`systemVersionId` deverá referenciar a versão imutável adotada na decisão 002. O responsável vem da autenticação. Criação de campanha ainda não está disponível.
+`systemVersionId` referencia a versão imutável adotada na decisão 002. O responsável vem da autenticação. Criação de campanha está disponível conforme o contrato implementado acima.
 
 ### Criar sessão
 
@@ -212,13 +233,12 @@ Não exigir Força ou Vida como campos fixos. O servidor gera IDs de sistema/ver
   "title": "A Floresta Negra",
   "description": "O grupo segue as pistas do templo.",
   "scheduledAt": "2030-05-18T19:00:00-03:00",
-  "timezone": "America/Fortaleza",
-  "visibility": "PRIVATE",
-  "participantIds": ["usr_jogador_exemplo"]
+  "timeZone": "America/Fortaleza",
+  "visibility": "PRIVATE"
 }
 ```
 
-Data meramente ilustrativa. Servidor valida vínculo dos participantes; estado inicial é controlado pelo serviço.
+Data meramente ilustrativa. Estado inicial é SCHEDULED. Leitura privada usa vínculo ativo da campanha; participantIds não é aceito neste incremento.
 
 ### Atualizar ficha
 

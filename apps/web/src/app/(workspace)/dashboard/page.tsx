@@ -2,11 +2,11 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import { ArrowRight, ArrowUpRight, BookOpen, CalendarDays, Check, Compass, Sparkles, Users } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, BookOpen, Check, Compass, Sparkles, Users } from 'lucide-react';
 import { useAuth } from '@/components/auth-provider';
 import { Avatar } from '@/components/avatar';
 import { Badge } from '@/components/ui/badge';
-import { EmptyState } from '@/components/ui/empty-state';
+import { SessionList } from '@/components/session-list';
 import { CampaignList } from '@/components/campaign-list';
 import { InvitationInbox } from '@/components/invitation-inbox';
 
@@ -27,7 +27,7 @@ export default function Dashboard() {
       <div className="dashboard-main">
         <section className="panel"><CampaignList compact refreshRevision={campaignRevision} /></section>
         <section className="panel"><InvitationInbox compact onAccepted={() => setCampaignRevision(value => value + 1)} /></section>
-        <section className="panel"><div className="panel-heading"><h2><CalendarDays size={18} /> Próximas sessões</h2><Badge>Em desenvolvimento</Badge></div><EmptyState icon={<CalendarDays size={25} />} title="O próximo encontro começa aqui">Quando o módulo de sessões estiver disponível, você poderá acompanhar as próximas aventuras da sua mesa.</EmptyState></section>
+        <section className="panel"><SessionList compact /></section>
       </div>
       <aside className="dashboard-aside">
         <section className="panel profile-summary"><div className="panel-heading"><h2>Seu perfil</h2><Link href="/perfil" className="subtle-link">Editar <ArrowUpRight size={14} /></Link></div><div className="summary-person"><Avatar user={user} large /><div><h3>{user.displayName}</h3><span className="muted">@{user.username}</span></div></div><p className="summary-bio">{user.bio || 'Quais histórias inspiram você? Adicione uma biografia ao seu perfil.'}</p><Link href={`/u/${user.username}`} className="panel-link">Ver meu perfil público <ArrowUpRight size={17} /></Link></section>

@@ -2,7 +2,7 @@
 
 Este é um modelo **conceitual e lógico proposto**, derivado das entidades das seções 40–41. Não é uma migration, um schema Prisma ou uma decisão definitiva de armazenamento. Campos, enums e restrições devem ser validados junto da implementação.
 
-`User`, `Profile`, `RefreshSession`, `RpgSystem`, `SystemVersion`, `Campaign`, `CampaignChange`, `CampaignMember`, `CampaignInvitation`, `Character` e `CharacterChange` já possuem [schema Prisma](../apps/api/prisma/schema.prisma) e migrations versionadas. As demais entidades abaixo continuam propostas para os próximos módulos.
+`User`, `Profile`, `RefreshSession`, `RpgSystem`, `SystemVersion`, `Campaign`, `CampaignChange`, `CampaignMember`, `CampaignInvitation`, `Character`, `CharacterChange`, `GameSession` e `GameSessionChange` já possuem [schema Prisma](../apps/api/prisma/schema.prisma) e migrations versionadas. As demais entidades abaixo continuam propostas para os próximos módulos.
 
 ## Recorte implementado de sistemas
 
@@ -31,6 +31,12 @@ Aceite, revogação, remoção e edição de capacidade bloqueiam a mesma linha 
 `Character` armazena dono, campanha, versão fixa, nome, descrição, história, nível opcional, values JSON, revisão e datas. A FK composta para `(Campaign.id, Campaign.systemVersionId)` garante a mesma versão. Índices cobrem dono/atualização, campanha/atualização e versão. CHECKs limitam nível e revisão. A aplicação valida UUIDs/categorias exatos, valores inteiros e limites de recursos da definição imutável.
 
 `CharacterChange` registra ator, revisão única por personagem, snapshot e data na mesma transação da gravação. Não há tabelas CharacterAttribute/CharacterSkill/CharacterResource separadas neste recorte. Remoção do membro conserva o personagem e seu histórico; leitura depende de vínculo ativo ou responsabilidade da campanha. Criação/edição usa a mesma trava da campanha que a remoção. Políticas na [decisão 005](architecture/decisions/005-personagens-e-fichas.md).
+
+## Recorte implementado de sessões
+
+GameSession armazena campaignId, título, descrição, scheduledAt UTC, timeZone IANA, visibilidade, estado SCHEDULED/LIVE/ENDED/CANCELLED, revisão, startedAt/endedAt/cancelledAt, durationSeconds e criação/atualização. Mestre deriva da campanha. Índices cobrem campanha/agenda e estado/visibilidade/início. CHECKs protegem revisão e coerência de estado/datas/duração; índice SQL parcial GameSession_one_live_per_campaign limita LIVE por campanha.
+
+GameSessionChange guarda sessão, ator, revisão única, snapshot e data junto da escrita. Migration aditiva 20261008010000_sessions. Não há SessionParticipant/SessionSpectator: acesso privado deriva de mestre ou jogador ativo da campanha, sem seleção ou presença. [Decisão 006](architecture/decisions/006-sessoes-e-agenda.md). O diagrama completo abaixo permanece conceitual.
 
 ## Convenções propostas
 
@@ -128,7 +134,7 @@ Documentos, diário, criaturas, equipamentos, regras de progressão, permissões
 1. Criar campanha com responsável em `ownerId` e histórico na mesma transação; não duplicar o mestre em `CampaignMember`.
 2. Aceitar convite, atualizar seu estado e verificar capacidade de modo atômico, com bloqueio da linha da campanha adotado na decisão 004.
 3. Impedir que valores da ficha referenciem campos de outro sistema/versão.
-4. Proposta: controlar transições da sessão e regra de uma sessão ativa por campanha no banco/serviço, inclusive sob concorrência.
+4. Adotado na decisão 006: transições e uma LIVE por campanha, com índice parcial e trava transacional. Pausas futuras.
 5. Proposta: exigir `revision` na edição concorrente da ficha, retornando conflito quando obsoleta.
 6. Persistir mensagem/rolagem antes de emitir o evento; deduplicar por autor, sessão e identificador de requisição.
 

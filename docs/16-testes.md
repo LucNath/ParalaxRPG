@@ -2,7 +2,7 @@
 
 ## Status e objetivo
 
-Este documento é o **plano de testes** da plataforma completa. Conta/perfil, sistemas, campanhas, convites/membros e personagens/fichas têm integração com PostgreSQL real e testes de navegador desktop/mobile. Resultados nos relatórios [001](verification/001-autenticacao-perfil.md), [003](verification/003-sistemas.md), [005](verification/005-campanhas.md) e [006](verification/006-convites-e-membros.md). Fichas: 8 casos de API com valores dinâmicos, autoria, acesso privado, FK de versão, reinício, concorrência, quota, remoção e reingresso; 2 cenários E2E em cada dispositivo com criação/validação, edição jogador/mestre, conflito, revogação, paginação e recuperação de erro. Evidências na [verificação 007](verification/007-personagens-e-fichas.md). Sessões e tempo real abaixo permanecem planejados.
+Este documento é o **plano de testes** da plataforma completa. Conta/perfil, sistemas, campanhas, convites/membros e personagens/fichas têm integração com PostgreSQL real e testes de navegador desktop/mobile. Resultados nos relatórios [001](verification/001-autenticacao-perfil.md), [003](verification/003-sistemas.md), [005](verification/005-campanhas.md) e [006](verification/006-convites-e-membros.md). Fichas: 8 casos de API com valores dinâmicos, autoria, acesso privado, FK de versão, reinício, concorrência, quota, remoção e reingresso; 2 cenários E2E em cada dispositivo com criação/validação, edição jogador/mestre, conflito, revogação, paginação e recuperação de erro. Evidências na [verificação 007](verification/007-personagens-e-fichas.md). Sessões acrescentam nove casos de API: fuso/DST, acesso, validação, reinício, estados, concorrência/fechamento, público, remoção/reingresso, cota e paginação. Dois cenários E2E por dispositivo cobrem mestre/jogador/visitante, conflito, estados, revogação e listagem/recuperação. Resultados na [verificação 008](verification/008-sessoes-e-agenda.md). Chat, dados, presença e tempo real abaixo permanecem planejados.
 
 O objetivo do plano é comprovar o fluxo do MVP 1, persistência, privacidade, acesso por campanha e comunicação em tempo real. Testar o payload recebido é necessário: a tela pode esconder um segredo que o servidor já vazou.
 
@@ -98,7 +98,7 @@ Usar fonte de aleatoriedade controlável nos testes determinísticos para verifi
 
 - Dois aceites disputam a última vaga: somente um jogador ocupa a vaga, sem ultrapassar capacidade.
 - Mesmo convite aceito simultaneamente: um vínculo e um estado final consistente.
-- Duas tentativas de iniciar sessão: respeitar regra proposta de uma ativa por campanha.
+- Duas tentativas de iniciar sessão: respeitar regra adotada de uma LIVE por campanha.
 - Duas edições de ficha com mesma revisão: conflito tratado, sem sobrescrita silenciosa conforme estratégia escolhida.
 - Persistência falha: não confirmar sucesso nem transmitir resultado definitivo.
 - Persistência confirma e entrega falha: histórico/snapshot recupera o estado na reconexão.

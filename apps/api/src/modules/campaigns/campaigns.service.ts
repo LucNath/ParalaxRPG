@@ -57,6 +57,7 @@ export class CampaignsService {
     const { expectedRevision, ...settings } = input;
     return this.prisma.$transaction(async db => {
       await lockCampaign(db, id, ownerId);
+      if (['ENDED', 'CANCELLED'].includes(settings.status) && await db.gameSession.count({ where: { campaignId: id, status: 'LIVE' } })) throw new ConflictException({ code: 'CAMPAIGN_LIVE_SESSION', message: 'Encerre a sessão ao vivo antes de finalizar ou cancelar a campanha.' });
       const activePlayers = await db.campaignMember.count({ where: { campaignId: id, status: 'ACTIVE' } });
       if (settings.maxPlayers < activePlayers) throw new ConflictException({ code: 'CAMPAIGN_CAPACITY_CONFLICT', message: 'A capacidade não pode ser menor que a quantidade atual de jogadores.' });
       const updated = await db.campaign.updateMany({ where: { id, ownerId, revision: expectedRevision }, data: { ...settings, revision: { increment: 1 } } });
