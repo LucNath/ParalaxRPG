@@ -42,6 +42,7 @@ Consulte as [instruções de execução](../README.md) e os relatórios de [cont
 | [17 — Deploy](17-deploy.md) | Ambientes, serviços e operação proposta |
 | [18 — Contribuição](18-contribuicao.md) | Convenções, revisão e mudanças |
 | [19 — Design system](19-design-system.md) | Direção visual adotada, tokens, navegação, componentes e padrões para os próximos módulos |
+| [20 — Conquistas e personalização](20-conquistas-e-personalizacao.md) | Funcionalidade solicitada: desbloqueio de fundos e bordas, coleção, animações e proposta de implementação |
 | [Artes do site](design/artes-do-site.md) | Coleção de imagens, arquivos originais/WebP, aplicações e prompts de geração |
 | [Logo Paralax](design/logo-paralax.md) | Kit SVG/PNG, variantes, ícones, aplicação e prompt de criação |
 | [Verificação 009](verification/009-logo-e-favicon.md) | Logo própria, favicon, navegador e publicação |
@@ -81,6 +82,7 @@ Estas decisões não impedem a leitura da documentação, mas devem ser resolvid
 | DP10 | Idiomas, classificação indicativa, moderação e conteúdo proibido | [Visão](01-visao-do-produto.md) |
 | DP11 | Anotações, mensagens privadas e informações expostas a espectadores | [Interface](13-interface.md) e [WebSocket](10-websocket.md) |
 | DP12 | Operadores e precisão de fórmulas; modelos sem dados ou com cartas | [Arquitetura](07-arquitetura.md) |
+| DP13 | Catálogo e critérios de conquistas cosméticas, retroatividade, participação comprovada e produção de animações | [Conquistas e personalização](20-conquistas-e-personalizacao.md) |
 
 ## Rastreabilidade da especificação original
 

@@ -64,6 +64,16 @@ HU05 inclui publicação de sistemas, requisito geral cujo recorte de primeira e
 | HU27 | Como usuário, quero seguir pessoas, avaliar conteúdo e acompanhar conquistas | MVP 4; origem 49 |
 | HU28 | Como criador, quero definir fórmulas, progressão e opções avançadas de ficha | Evolução do construtor; fase pendente |
 
+## Ampliação solicitada — personalização por conquistas
+
+| ID | História | Aceitação proposta |
+| --- | --- | --- |
+| HU29 | Como usuário, quero obter conquistas que liberem itens para meu perfil | Uma ação elegível confirmada no servidor concede conquista e cosméticos uma única vez, inclusive em concorrência |
+| HU30 | Como usuário, quero escolher fundos e bordas da minha coleção | Prévia, seleção independente, remoção e persistência; chamadas diretas não equipam itens bloqueados ou de outra categoria |
+| HU31 | Como visitante, quero ver o perfil personalizado | Aparência pública correta, sem progresso/evidências privadas; animações têm pausa e alternativa estática |
+
+Funcionalidade solicitada, ainda não implementada. Condições, retroatividade e catálogo seguem a [proposta 20](20-conquistas-e-personalizacao.md). Não promove os demais recursos sociais do MVP 4.
+
 ## Ordem e definição de pronto
 
 Implementar HU01–HU03, HU04–HU05, HU06–HU10, HU11–HU12, HU13–HU16 e HU17–HU19 conforme dependências. A navegação pode ser construída junto dos módulos correspondentes.

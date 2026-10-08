@@ -20,6 +20,10 @@ Estado atual: conta/perfil, sistemas básicos e campanhas vinculadas a uma vers�
 
 “Complementos do núcleo” é uma organização proposta para requisitos gerais não incluídos expressamente na seção 46, não um quinto MVP definido na origem.
 
+## Incremento solicitado: conquistas e personalização
+
+O usuário solicitou fundos e bordas de avatar desbloqueados por conquistas, com versões estáticas e animadas. A [proposta 20](20-conquistas-e-personalizacao.md) organiza critérios, catálogo, concessão persistente, coleção/editor e produção de animações. Recomenda-se implementar primeiro o fluxo com itens estáticos, depois integrar os animados. A prioridade em relação ao chat/tempo real e as condições de obtenção permanecem pendentes; a solicitação antecipa parte das conquistas originalmente previstas no MVP 4, sem antecipar todo o módulo social.
+
 ## Prioridade técnica de origem
 
 A seção 57 recomenda:

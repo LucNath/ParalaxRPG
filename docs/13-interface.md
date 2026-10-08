@@ -103,6 +103,10 @@ O MVP 1 cobre campanhas, sistemas conforme publicação adotada e sessões ao vi
 
 Perfil completo futuro: banner, localização opcional, links, sistemas favoritos, campanhas, personagens, conquistas, seguidores e seguindo. Histórico de campanhas como Mestre/jogador, personagens, sistemas, horas e sessões exige regras de contagem; os números apresentados na origem são exemplos, não metas nem dados reais.
 
+### Personalização por conquistas — solicitação adicional
+
+Proposta de navegação: **Perfil → Conquistas / Personalizar**, com catálogo, condição/progresso, recompensas, coleção de fundos/bordas, prévia e seleção persistente. O banner atual é o padrão; imagens/loops e bordas são itens obtidos. Conquistas públicas são opcionais; evidências privadas não são exibidas. Ainda não implementado. Veja [20 — Conquistas e personalização](20-conquistas-e-personalizacao.md).
+
 ## Ferramentas da mesa nas etapas posteriores
 
 | Área | Elementos descritos na origem | Etapa |

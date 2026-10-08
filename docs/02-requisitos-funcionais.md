@@ -55,6 +55,10 @@ Não foram criados novos números RF para estas funcionalidades. Elas permanecem
 | Amigos, seguidores, avaliações, rankings e conquistas | 15–16, 49 | MVP 4 |
 | Voz, vídeo, replay, integrações, API pública, mercado, plugins e app móvel | 50 | Evolução futura |
 
+## Ampliação solicitada: conquistas cosméticas
+
+Em 8 de outubro de 2026, o usuário solicitou conquistas que desbloqueiam fundos estáticos/animados e bordas de avatar estáticas/animadas para personalizar o perfil público. Amplia RF003 e a ideia de conquistas da origem; ainda não implementado. O desenho, fluxo da coleção, critérios propostos, autorização e decisões pendentes estão em [20 — Conquistas e personalização](20-conquistas-e-personalizacao.md). A condição de cada conquista ainda precisa ser definida; exemplos não representam regras aprovadas.
+
 ## Validação transversal
 
 Cada operação de escrita deve validar identidade, permissão no recurso, entradas e estado atual antes de persistir ou transmitir. Os critérios negativos de acesso são parte da aceitação funcional, não apenas dos testes de segurança.
