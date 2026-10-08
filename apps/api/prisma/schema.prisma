@@ -35,6 +35,7 @@ model Profile {
   avatarKey String?
   backgroundId String?
   avatarFrameId String?
+  allCosmeticsUnlocked Boolean @default(false)
   updatedAt DateTime @updatedAt
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   background UserCosmetic? @relation("ProfileBackground", fields: [userId, backgroundId], references: [userId, cosmeticId], onDelete: NoAction)

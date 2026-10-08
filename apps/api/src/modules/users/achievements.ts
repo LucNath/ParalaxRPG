@@ -11,6 +11,15 @@ export async function grantIdentity(db: Prisma.TransactionClient, userId: string
   const profile = await db.profile.findUniqueOrThrow({ where: { userId }, select: { bio: true, avatarKey: true } });
   if (profile.bio.trim() && profile.avatarKey) await grantAchievement(db, userId, 'identity');
 }
+// Administrative entitlement belongs to the immutable account, never to a username or client input.
+export async function ensureCosmeticAccess(db: Prisma.TransactionClient, userId: string) {
+  const profile = await db.profile.findUniqueOrThrow({ where: { userId }, select: { allCosmeticsUnlocked: true } });
+  if (profile.allCosmeticsUnlocked) {
+    // Keep the same Profile → Cosmetic lock order as bio/avatar saves.
+    await db.$queryRaw`SELECT "userId" FROM "Profile" WHERE "userId" = ${userId} FOR UPDATE`;
+    await db.userCosmetic.createMany({ data: profileCosmetics.map(item => ({ userId, cosmeticId: item.id })), skipDuplicates: true });
+  }
+}
 export async function achievements(db: Prisma.TransactionClient, userId: string): Promise<AchievementsPage> {
   const obtained = await db.userAchievement.findMany({ where: { userId } });
   return { items: achievementDefinitions.map(item => {
@@ -20,6 +29,7 @@ export async function achievements(db: Prisma.TransactionClient, userId: string)
   }) };
 }
 export async function cosmetics(db: Prisma.TransactionClient, userId: string): Promise<CosmeticsPage> {
+  await ensureCosmeticAccess(db, userId);
   const [owned, profile] = await Promise.all([
     db.userCosmetic.findMany({ where: { userId }, select: { cosmeticId: true } }),
     db.profile.findUniqueOrThrow({ where: { userId }, select: { backgroundId: true, avatarFrameId: true } }),

@@ -22,3 +22,11 @@ Chromium online, desktop e Pixel 7 reduzido a 320 px: conta nova com 0/4, item b
 Captura online do perfil público móvel inspecionada; sem overflow. Logout visível na área privada de 320 px. Contas sintéticas e dados associados excluídos por IDs/e-mails/nomes exatos, ausência confirmada; apenas os dois avatares produzidos pelo teste foram removidos do Blob e sua ausência foi confirmada com leitura privada.
 
 Logs dos deployments após o teste, janela de uma hora: nenhum HTTP 500 e nenhum registro web de nível error. API apresentou cinco registros de aviso existente sobre depreciação de sslmode, associados a quatro HTTP 200 e um HTTP 201; sem falha de conexão. Não se afirma ausência de logs de erro da API. Capturas, backups e logs permanecem ignorados em `.artifacts/`.
+
+## Liberação permanente solicitada pelo titular
+
+Profile.allCosmeticsUnlocked, default false e indisponível via HTTP, permite sincronizar todo o catálogo para a conta configurada administrativamente. Oitavo teste de conquistas verifica rejeição de ativação pelo cliente, PATCH antes da visita à coleção, sincronização repetida sem duplicação, reposição de item, conquistas reais preservadas, outra conta bloqueada, privacidade do campo e vínculo ao ID mesmo após mudança do username.
+
+Check final aprovado: tipos e 67 testes de integração. Nenhuma alteração de interface ou nova dependência nesta extensão.
+
+Backup antes da nona migration: `.artifacts/backups/before-owner-access-1791481474557.dump`, 53.456 bytes, formato/manifesto conferidos. Migration 20261008040000_cosmetic_access aplicada no Neon; liberação ativada exclusivamente para a conta indicada pelo usuário, conferida por identidade exata. Os quatro itens foram adicionados sem mudar aparência, avatar, biografia ou conquistas. Dados pessoais e seleções anteriores conferidos.

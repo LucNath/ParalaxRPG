@@ -25,6 +25,12 @@ Concessão dentro da transação que confirma a ação, sem fila nem evento envi
 
 Excluir ficha/campanha ou apagar biografia não retira conquistas já obtidas. Exclusão da conta remove conquistas/coleção/perfil. Não há revogação de prêmios nem contagem de sessões/horas, feitos, vitórias ou críticos.
 
+## Liberação permanente por conta
+
+Após solicitação do proprietário, Profile.allCosmeticsUnlocked permite acesso a todo o catálogo, inclusive novos itens. Default false, sem campo de entrada ou saída na API. A ativação ocorre administrativamente no banco para o ID imutável da conta identificada; não depende de nome de usuário nem concede acesso a dados de outras mesas. Conquistas continuam refletindo ações reais.
+
+GET da coleção e PATCH com seleção de cosmético sincronizam os itens do catálogo na propriedade da conta em transação, sem duplicatas. A sincronização trava Profile antes de escrever cosméticos para manter a ordem de bloqueio das edições de bio/avatar. As validações de categoria e propriedade continuam aplicadas. Migration aditiva 20261008040000_cosmetic_access; nenhuma conta recebe liberação por padrão.
+
 ## Retroatividade
 
 Migration 20261008030000_achievement_cosmetics concede marcos comprovados pelo estado existente: perfil com bio/avatar, menor createdAt da ficha/campanha da conta e menor createdAt de rolagem por actorId ainda existente. Avatar e biografia completos recebem a data da migration, pois não existe uma data confiável do momento em que ambas condições se completaram. Ações cujos registros foram apagados antes da migration não são inferidas. As escolhas de perfil continuam nulas; aparência antiga preservada.

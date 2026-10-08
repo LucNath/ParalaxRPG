@@ -9,7 +9,7 @@ import { SchemaPipe } from '../../common/schema.pipe';
 import { AuthIdentity, Identity, Public } from '../auth/auth.decorators';
 import { currentProfile, currentUserSelect, publicProfile, publicUserSelect } from './profile.mapper';
 import { AvatarService } from './avatar.service';
-import { achievements, cosmetics, grantIdentity } from './achievements';
+import { achievements, cosmetics, ensureCosmeticAccess, grantIdentity } from './achievements';
 
 @Controller('users')
 export class UsersController {
@@ -26,6 +26,7 @@ export class UsersController {
     @Res({ passthrough: true }) response: Response) {
     response.setHeader('Cache-Control', 'no-store');
     return this.prisma.$transaction(async db => {
+      if (input.backgroundId != null || input.avatarFrameId != null) await ensureCosmeticAccess(db, identity.userId);
       for (const [field, category] of [['backgroundId', 'BACKGROUND'], ['avatarFrameId', 'AVATAR_FRAME']] as const) {
         const id = input[field];
         if (id != null && (!profileCosmetics.some(item => item.id === id && item.category === category)
@@ -45,7 +46,7 @@ export class UsersController {
   @Get('me/cosmetics')
   async cosmetics(@Identity() identity: AuthIdentity, @Res({ passthrough: true }) response: Response) {
     response.setHeader('Cache-Control', 'no-store');
-    return cosmetics(this.prisma, identity.userId);
+    return this.prisma.$transaction(db => cosmetics(db, identity.userId));
   }
   @Post('me/avatar')
   @Throttle({ default: { limit: 10, ttl: 60000 } })

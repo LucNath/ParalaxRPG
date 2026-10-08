@@ -108,4 +108,23 @@ describe('Conquistas e cosméticos com PostgreSQL real', { concurrency: false },
       const profiles = (await client.query('SELECT "backgroundId", "avatarFrameId" FROM "Profile"')).rows; assert.ok(profiles.every(row => row.backgroundId === null && row.avatarFrameId === null));
     } finally { await client.query('ROLLBACK'); client.release(); await pool.end(); }
   });
+  it('liberação permanente fica na conta, não altera conquistas e não pode ser ativada por HTTP', async () => {
+    const actor = await register(), other = await register();
+    assert.equal((await request('/users/me', actor, 'PATCH', { allCosmeticsUnlocked: true })).status, 400);
+    await prisma.profile.update({ where: { userId: actor.user.id }, data: { allCosmeticsUnlocked: true } });
+    // PATCH also grants a newly catalogued item without requiring a collection visit first.
+    assert.equal((await patch(actor, { backgroundId: 'floating-citadel', avatarFrameId: 'dice-path' })).background.id, 'floating-citadel');
+    let collection = await json('/users/me/cosmetics', actor, 'GET', undefined, 200); assert.ok(collection.items.every(item => item.unlocked));
+    const original = await prisma.userCosmetic.findMany({ where: { userId: actor.user.id }, orderBy: { cosmeticId: 'asc' } });
+    await json('/users/me/cosmetics', actor, 'GET', undefined, 200); assert.deepEqual(await prisma.userCosmetic.findMany({ where: { userId: actor.user.id }, orderBy: { cosmeticId: 'asc' } }), original);
+    await patch(actor, { backgroundId: null, avatarFrameId: null });
+    await prisma.userCosmetic.delete({ where: { userId_cosmeticId: { userId: actor.user.id, cosmeticId: 'forest-refuge' } } });
+    collection = await json('/users/me/cosmetics', actor, 'GET', undefined, 200); assert.ok(collection.items.every(item => item.unlocked));
+    assert.ok((await json('/users/me/achievements', actor, 'GET', undefined, 200)).items.every(item => item.earnedAt === null));
+    assert.ok((await json('/users/me/cosmetics', other, 'GET', undefined, 200)).items.every(item => !item.unlocked));
+    const publicUser = await json(`/users/${actor.user.username}`, null, 'GET', undefined, 200); assert.equal(publicUser.allCosmeticsUnlocked, undefined);
+    assert.equal((await request('/users/me', other, 'PATCH', { avatarFrameId: 'dice-path' })).status, 400);
+    await prisma.user.update({ where: { id: actor.user.id }, data: { username: `${actor.user.username}_x` } });
+    assert.ok((await json('/users/me/cosmetics', actor, 'GET', undefined, 200)).items.every(item => item.unlocked));
+  });
 });
