@@ -18,4 +18,15 @@ Brand compartilha os mesmos SVGs na landing, login, cadastro e páginas pública
 
 O servidor web padrão estava ocupado por outro projeto. As conferências finais locais usaram localhost:3002 e WEB_ORIGIN correspondente no processo da API, sem alterar arquivos de ambiente ou interromper o outro aplicativo.
 
-Publicação online será registrada após concluir.
+## Publicação e conferência online
+
+- Código publicado: `bb93526d41854818f50f42c69ae2b48b4eb489e3`.
+- Web: `dpl_GxeGA72yxqmLH8tTA9uJi1jHSBdc`, READY; build remoto com tipos passou em 32 s.
+- URL canônica: [paralax-rpg-web.vercel.app](https://paralax-rpg-web.vercel.app). Deployment: [paralax-rpg-nj4aos0iv-lucky-8804ce74.vercel.app](https://paralax-rpg-nj4aos0iv-lucky-8804ce74.vercel.app).
+- Só a web foi republicada, no projeto `paralax-rpg-web` da equipe `lucky-8804ce74`; API e banco não precisaram de publicação ou migration.
+- Conferência anônima online repetiu as quatro páginas em desktop/Pixel 7/320 px, incluindo MIME, metadados e arquivos dos ícones. Logos carregadas, sem overflow nem erros JavaScript.
+- Cadastro real → dashboard → recarga → logout → link da logo passou em desktop e celular. Marca compacta e card conferidos no desktop; cabeçalho de cadastro/entrada no celular. Os seis controles da navegação inferior continuam acessíveis.
+- Contas sintéticas online removidas por ID/e-mail/username exatos e ausência confirmada no Neon; nenhum avatar foi criado. Screenshots online em `.artifacts/online-desktop-logo-dashboard.png`, `.artifacts/online-mobile-logo-dashboard.png` e `.artifacts/online-mobile-logo-cadastro.png`.
+- Logs do deployment web, consultados após os testes com filtros `error` e HTTP 500, não retornaram registros na janela de 1 h. Isso descreve a janela conferida, não um monitoramento contínuo.
+
+No Windows, requisições Node usaram `NODE_USE_SYSTEM_CA=1` para certificados locais, mantendo a verificação TLS. A fonte da marca, as exportações, o conceito original e os registros de implementação ficam no Git; arquivos de ambiente e evidências locais continuam ignorados.
