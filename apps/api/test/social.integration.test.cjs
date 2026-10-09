@@ -60,6 +60,86 @@ describe('Amizades e mensagens privadas: consentimento, isolamento e concorrênc
     assert.deepEqual(responses.map(res => res.status).sort(), [201, 409]);
     const rows = await db.friendship.findMany({ where: { lowId: { in: ids }, highId: { in: ids } } }); assert.equal(rows.length, 1); assert.equal(rows[0].status, 'PENDING');
   });
+  it('migração real recupera apenas pedidos pendentes e mensagens ainda não lidas', async () => {
+    const { Client } = require('pg'), { readFileSync } = require('node:fs'), { join } = require('node:path');
+    const client = new Client({ connectionString: app.get(ConfigService).get('DATABASE_URL') }); await client.connect();
+    const schema = `notification_${randomUUID().replaceAll('-', '')}`, pending = randomUUID(), accepted = randomUUID();
+    try {
+      await client.query('BEGIN'); await client.query(`CREATE SCHEMA "${schema}"; SET LOCAL search_path TO "${schema}", public`);
+      await client.query('CREATE TABLE "User" (id TEXT PRIMARY KEY); CREATE TABLE "Friendship" (LIKE public."Friendship" INCLUDING ALL); CREATE TABLE "DirectMessage" (LIKE public."DirectMessage" INCLUDING ALL)');
+      await client.query('INSERT INTO "User" (id) VALUES ($1),($2),($3)', [a.user.id, b.user.id, outsider.user.id]);
+      const [low, high] = [a.user.id, b.user.id].sort();
+      await client.query(`INSERT INTO "Friendship" (id,"lowId","highId","initiatorId",status,"updatedAt") VALUES ($1,$2,$3,$4,'PENDING',CURRENT_TIMESTAMP)`, [pending, low, high, a.user.id]);
+      const [otherLow, otherHigh] = [a.user.id, outsider.user.id].sort();
+      const lowRead = outsider.user.id === otherLow ? 1 : 0, highRead = outsider.user.id === otherHigh ? 1 : 0;
+      await client.query(`INSERT INTO "Friendship" (id,"lowId","highId","initiatorId",status,"lastSequence","lowReadSequence","highReadSequence","updatedAt") VALUES ($1,$2,$3,$4,'ACCEPTED',2,$5,$6,CURRENT_TIMESTAMP)`, [accepted, otherLow, otherHigh, a.user.id, lowRead, highRead]);
+      for (const sequence of [1, 2]) await client.query('INSERT INTO "DirectMessage" (id,"friendshipId","senderId","requestId",sequence,content) VALUES ($1,$2,$3,$4,$5,$6)', [randomUUID(), accepted, a.user.id, randomUUID(), sequence, `Anterior ${sequence}`]);
+      const migration = readFileSync(join(__dirname, '../prisma/migrations/20261008200000_notifications/migration.sql'), 'utf8').replace(/^BEGIN;\s*/, '').replace(/COMMIT;\s*$/, '');
+      await client.query(migration);
+      const rows = (await client.query('SELECT "recipientId","friendshipId",kind,sequence FROM "SocialNotification" ORDER BY kind')).rows;
+      assert.deepEqual(rows, [
+        { recipientId: b.user.id, friendshipId: pending, kind: 'REQUEST', sequence: 0 },
+        { recipientId: outsider.user.id, friendshipId: accepted, kind: 'MESSAGE', sequence: 2 },
+      ]);
+      await client.query(`UPDATE "Friendship" SET "${outsider.user.id === otherLow ? 'lowReadSequence' : 'highReadSequence'}"=2 WHERE id=$1`, [accepted]);
+      assert.equal((await client.query(`SELECT count(*)::int n FROM "SocialNotification" WHERE kind='MESSAGE' AND "readAt" IS NULL`)).rows[0].n, 0);
+    } finally { await client.query('ROLLBACK'); await client.end(); }
+  });
+  it('notificações privadas acompanham solicitações, aceite, versões e leitura real da conversa', async () => {
+    for (const path of ['/notifications', '/notifications/summary']) assert.equal((await request(path)).status, 401);
+    const pending = await json('/requests', a, 'POST', { username: b.user.username }, 201);
+    assert.equal((await request(`/connections/${pending.id}`, outsider)).status, 404);
+    assert.equal((await json(`/connections/${pending.id}`, b)).incoming, true);
+    let inbox = await json('/notifications', b);
+    assert.equal(inbox.items[0].kind, 'REQUEST'); assert.ok(!JSON.stringify(inbox).includes(a.user.email));
+    const notification = inbox.items[0];
+    assert.equal((await request(`/notifications/${notification.id}/read`, outsider, 'POST', { version: notification.version })).status, 404);
+    assert.equal((await request(`/notifications/${notification.id}/read`, b, 'POST', { version: 0 })).status, 400);
+    assert.equal((await request(`/notifications/${notification.id}/read`, b, 'POST', { version: notification.version, recipientId: a.user.id })).status, 400);
+    assert.equal((await request(`/notifications/${notification.id}/read`, b, 'POST', { version: notification.version })).status, 204);
+    assert.deepEqual(await json('/notifications/summary', b), { incomingRequests: 1, unreadMessages: 0, unreadNotifications: 0 });
+    assert.equal((await request(`/connections/${pending.id}/action`, b, 'POST', { action: 'accept' })).status, 204);
+    assert.equal((await json('/notifications', b)).total, 0);
+    assert.equal((await json('/notifications', a)).items[0].kind, 'ACCEPTED');
+    const input = { requestId: randomUUID(), content: 'Mensagem confidencial' };
+    await json(`/connections/${pending.id}/messages`, a, 'POST', input, 201);
+    const first = (await json('/notifications', b)).items[0];
+    await json(`/connections/${pending.id}/messages`, a, 'POST', input, 201);
+    assert.equal((await json('/notifications', b)).items[0].version, first.version);
+    await json(`/connections/${pending.id}/messages`, a, 'POST', { requestId: randomUUID(), content: 'Outra mensagem' }, 201);
+    assert.equal((await request(`/notifications/${first.id}/read`, b, 'POST', { version: first.version })).status, 204);
+    inbox = await json('/notifications', b); assert.equal(inbox.total, 1); assert.equal(inbox.items[0].readAt, null); assert.equal(inbox.items[0].version, first.version + 1);
+    assert.ok(!JSON.stringify(inbox).includes('Mensagem confidencial'));
+    assert.equal((await request(`/notifications/${first.id}/read`, b, 'POST', { version: inbox.items[0].version })).status, 204);
+    assert.deepEqual(await json('/notifications/summary', b), { incomingRequests: 0, unreadMessages: 2, unreadNotifications: 0 });
+    await json(`/connections/${pending.id}/messages`, a, 'POST', { requestId: randomUUID(), content: 'Nova mensagem' }, 201);
+    assert.equal((await request(`/connections/${pending.id}/read`, b, 'POST', { sequence: 2 })).status, 204);
+    assert.equal((await json('/notifications/summary', b)).unreadNotifications, 1);
+    assert.equal((await request(`/connections/${pending.id}/read`, b, 'POST', { sequence: 3 })).status, 204);
+    assert.deepEqual(await json('/notifications/summary', b), { incomingRequests: 0, unreadMessages: 0, unreadNotifications: 0 });
+    assert.equal((await request(`/connections/${pending.id}/action`, a, 'POST', { action: 'block' })).status, 204);
+    assert.equal((await json('/notifications', a)).total, 0); assert.equal((await json('/notifications', b)).total, 0);
+    assert.equal((await request(`/notifications/${first.id}/read`, b, 'POST', { version: first.version })).status, 404);
+  });
+  it('contadores e atalhos abrangem vínculos fora da primeira página; cancelamentos e rollback retiram avisos', async () => {
+    const extra = Array.from({ length: 32 }, () => randomUUID()); ids.push(...extra);
+    const passwordHash = (await db.user.findUnique({ where: { id: a.user.id } })).passwordHash;
+    await db.user.createMany({ data: extra.map(id => ({ id, username: `n_${id.replaceAll('-', '')}`, email: `${id}@example.test`, passwordHash })) });
+    const pairs = extra.map(id => ({ id: randomUUID(), lowId: [id, b.user.id].sort()[0], highId: [id, b.user.id].sort()[1], initiatorId: id, status: 'PENDING' }));
+    await db.friendship.createMany({ data: pairs });
+    assert.equal((await json('/notifications', b)).items.length, 30);
+    assert.equal((await json('/notifications?page=2', b)).items.length, 2);
+    assert.deepEqual(await json('/notifications/summary', b), { incomingRequests: 32, unreadMessages: 0, unreadNotifications: 32 });
+    assert.equal((await json(`/connections/${pairs[0].id}`, b)).id, pairs[0].id);
+    await db.friendship.update({ where: { id: pairs[0].id }, data: { status: 'ACCEPTED', lastSequence: 1 } });
+    await db.directMessage.create({ data: { friendshipId: pairs[0].id, senderId: extra[0], sequence: 1, requestId: randomUUID(), content: 'Fora da página' } });
+    assert.equal((await json('/notifications/summary', b)).unreadMessages, 1);
+    await assert.rejects(db.$transaction(async tx => { await tx.friendship.update({ where: { id: pairs[1].id }, data: { status: 'ACCEPTED' } }); throw new Error('rollback'); }));
+    assert.equal((await db.socialNotification.findFirst({ where: { friendshipId: pairs[1].id } })).kind, 'REQUEST');
+    await db.friendship.update({ where: { id: pairs[1].id }, data: { status: 'DECLINED' } });
+    assert.equal(await db.socialNotification.count({ where: { friendshipId: pairs[1].id } }), 0);
+    const response = await request('/notifications', b); assert.equal(response.headers.get('cache-control'), 'no-store');
+  });
   it('mensagens têm sequência atômica, replay seguro, leitura monotônica e paginação sem perdas', async () => {
     const id = await friendship(), input = { requestId: randomUUID(), content: 'Olá <script>literal</script>\nPróxima aventura?' };
     assert.equal((await request(`/connections/${id}/messages?before=9007199254740991`, a)).status, 400);

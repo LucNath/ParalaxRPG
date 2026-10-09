@@ -6,10 +6,28 @@ import { socialListSchema, socialSearchSchema, friendRequestSchema, friendAction
 import { SchemaPipe } from '../../common/schema.pipe';
 import { Identity, type AuthIdentity } from '../auth/auth.decorators';
 import { SocialService } from './social.service';
+import { notificationReadSchema, type NotificationReadInput } from '@paralax/contracts';
 
 @Controller('social')
 export class SocialController {
   constructor(private readonly social: SocialService) {}
+  @Get('notifications/summary')
+  summary(@Identity() identity: AuthIdentity, @Res({ passthrough: true }) res: Response) {
+    res.setHeader('Cache-Control', 'no-store'); return this.social.summary(identity.userId);
+  }
+  @Get('notifications')
+  notifications(@Identity() identity: AuthIdentity, @Query(new SchemaPipe(socialListSchema)) query: SocialListQuery, @Res({ passthrough: true }) res: Response) {
+    res.setHeader('Cache-Control', 'no-store'); return this.social.notifications(identity.userId, query.page);
+  }
+  @Post('notifications/:id/read')
+  @HttpCode(204)
+  notificationRead(@Identity() identity: AuthIdentity, @Param('id', new ParseUUIDPipe({ version: '4' })) id: string, @Body(new SchemaPipe(notificationReadSchema)) input: NotificationReadInput, @Res({ passthrough: true }) res: Response) {
+    res.setHeader('Cache-Control', 'no-store'); return this.social.notificationRead(identity.userId, id, input.version);
+  }
+  @Get('connections/:id')
+  connection(@Identity() identity: AuthIdentity, @Param('id', new ParseUUIDPipe({ version: '4' })) id: string, @Res({ passthrough: true }) res: Response) {
+    res.setHeader('Cache-Control', 'no-store'); return this.social.connection(identity.userId, id);
+  }
   @Get('search')
   search(@Identity() identity: AuthIdentity, @Query(new SchemaPipe(socialSearchSchema)) query: SocialSearchQuery, @Res({ passthrough: true }) res: Response) {
     res.setHeader('Cache-Control', 'no-store'); return this.social.search(identity.userId, query.search);

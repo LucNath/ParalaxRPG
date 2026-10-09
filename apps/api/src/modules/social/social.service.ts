@@ -16,6 +16,52 @@ const visible = (userId: string): Prisma.FriendshipWhereInput => ({ AND: [partic
 @Injectable()
 export class SocialService {
   constructor(private readonly prisma: PrismaService) {}
+  private notificationScope(userId: string): Prisma.SocialNotificationWhereInput {
+    return { recipientId: userId, AND: [
+      { friendship: participant(userId) },
+      { OR: [
+        { kind: 'REQUEST', friendship: { status: 'PENDING', initiatorId: { not: userId } } },
+        { kind: { in: ['ACCEPTED', 'MESSAGE'] }, friendship: { status: 'ACCEPTED' } },
+      ] },
+    ] };
+  }
+  async summary(userId: string) {
+    const [incomingRequests, unreadNotifications, counts] = await Promise.all([
+      this.prisma.friendship.count({ where: { AND: [participant(userId), { status: 'PENDING', initiatorId: { not: userId } }] } }),
+      this.prisma.socialNotification.count({ where: { AND: [this.notificationScope(userId), { readAt: null }] } }),
+      this.prisma.$queryRaw<{ count: bigint }[]>`SELECT COUNT(*) AS count FROM "DirectMessage" m JOIN "Friendship" f ON f."id" = m."friendshipId"
+        WHERE f."status" = 'ACCEPTED' AND (f."lowId" = ${userId} OR f."highId" = ${userId}) AND m."senderId" <> ${userId}
+        AND m."sequence" > CASE WHEN f."lowId" = ${userId} THEN f."lowReadSequence" ELSE f."highReadSequence" END`,
+    ]);
+    return { incomingRequests, unreadMessages: Number(counts[0].count), unreadNotifications };
+  }
+  async notifications(userId: string, page: number) {
+    const where = this.notificationScope(userId);
+    const [rows, total] = await this.prisma.$transaction([
+      this.prisma.socialNotification.findMany({ where, orderBy: [{ updatedAt: 'desc' }, { id: 'desc' }], skip: (page - 1) * 30, take: 30,
+        include: { friendship: { include: { low: { select: personSelect }, high: { select: personSelect } } } } }),
+      this.prisma.socialNotification.count({ where }),
+    ]);
+    return { items: rows.map(row => ({ id: row.id, friendshipId: row.friendshipId, kind: row.kind, version: row.version,
+      person: person(row.friendship.lowId === userId ? row.friendship.high : row.friendship.low), updatedAt: row.updatedAt.toISOString(), readAt: row.readAt?.toISOString() ?? null })), total, page, pageSize: 30 };
+  }
+  async notificationRead(userId: string, id: string, version: number) {
+    // SQL preserves event time and compares the observed revision atomically.
+    if (!await this.prisma.socialNotification.findFirst({ where: { AND: [this.notificationScope(userId), { id }] }, select: { id: true } })) throw new NotFoundException();
+    await this.prisma.$executeRaw`UPDATE "SocialNotification" n SET "readAt" = COALESCE(n."readAt", CURRENT_TIMESTAMP)
+      FROM "Friendship" f WHERE n."friendshipId" = f."id" AND n."id" = ${id} AND n."recipientId" = ${userId} AND n."version" = ${version}
+      AND (f."lowId" = ${userId} OR f."highId" = ${userId})
+      AND ((n."kind" = 'REQUEST' AND f."status" = 'PENDING' AND f."initiatorId" <> ${userId}) OR (n."kind" IN ('ACCEPTED', 'MESSAGE') AND f."status" = 'ACCEPTED'))`;
+  }
+  async connection(userId: string, id: string): Promise<SocialConnection> {
+    return this.prisma.$transaction(async db => {
+      await this.locked(db, userId, id);
+      const row = await db.friendship.findFirst({ where: { AND: [visible(userId), { id }] }, include: { low: { select: personSelect }, high: { select: personSelect }, messages: { orderBy: { sequence: 'desc' }, take: 1 } } });
+      if (!row) throw new NotFoundException();
+      const unread = row.status === 'ACCEPTED' ? await db.directMessage.count({ where: { friendshipId: id, senderId: { not: userId }, sequence: { gt: row.lowId === userId ? row.lowReadSequence : row.highReadSequence } } }) : 0;
+      return { id, person: person(row.lowId === userId ? row.high : row.low), status: row.status, incoming: row.initiatorId !== userId, blockedByMe: row.blockedById === userId, unread, lastMessage: row.status === 'ACCEPTED' && row.messages[0] ? message(row.messages[0]) : null };
+    });
+  }
   async search(userId: string, search: string) {
     const users = await this.prisma.user.findMany({ where: { id: { not: userId }, username: { startsWith: search },
       NOT: { OR: [{ friendshipsLow: { some: { highId: userId, status: 'BLOCKED' } } }, { friendshipsHigh: { some: { lowId: userId, status: 'BLOCKED' } } }] } },

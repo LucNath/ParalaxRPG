@@ -16,6 +16,8 @@ As dez primeiras contas recebem todos os cosméticos atuais e futuros, inclusive
 
 Em **Amigos**, busque um nome de usuário, envie/aceite solicitações e abra uma conversa privada. As mensagens têm histórico, contagem de não lidas, atualização automática e bloqueio. Veja [amizades e mensagens](docs/friends-and-messages.md).
 
+O sino abre a **central de notificações**, com solicitações, amizades aceitas e mensagens agrupadas por conversa. O menu Amigos indica pedidos pendentes e mensagens não lidas em todas as amizades; marcar um aviso como visto mantém as mensagens pendentes até abrir a conversa.
+
 ## Executar localmente
 
 Pré-requisitos: Node.js 22.18 ou superior, npm 10 ou superior e Docker com Compose. A implementação foi verificada em Windows com Node.js 26.5.0.

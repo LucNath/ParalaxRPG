@@ -29,6 +29,7 @@ model User {
   friendshipsLow Friendship[] @relation("FriendLow")
   friendshipsHigh Friendship[] @relation("FriendHigh")
   directMessages DirectMessage[]
+  socialNotifications SocialNotification[]
 }
 
 enum FriendshipStatus {
@@ -53,9 +54,32 @@ model Friendship {
   low User @relation("FriendLow", fields: [lowId], references: [id], onDelete: Cascade)
   high User @relation("FriendHigh", fields: [highId], references: [id], onDelete: Cascade)
   messages DirectMessage[]
+  notifications SocialNotification[]
   @@unique([lowId, highId])
   @@index([lowId, updatedAt])
   @@index([highId, updatedAt])
+}
+
+enum SocialNotificationKind {
+  REQUEST
+  ACCEPTED
+  MESSAGE
+}
+
+model SocialNotification {
+  id String @id @default(uuid())
+  recipientId String
+  friendshipId String
+  kind SocialNotificationKind
+  sequence Int @default(0)
+  version Int @default(1)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  readAt DateTime?
+  recipient User @relation(fields: [recipientId], references: [id], onDelete: Cascade)
+  friendship Friendship @relation(fields: [friendshipId], references: [id], onDelete: Cascade)
+  @@unique([friendshipId, recipientId, kind])
+  @@index([recipientId, updatedAt])
 }
 
 model DirectMessage {

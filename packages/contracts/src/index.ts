@@ -20,6 +20,11 @@ export interface SocialConnection { id: string; person: SocialPerson; status: 'P
 export interface SocialConnectionsPage { items: SocialConnection[]; total: number; page: number; pageSize: number }
 export interface DirectMessageItem { id: string; senderId: string; sequence: number; content: string; createdAt: string }
 export interface DirectMessagesPage { items: DirectMessageItem[]; hasMore: boolean }
+export interface NotificationSummary { incomingRequests: number; unreadMessages: number; unreadNotifications: number }
+export interface SocialNotificationItem { id: string; friendshipId: string; kind: 'REQUEST' | 'ACCEPTED' | 'MESSAGE'; person: SocialPerson; version: number; updatedAt: string; readAt: string | null }
+export interface SocialNotificationsPage { items: SocialNotificationItem[]; total: number; page: number; pageSize: number }
+export const notificationReadSchema = z.object({ version: z.number().int().positive().max(2147483647) }).strict();
+export type NotificationReadInput = z.infer<typeof notificationReadSchema>;
 
 const email = z.string().trim().toLowerCase().email('Informe um e-mail válido.').max(254);
 const username = z.string().trim().toLowerCase()
