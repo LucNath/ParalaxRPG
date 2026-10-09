@@ -123,6 +123,22 @@ describe('Chat de sessão: acesso, histórico, leitura, notificações e concorr
     assert.equal((await send(input('Campanha fechada'))).status, 409); assert.equal((await (await request(path())).json()).items.length, 1);
     await request(`/campaigns/${campaign.id}/members/${player.user.id}`, gm, 'DELETE'); assert.equal((await request(path())).status, 404);
   });
+  it('conta mensagens após reingresso mesmo quando a transação do envio começou antes do aceite', async () => {
+    await request(`/campaigns/${campaign.id}/members/${player.user.id}`, gm, 'DELETE');
+    const invitation = await (await request(`/campaigns/${campaign.id}/invitations`, gm, 'POST', { username: player.user.username })).json();
+    let started, release; const entered = new Promise(resolve => { started = resolve; }), gate = new Promise(resolve => { release = resolve; });
+    const original = chat.session.bind(chat);
+    // Pause a real PostgreSQL transaction before it acquires the campaign lock.
+    chat.session = async (db, ...args) => { await db.$queryRaw`SELECT CURRENT_TIMESTAMP`; started(); await gate; return original(db, ...args); };
+    const pending = chat.send(gm.user.id, session.id, input('Recebida após voltar'));
+    let joined, saved;
+    try {
+      await entered; assert.equal((await request(`/invitations/${invitation.id}/accept`, player, 'POST')).status, 200);
+      joined = await prisma.campaignMember.findUnique({ where: { campaignId_userId: { campaignId: campaign.id, userId: player.user.id } } });
+    } finally { release(); chat.session = original; saved = await pending; }
+    assert.ok(new Date(saved.createdAt) >= joined.joinedAt);
+    assert.equal((await summary()).sessionUnreadMessages, 1); assert.equal((await feed()).total, 1);
+  });
   it('pagina feed misto de amizades e sessões e só notifica membros atuais', async () => {
     const [lowId, highId] = [gm.user.id, player.user.id].sort();
     await prisma.friendship.create({ data: { lowId, highId, initiatorId: gm.user.id } });

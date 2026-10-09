@@ -49,15 +49,17 @@ export class SessionChatService {
       }
       if (!sendAllowed(session)) throw new ConflictException({ code: 'SESSION_CHAT_CLOSED', message: 'O envio de mensagens desta sessão está encerrado.' });
       const chat = await db.sessionChat.upsert({ where: { sessionId: id }, create: { sessionId: id, lastSequence: 1 }, update: { lastSequence: { increment: 1 } } });
-      const saved = await db.sessionMessage.create({ data: { sessionId: id, senderId: userId, requestId: input.requestId, sequence: chat.lastSequence, content: input.content }, include });
+      // PostgreSQL now() is the transaction start, which may precede a concurrent membership join.
+      // Capture the message time after acquiring the campaign lock and checking current access.
+      const saved = await db.sessionMessage.create({ data: { sessionId: id, senderId: userId, requestId: input.requestId, sequence: chat.lastSequence, content: input.content, createdAt: new Date() }, include });
       // One event per session and recipient; replaying a send never creates another event.
       await db.$executeRaw`INSERT INTO "SessionChatNotification" AS n (id, "sessionId", "recipientId", "senderId", sequence, "updatedAt")
-        SELECT gen_random_uuid()::text, ${id}, audience."userId", ${userId}, ${saved.sequence}, CURRENT_TIMESTAMP
+        SELECT gen_random_uuid()::text, ${id}, audience."userId", ${userId}, ${saved.sequence}, ${saved.createdAt}
         FROM (SELECT "ownerId" AS "userId" FROM "Campaign" WHERE id = ${session.campaignId}
           UNION SELECT "userId" FROM "CampaignMember" WHERE "campaignId" = ${session.campaignId} AND status = 'ACTIVE') audience
         WHERE audience."userId" <> ${userId}
         ON CONFLICT ("sessionId", "recipientId") DO UPDATE SET "senderId" = EXCLUDED."senderId", sequence = EXCLUDED.sequence,
-          version = n.version + 1, "readAt" = NULL, "updatedAt" = CURRENT_TIMESTAMP`;
+          version = n.version + 1, "readAt" = NULL, "updatedAt" = EXCLUDED."updatedAt"`;
       return message(saved);
     }, { maxWait: 10000, timeout: 10000 });
   }
