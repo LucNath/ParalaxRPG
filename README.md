@@ -2,7 +2,7 @@
 
 Plataforma para criar sistemas próprios de RPG, organizar campanhas e jogar online. A plataforma fornece as ferramentas; o criador define as regras.
 
-Já estão disponíveis **cadastro, login, renovação de sessão, logout, dashboard, perfil com avatar, sistemas de RPG, campanhas, convites, membros, personagens, fichas, sessões, rolagens, amizades e mensagens privadas**, com PostgreSQL real. O editor de sistemas configura atributos, perícias, recursos e dados, mostra uma prévia da ficha e salva versões imutáveis. Sistemas podem ser privados, não listados ou públicos. Campanhas usam uma versão fixa de um sistema do mestre e oferecem descrição, estado, capacidade, edição e apresentação pública/privada. O mestre convida contas existentes; jogadores aceitam/recusam e recebem acesso privado conforme sua participação. Fichas usam os campos da versão fixa da campanha; dono ativo e mestre podem editá-las. Sessões oferecem agenda com fuso, início, encerramento, cancelamento e apresentação pública elegível. Chat de sessão e entrega por WebSocket continuam como próximas entregas; o MVP 1 completo ainda não está concluído.
+Já estão disponíveis **cadastro, login, renovação de sessão, logout, dashboard, perfil com avatar, sistemas de RPG, campanhas, convites, membros, personagens, fichas, sessões, rolagens, amizades, mensagens privadas e chat de sess?o**, com PostgreSQL real. O editor de sistemas configura atributos, perícias, recursos e dados, mostra uma prévia da ficha e salva versões imutáveis. Sistemas podem ser privados, não listados ou públicos. Campanhas usam uma versão fixa de um sistema do mestre e oferecem descrição, estado, capacidade, edição e apresentação pública/privada. O mestre convida contas existentes; jogadores aceitam/recusam e recebem acesso privado conforme sua participação. Fichas usam os campos da versão fixa da campanha; dono ativo e mestre podem editá-las. Sessões oferecem agenda com fuso, início, encerramento, cancelamento e apresentação pública elegível. Chat de sessão e entrega por WebSocket continuam como próximas entregas; o MVP 1 completo ainda não está concluído.
 
 A interface adota fantasia moderna com tema escuro, roxo/ciano e Geist. O [design system](docs/19-design-system.md) registra a direção fornecida, os componentes atuais, a proveniência da arte e os padrões para os próximos módulos. A [identidade Paralax](docs/design/logo-paralax.md) reúne logos SVG/PNG, variantes para fundos claros/escuros, favicon, fontes e instruções de exportação.
 
@@ -17,6 +17,8 @@ As dez primeiras contas recebem todos os cosméticos atuais e futuros, inclusive
 Em **Amigos**, busque um nome de usuário, envie/aceite solicitações e abra uma conversa privada. As mensagens têm histórico, contagem de não lidas, atualização automática e bloqueio. Veja [amizades e mensagens](docs/friends-and-messages.md).
 
 O sino abre a **central de notificações**, com solicitações, amizades aceitas e mensagens agrupadas por conversa. O menu Amigos indica pedidos pendentes e mensagens não lidas em todas as amizades; marcar um aviso como visto mantém as mensagens pendentes até abrir a conversa.
+
+Na p?gina de cada sess?o, **Chat da sess?o** permite combinar os preparativos e conversar durante o jogo. O mestre e os jogadores ativos compartilham mensagens de at? 2.000 caracteres; encerrar a sess?o fecha o envio e preserva o hist?rico. O sino avisa novas mensagens e abre o chat diretamente. Veja [permiss?es, leitura e API](docs/session-chat.md).
 
 ## Executar localmente
 
