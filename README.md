@@ -12,6 +12,8 @@ Rolagens estão disponíveis dentro de uma sessão **Ao vivo**: escolha quantida
 
 Em **Perfil**, as áreas **Conquistas** e **Personalizar perfil** mostram quatro marcos que liberam fundos e bordas estáticos ou animados. Complete sua biografia e avatar, crie uma campanha/ficha ou faça sua primeira rolagem para obter os itens correspondentes. Escolha os desbloqueados, confira a prévia e clique em **Salvar personalização**. Os itens permanecem na coleção e só a combinação equipada aparece publicamente. O fundo padrão segue disponível; os novos visuais usam verde/turquesa e vermelho/dourado, com pausa e movimento reduzido. Veja as [artes e animações](docs/animated-profile-cosmetics.md). Veja a [decisão 008](docs/architecture/decisions/008-conquistas-e-cosmeticos.md).
 
+As dez primeiras contas recebem todos os cosméticos atuais e futuros, inclusive para usuários já cadastrados, em ordem de criação. A liberação é permanente e não reabre vagas após exclusão. Veja [acesso dos pioneiros](docs/pioneer-profile-access.md).
+
 ## Executar localmente
 
 Pré-requisitos: Node.js 22.18 ou superior, npm 10 ou superior e Docker com Compose. A implementação foi verificada em Windows com Node.js 26.5.0.

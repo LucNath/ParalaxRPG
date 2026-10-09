@@ -11,7 +11,7 @@ export async function grantIdentity(db: Prisma.TransactionClient, userId: string
   const profile = await db.profile.findUniqueOrThrow({ where: { userId }, select: { bio: true, avatarKey: true } });
   if (profile.bio.trim() && profile.avatarKey) await grantAchievement(db, userId, 'identity');
 }
-// Administrative entitlement belongs to the immutable account, never to a username or client input.
+// Permanent entitlement belongs to the immutable account, never to a username or client input.
 export async function ensureCosmeticAccess(db: Prisma.TransactionClient, userId: string) {
   const profile = await db.profile.findUniqueOrThrow({ where: { userId }, select: { allCosmeticsUnlocked: true } });
   if (profile.allCosmeticsUnlocked) {

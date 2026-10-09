@@ -25,6 +25,14 @@ model User {
   characters Character[]
   achievements UserAchievement[]
   cosmetics UserCosmetic[]
+  pioneerAccess PioneerAccessSlot?
+}
+
+model PioneerAccessSlot {
+  slot Int @id
+  userId String? @unique
+  grantedAt DateTime?
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
 }
 
 model Profile {
