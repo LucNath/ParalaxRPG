@@ -3,7 +3,7 @@ import { randomUUID } from 'node:crypto';
 import { hash, argon2id } from 'argon2';
 import { Pool } from 'pg';
 
-test('notificações em qualquer página, aceite e atalho para conversa sem confundir vista com lida', async ({ page, browser }, testInfo) => {
+test('notifications: notificações em qualquer página, aceite e atalho para conversa sem confundir vista com lida', async ({ page, browser }, testInfo) => {
   test.setTimeout(120000);
   const url = new URL(process.env.DATABASE_URL!);
   if (!['localhost', '127.0.0.1'].includes(url.hostname) || url.pathname !== '/paralax') throw Error('Somente banco local.');
@@ -33,6 +33,8 @@ test('notificações em qualquer página, aceite e atalho para conversa sem conf
     await friend.getByRole('button', { name: 'Ver solicitação', exact: true }).click(); await expect(friend).toHaveURL(/\/amigos\?conexao=/);
     await expect(friend.getByTestId('notification-count')).toHaveCount(0); await expect(friend.getByTestId('friends-count')).toHaveText('1');
     await friend.getByRole('button', { name: 'Aceitar amizade', exact: true }).click(); await expect(friend.getByTestId('friends-count')).toHaveCount(0);
+    // Leave the conversation before sending: a visible open chat legitimately reads incoming messages.
+    await friend.goto('/dashboard');
     await page.goto('/dashboard'); await expect(page.getByTestId('notification-count')).toHaveText('1');
     await page.getByRole('link', { name: 'Notificações', exact: true }).click(); await expect(page.getByText('aceitou sua amizade.', { exact: false })).toBeVisible();
     await page.getByRole('button', { name: 'Abrir conversa', exact: true }).click(); await expect(page.getByLabel('Sua mensagem')).toBeVisible();
