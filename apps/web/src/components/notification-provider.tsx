@@ -7,7 +7,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 import type { NotificationSummary } from '@paralax/contracts';
 import { useAuth } from './auth-provider';
 
-const empty: NotificationSummary = { incomingRequests: 0, unreadMessages: 0, unreadNotifications: 0 };
+const empty: NotificationSummary = { incomingRequests: 0, unreadMessages: 0, unreadNotifications: 0, sessionUnreadMessages: 0 };
 const Context = createContext({ summary: empty, refresh: () => {} });
 export function NotificationProvider({ children }: { children: React.ReactNode }) {
   const { api, user } = useAuth();

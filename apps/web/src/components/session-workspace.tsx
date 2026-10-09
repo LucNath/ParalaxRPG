@@ -8,6 +8,7 @@ import { useAuth } from './auth-provider';
 import { SessionEditor } from './session-editor';
 import { SessionList } from './session-list';
 import { SessionRolls } from './session-rolls';
+import { SessionChat } from './session-chat';
 import { Badge } from './ui/badge';
 import { ApiError, errorMessage } from '@/lib/api';
 import { sessionDate, sessionDuration } from '@/lib/session-date';
@@ -50,7 +51,7 @@ export function SessionWorkspace({ create = false, edit = false }: { create?: bo
     <section className="panel campaign-presentation"><h2>O encontro</h2><p className="system-description">{session.description || 'Sem descrição.'}</p><dl className="session-facts"><div><dt>Agendada para</dt><dd><time dateTime={session.scheduledAt}>{sessionDate(session.scheduledAt, session.timeZone)}</time> · {session.timeZone}</dd></div><div><dt>Visibilidade</dt><dd>{session.visibility === 'PUBLIC' ? 'Pública quando ao vivo em campanha pública' : 'Privada — mestre e jogadores ativos'}</dd></div>{session.startedAt ? <div><dt>Iniciada em</dt><dd><time dateTime={session.startedAt}>{sessionDate(session.startedAt, session.timeZone)}</time></dd></div> : null}{session.endedAt ? <div><dt>Encerrada em</dt><dd><time dateTime={session.endedAt}>{sessionDate(session.endedAt, session.timeZone)}</time> · duração {sessionDuration(session.durationSeconds!)}</dd></div> : null}{session.cancelledAt ? <div><dt>Cancelada em</dt><dd>{sessionDate(session.cancelledAt, session.timeZone)}</dd></div> : null}</dl>
       <Link className="subtle-link" href={`/campanhas/${session.campaign.id}`}>Abrir campanha e fichas</Link>{session.status === 'LIVE' && session.visibility === 'PUBLIC' && session.campaign.visibility === 'PUBLIC' ? <Link className="button button-secondary" href={`/ao-vivo/${session.id}`} target="_blank" rel="noopener noreferrer">Ver apresentação pública</Link> : null}
       <p className="campaign-rules-note">Todos os jogadores ativos desta campanha podem acompanhar o encontro e consultar o histórico de rolagens.</p>
-    </section><SessionRolls key={session.id} session={session} onAccessLost={accessLost} /></>;
+    </section><SessionChat key={`chat-${session.id}`} session={session} onAccessLost={accessLost} /><SessionRolls key={session.id} session={session} onAccessLost={accessLost} /></>;
 }
 
 export function CampaignSessions() {

@@ -30,6 +30,10 @@ model User {
   friendshipsHigh Friendship[] @relation("FriendHigh")
   directMessages DirectMessage[]
   socialNotifications SocialNotification[]
+  sessionMessages SessionMessage[]
+  sessionChatReads SessionChatRead[]
+  sessionChatNotifications SessionChatNotification[] @relation("SessionNotificationRecipient")
+  sentSessionNotifications SessionChatNotification[] @relation("SessionNotificationSender")
 }
 
 enum FriendshipStatus {
@@ -94,6 +98,52 @@ model DirectMessage {
   sender User @relation(fields: [senderId], references: [id], onDelete: Cascade)
   @@unique([friendshipId, sequence])
   @@unique([friendshipId, senderId, requestId])
+}
+
+model SessionChat {
+  sessionId String @id
+  lastSequence Int @default(0)
+  session GameSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+}
+
+model SessionMessage {
+  id String @id @default(uuid())
+  sessionId String
+  senderId String
+  requestId String
+  sequence Int
+  content String
+  createdAt DateTime @default(now())
+  session GameSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  sender User @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  @@unique([sessionId, sequence])
+  @@unique([sessionId, senderId, requestId])
+}
+
+model SessionChatRead {
+  sessionId String
+  userId String
+  sequence Int @default(0)
+  session GameSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@id([sessionId, userId])
+}
+
+model SessionChatNotification {
+  id String @id @default(uuid())
+  sessionId String
+  recipientId String
+  senderId String
+  sequence Int
+  version Int @default(1)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  readAt DateTime?
+  session GameSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  recipient User @relation("SessionNotificationRecipient", fields: [recipientId], references: [id], onDelete: Cascade)
+  sender User @relation("SessionNotificationSender", fields: [senderId], references: [id], onDelete: Cascade)
+  @@unique([sessionId, recipientId])
+  @@index([recipientId, updatedAt])
 }
 
 model PioneerAccessSlot {
@@ -338,6 +388,10 @@ model GameSession {
   campaign Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
   changes GameSessionChange[]
   rolls DiceRoll[]
+  chat SessionChat?
+  messages SessionMessage[]
+  chatReads SessionChatRead[]
+  chatNotifications SessionChatNotification[]
   @@index([campaignId, scheduledAt])
   @@index([status, visibility, startedAt])
 }

@@ -20,9 +20,14 @@ export interface SocialConnection { id: string; person: SocialPerson; status: 'P
 export interface SocialConnectionsPage { items: SocialConnection[]; total: number; page: number; pageSize: number }
 export interface DirectMessageItem { id: string; senderId: string; sequence: number; content: string; createdAt: string }
 export interface DirectMessagesPage { items: DirectMessageItem[]; hasMore: boolean }
-export interface NotificationSummary { incomingRequests: number; unreadMessages: number; unreadNotifications: number }
-export interface SocialNotificationItem { id: string; friendshipId: string; kind: 'REQUEST' | 'ACCEPTED' | 'MESSAGE'; person: SocialPerson; version: number; updatedAt: string; readAt: string | null }
+export interface NotificationSummary { incomingRequests: number; unreadMessages: number; unreadNotifications: number; sessionUnreadMessages: number }
+interface NotificationBase { id: string; person: SocialPerson; version: number; updatedAt: string; readAt: string | null }
+export type SocialNotificationItem = NotificationBase & ({ friendshipId: string; kind: 'REQUEST' | 'ACCEPTED' | 'MESSAGE' } | { kind: 'SESSION_MESSAGE'; session: { id: string; title: string } });
 export interface SocialNotificationsPage { items: SocialNotificationItem[]; total: number; page: number; pageSize: number }
+export const sessionMessageSchema = directMessageSchema;
+export type SessionMessageInput = z.infer<typeof sessionMessageSchema>;
+export interface SessionMessage { id: string; sequence: number; content: string; sender: SocialPerson; createdAt: string }
+export interface SessionMessagesPage { items: SessionMessage[]; nextCursor: number | null; latestSequence: number; readSequence: number; canSend: boolean }
 export const notificationReadSchema = z.object({ version: z.number().int().positive().max(2147483647) }).strict();
 export type NotificationReadInput = z.infer<typeof notificationReadSchema>;
 

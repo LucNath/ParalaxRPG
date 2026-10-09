@@ -1,8 +1,9 @@
 import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
-import type { DirectMessageItem, DirectMessagesPage, SocialConnection, SocialConnectionsPage, SocialPerson } from '@paralax/contracts';
+import type { DirectMessageItem, DirectMessagesPage, SocialConnection, SocialConnectionsPage, SocialPerson, SocialNotificationsPage } from '@paralax/contracts';
 import { PrismaService } from '../../database/prisma.service';
 import type { Friendship, Prisma, DirectMessage } from '../../generated/prisma/client';
+import { campaignAccess, lockCampaign } from '../campaigns/campaign-access';
 
 const personSelect = { id: true, username: true, profile: { select: { displayName: true, avatarKey: true } } } satisfies Prisma.UserSelect;
 function person(user: Prisma.UserGetPayload<{ select: typeof personSelect }>): SocialPerson {
@@ -25,27 +26,68 @@ export class SocialService {
       ] },
     ] };
   }
+  private sessionNotificationScope(userId: string): Prisma.SessionChatNotificationWhereInput {
+    return { recipientId: userId, session: { campaign: campaignAccess(userId) } };
+  }
   async summary(userId: string) {
-    const [incomingRequests, unreadNotifications, counts] = await Promise.all([
+    const [incomingRequests, unreadNotifications, counts, sessionNotifications, sessionCounts] = await Promise.all([
       this.prisma.friendship.count({ where: { AND: [participant(userId), { status: 'PENDING', initiatorId: { not: userId } }] } }),
       this.prisma.socialNotification.count({ where: { AND: [this.notificationScope(userId), { readAt: null }] } }),
       this.prisma.$queryRaw<{ count: bigint }[]>`SELECT COUNT(*) AS count FROM "DirectMessage" m JOIN "Friendship" f ON f."id" = m."friendshipId"
         WHERE f."status" = 'ACCEPTED' AND (f."lowId" = ${userId} OR f."highId" = ${userId}) AND m."senderId" <> ${userId}
         AND m."sequence" > CASE WHEN f."lowId" = ${userId} THEN f."lowReadSequence" ELSE f."highReadSequence" END`,
+      this.prisma.sessionChatNotification.count({ where: { AND: [this.sessionNotificationScope(userId), { readAt: null }] } }),
+      this.prisma.$queryRaw<{ count: bigint }[]>`SELECT COUNT(*) AS count FROM "SessionMessage" m
+        JOIN "GameSession" s ON s.id = m."sessionId" JOIN "Campaign" c ON c.id = s."campaignId"
+        LEFT JOIN "CampaignMember" p ON p."campaignId" = c.id AND p."userId" = ${userId} AND p.status = 'ACTIVE'
+        LEFT JOIN "SessionChatRead" r ON r."sessionId" = s.id AND r."userId" = ${userId}
+        WHERE m."senderId" <> ${userId} AND m.sequence > COALESCE(r.sequence, 0)
+        AND (c."ownerId" = ${userId} OR (p.id IS NOT NULL AND m."createdAt" >= p."joinedAt"))`,
     ]);
-    return { incomingRequests, unreadMessages: Number(counts[0].count), unreadNotifications };
+    return { incomingRequests, unreadMessages: Number(counts[0].count), unreadNotifications: unreadNotifications + sessionNotifications, sessionUnreadMessages: Number(sessionCounts[0].count) };
   }
-  async notifications(userId: string, page: number) {
+  async notifications(userId: string, page: number): Promise<SocialNotificationsPage> {
     const where = this.notificationScope(userId);
-    const [rows, total] = await this.prisma.$transaction([
-      this.prisma.socialNotification.findMany({ where, orderBy: [{ updatedAt: 'desc' }, { id: 'desc' }], skip: (page - 1) * 30, take: 30,
-        include: { friendship: { include: { low: { select: personSelect }, high: { select: personSelect } } } } }),
-      this.prisma.socialNotification.count({ where }),
-    ]);
-    return { items: rows.map(row => ({ id: row.id, friendshipId: row.friendshipId, kind: row.kind, version: row.version,
-      person: person(row.friendship.lowId === userId ? row.friendship.high : row.friendship.low), updatedAt: row.updatedAt.toISOString(), readAt: row.readAt?.toISOString() ?? null })), total, page, pageSize: 30 };
+    return this.prisma.$transaction(async db => {
+      // Paginate the combined feed in SQL rather than fetching all earlier pages.
+      const keys = await db.$queryRaw<{ id: string; source: string }[]>`SELECT id, source FROM (
+        SELECT n.id, n."updatedAt", 'social' AS source FROM "SocialNotification" n JOIN "Friendship" f ON f.id = n."friendshipId"
+        WHERE n."recipientId" = ${userId} AND (f."lowId" = ${userId} OR f."highId" = ${userId})
+          AND ((n.kind = 'REQUEST' AND f.status = 'PENDING' AND f."initiatorId" <> ${userId}) OR (n.kind IN ('ACCEPTED','MESSAGE') AND f.status = 'ACCEPTED'))
+        UNION ALL
+        SELECT n.id, n."updatedAt", 'session' AS source FROM "SessionChatNotification" n
+        JOIN "GameSession" s ON s.id = n."sessionId" JOIN "Campaign" c ON c.id = s."campaignId"
+        WHERE n."recipientId" = ${userId} AND (c."ownerId" = ${userId} OR EXISTS (
+          SELECT 1 FROM "CampaignMember" p WHERE p."campaignId" = c.id AND p."userId" = ${userId} AND p.status = 'ACTIVE'))
+      ) feed ORDER BY "updatedAt" DESC, id DESC OFFSET ${(page - 1) * 30} LIMIT 30`;
+      const [rows, sessionRows, socialTotal, sessionTotal] = await Promise.all([
+        db.socialNotification.findMany({ where: { AND: [where, { id: { in: keys.filter(key => key.source === 'social').map(key => key.id) } }] },
+          include: { friendship: { include: { low: { select: personSelect }, high: { select: personSelect } } } } }),
+        db.sessionChatNotification.findMany({ where: { AND: [this.sessionNotificationScope(userId), { id: { in: keys.filter(key => key.source === 'session').map(key => key.id) } }] },
+          include: { session: { select: { id: true, title: true } }, sender: { select: personSelect } } }),
+        db.socialNotification.count({ where }), db.sessionChatNotification.count({ where: this.sessionNotificationScope(userId) }),
+      ]);
+      const items: SocialNotificationsPage['items'] = [
+        ...rows.map(row => ({ id: row.id, friendshipId: row.friendshipId, kind: row.kind, version: row.version,
+          person: person(row.friendship.lowId === userId ? row.friendship.high : row.friendship.low), updatedAt: row.updatedAt.toISOString(), readAt: row.readAt?.toISOString() ?? null })),
+        ...sessionRows.map(row => ({ id: row.id, kind: 'SESSION_MESSAGE' as const, session: row.session, person: person(row.sender), version: row.version, updatedAt: row.updatedAt.toISOString(), readAt: row.readAt?.toISOString() ?? null })),
+      ];
+      const positions = new Map(keys.map((key, index) => [key.id, index])); items.sort((a, b) => positions.get(a.id)! - positions.get(b.id)!);
+      return { items, total: socialTotal + sessionTotal, page, pageSize: 30 };
+    });
   }
   async notificationRead(userId: string, id: string, version: number) {
+    const sessionEvent = await this.prisma.sessionChatNotification.findFirst({ where: { AND: [this.sessionNotificationScope(userId), { id }] }, select: { session: { select: { campaignId: true } } } });
+    if (sessionEvent) {
+      await this.prisma.$transaction(async db => {
+        await lockCampaign(db, sessionEvent.session.campaignId);
+        const current = await db.sessionChatNotification.findFirst({ where: { AND: [this.sessionNotificationScope(userId), { id }] } });
+        if (!current) throw new NotFoundException();
+        await db.$executeRaw`UPDATE "SessionChatNotification" SET "readAt" = COALESCE("readAt", CURRENT_TIMESTAMP)
+          WHERE id = ${id} AND "recipientId" = ${userId} AND version = ${version}`;
+      });
+      return;
+    }
     // SQL preserves event time and compares the observed revision atomically.
     if (!await this.prisma.socialNotification.findFirst({ where: { AND: [this.notificationScope(userId), { id }] }, select: { id: true } })) throw new NotFoundException();
     await this.prisma.$executeRaw`UPDATE "SocialNotification" n SET "readAt" = COALESCE(n."readAt", CURRENT_TIMESTAMP)

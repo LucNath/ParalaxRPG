@@ -684,6 +684,11 @@ svg { flex-shrink: 0; }
 .public-sessions .page-heading>.badge { display: inline-flex; }
 .session-list-heading .editor-actions { flex-wrap: wrap; }
 .session-rolls { margin-top: 24px; padding: 28px; }
+.session-chat { margin-top: 24px; overflow: hidden; scroll-margin-top: 24px; }
+.session-chat > .rolls-heading { padding: 24px; margin-bottom: 0; border-bottom: 1px solid var(--border); }
+.session-chat > .feedback, .session-chat > .roll-note, .session-chat > .subtle-link { margin: 16px 24px; }
+.session-chat .social-message-author { display: flex; flex-wrap: wrap; gap: 4px 10px; }
+.session-chat .session-message-scroll { height: 360px; }
 .rolls-heading { display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; }
 .rolls-heading h2 { display: flex; align-items: center; gap: 10px; margin: 0; font-size: 20px; }
 .rolls-heading p { margin: 10px 0; font-size: 12px; }
@@ -781,6 +786,7 @@ svg { flex-shrink: 0; }
   .session-list-heading { flex-direction: column; align-items: flex-start; }
   .session-list-heading .editor-actions { width: auto; }
   .session-rolls { padding: 22px; }
+  .session-chat > .rolls-heading { padding: 16px; }
   .rolls-heading { flex-direction: column; gap: 8px; }
   .roll-fields, .roll-character-fields { grid-template-columns: 1fr; }
   .roll-entry { flex-direction: column; gap: 12px; }

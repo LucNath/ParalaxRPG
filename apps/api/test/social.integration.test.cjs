@@ -97,7 +97,7 @@ describe('Amizades e mensagens privadas: consentimento, isolamento e concorrênc
     assert.equal((await request(`/notifications/${notification.id}/read`, b, 'POST', { version: 0 })).status, 400);
     assert.equal((await request(`/notifications/${notification.id}/read`, b, 'POST', { version: notification.version, recipientId: a.user.id })).status, 400);
     assert.equal((await request(`/notifications/${notification.id}/read`, b, 'POST', { version: notification.version })).status, 204);
-    assert.deepEqual(await json('/notifications/summary', b), { incomingRequests: 1, unreadMessages: 0, unreadNotifications: 0 });
+    assert.deepEqual(await json('/notifications/summary', b), { incomingRequests: 1, unreadMessages: 0, unreadNotifications: 0, sessionUnreadMessages: 0 });
     assert.equal((await request(`/connections/${pending.id}/action`, b, 'POST', { action: 'accept' })).status, 204);
     assert.equal((await json('/notifications', b)).total, 0);
     assert.equal((await json('/notifications', a)).items[0].kind, 'ACCEPTED');
@@ -111,12 +111,12 @@ describe('Amizades e mensagens privadas: consentimento, isolamento e concorrênc
     inbox = await json('/notifications', b); assert.equal(inbox.total, 1); assert.equal(inbox.items[0].readAt, null); assert.equal(inbox.items[0].version, first.version + 1);
     assert.ok(!JSON.stringify(inbox).includes('Mensagem confidencial'));
     assert.equal((await request(`/notifications/${first.id}/read`, b, 'POST', { version: inbox.items[0].version })).status, 204);
-    assert.deepEqual(await json('/notifications/summary', b), { incomingRequests: 0, unreadMessages: 2, unreadNotifications: 0 });
+    assert.deepEqual(await json('/notifications/summary', b), { incomingRequests: 0, unreadMessages: 2, unreadNotifications: 0, sessionUnreadMessages: 0 });
     await json(`/connections/${pending.id}/messages`, a, 'POST', { requestId: randomUUID(), content: 'Nova mensagem' }, 201);
     assert.equal((await request(`/connections/${pending.id}/read`, b, 'POST', { sequence: 2 })).status, 204);
     assert.equal((await json('/notifications/summary', b)).unreadNotifications, 1);
     assert.equal((await request(`/connections/${pending.id}/read`, b, 'POST', { sequence: 3 })).status, 204);
-    assert.deepEqual(await json('/notifications/summary', b), { incomingRequests: 0, unreadMessages: 0, unreadNotifications: 0 });
+    assert.deepEqual(await json('/notifications/summary', b), { incomingRequests: 0, unreadMessages: 0, unreadNotifications: 0, sessionUnreadMessages: 0 });
     assert.equal((await request(`/connections/${pending.id}/action`, a, 'POST', { action: 'block' })).status, 204);
     assert.equal((await json('/notifications', a)).total, 0); assert.equal((await json('/notifications', b)).total, 0);
     assert.equal((await request(`/notifications/${first.id}/read`, b, 'POST', { version: first.version })).status, 404);
@@ -129,7 +129,7 @@ describe('Amizades e mensagens privadas: consentimento, isolamento e concorrênc
     await db.friendship.createMany({ data: pairs });
     assert.equal((await json('/notifications', b)).items.length, 30);
     assert.equal((await json('/notifications?page=2', b)).items.length, 2);
-    assert.deepEqual(await json('/notifications/summary', b), { incomingRequests: 32, unreadMessages: 0, unreadNotifications: 32 });
+    assert.deepEqual(await json('/notifications/summary', b), { incomingRequests: 32, unreadMessages: 0, unreadNotifications: 32, sessionUnreadMessages: 0 });
     assert.equal((await json(`/connections/${pairs[0].id}`, b)).id, pairs[0].id);
     await db.friendship.update({ where: { id: pairs[0].id }, data: { status: 'ACCEPTED', lastSequence: 1 } });
     await db.directMessage.create({ data: { friendshipId: pairs[0].id, senderId: extra[0], sequence: 1, requestId: randomUUID(), content: 'Fora da página' } });
