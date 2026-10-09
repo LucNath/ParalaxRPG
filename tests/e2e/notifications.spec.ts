@@ -50,6 +50,17 @@ test('notifications: notificações em qualquer página, aceite e atalho para co
     await friend.getByRole('button', { name: 'Abrir conversa', exact: true }).click();
     await expect(friend.getByRole('list', { name: 'Mensagens da conversa' }).getByText('Uma aventura espera por você.', { exact: true })).toBeVisible();
     await expect(friend.getByTestId('friends-count')).toHaveCount(0);
+    // A notification opens one chat; choosing another friend must keep that choice after sending.
+    const c = await fixture('c', passwordHash), [low, high] = [ids[0], ids[2]].sort();
+    await pool.query(`INSERT INTO "Friendship" (id,"lowId","highId","initiatorId",status,"updatedAt") VALUES ($1,$2,$3,$4,'ACCEPTED',CURRENT_TIMESTAMP)`, [randomUUID(), low, high, ids[0]]);
+    await page.reload();
+    await page.getByLabel(`Amizade com ${c}`, { exact: true }).getByRole('button', { name: 'Conversar', exact: true }).click();
+    await expect(page.getByRole('heading', { name: 'Conversa com Aventureiro c', exact: true })).toBeVisible();
+    const original = new URL(page.url()).searchParams.get('conexao');
+    const refreshedTarget = page.waitForResponse(response => response.url().endsWith(`/social/connections/${original}`) && response.status() === 200);
+    await page.getByLabel('Sua mensagem').fill('Esta conversa deve continuar selecionada.'); await page.getByRole('button', { name: 'Enviar mensagem', exact: true }).click();
+    await refreshedTarget; await expect(page.getByLabel('Sua mensagem')).toHaveValue('');
+    await expect(page.getByRole('heading', { name: 'Conversa com Aventureiro c', exact: true })).toBeVisible();
     await friend.getByRole('button', { name: 'Sair da conta', exact: true }).filter({ visible: true }).click(); await expect(friend).toHaveURL(/\/entrar$/);
     expect(errors).toEqual([]);
   } finally { await context.close(); if (ids.length) await pool.query('DELETE FROM "User" WHERE id = ANY($1::text[])', [ids]); await pool.end(); }

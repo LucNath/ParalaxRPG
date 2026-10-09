@@ -16,6 +16,7 @@ export function SocialWorkspace() {
   const { refresh: refreshNotifications } = useNotifications();
   const connectionId = useSearchParams().get('conexao');
   const [target, setTarget] = useState<SocialConnection | null>(null);
+  const openedTarget = useRef<string | null>(null);
   const [connections, setConnections] = useState<SocialConnectionsPage | null>(null);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
@@ -30,10 +31,10 @@ export function SocialWorkspace() {
   const [confirmation, setConfirmation] = useState<{ connection: SocialConnection; action: 'block' | 'remove' } | null>(null);
   useEffect(() => {
     setTarget(null);
-    if (!connectionId) return;
+    if (!connectionId) { openedTarget.current = null; return; }
     const abort = new AbortController();
     api.request<SocialConnection>(`/social/connections/${encodeURIComponent(connectionId)}`, { signal: abort.signal })
-      .then(value => { if (!abort.signal.aborted) { setTarget(value); if (value.status === 'ACCEPTED') setSelected(previous => previous?.id === value.id ? previous : value); } })
+      .then(value => { if (!abort.signal.aborted) { setTarget(value); if (value.status === 'ACCEPTED' && openedTarget.current !== connectionId) { openedTarget.current = connectionId; setSelected(value); } } })
       .catch(cause => { if (!abort.signal.aborted) setError(errorMessage(cause)); });
     return () => abort.abort();
   }, [api, connectionId, attempt]);
@@ -46,6 +47,7 @@ export function SocialWorkspace() {
         const value = await api.request<SocialConnectionsPage>(`/social/connections?page=${page}`, { signal: abort.signal });
         if (!abort.signal.aborted) {
           setConnections(value);
+          setTarget(previous => previous ? value.items.find(item => item.id === previous.id) ?? previous : null);
           setSelected(previous => {
             if (!previous) return null;
             const current = value.items.find(item => item.id === previous.id);
@@ -91,7 +93,7 @@ export function SocialWorkspace() {
     <div className="social-grid"><section className="panel social-connections"><div className="panel-heading"><h2><MessageCircle size={18} /> Sua companhia</h2></div>
       {!connections && !error ? <p role="status" className="social-empty">Carregando amizades…</p> : connections?.items.length === 0 ? <p className="social-empty muted">Sua próxima amizade começa com um convite. Busque alguém acima para adicionar.</p> : null}
       <div className="social-connection-list">{(target ? [target, ...(connections?.items ?? []).filter(item => item.id !== target.id)] : connections?.items)?.map(connection => <article className={`social-connection ${selected?.id === connection.id ? 'active' : ''}`} key={connection.id} aria-label={`Amizade com ${connection.person.username}`}><div className="social-person"><Avatar user={connection.person} /><Link href={`/u/${connection.person.username}`}>{connection.person.displayName}<small>@{connection.person.username}</small></Link>{connection.unread > 0 ? <span className="social-unread" aria-label={`${connection.unread} mensagens não lidas`}>{connection.unread}</span> : null}</div>
-        {connection.status === 'ACCEPTED' ? <><p className="social-preview muted">{connection.lastMessage?.content || 'Vocês já podem conversar.'}</p><div className="social-actions"><button className="button button-small" onClick={() => setSelected(connection)}>Conversar</button><button className="subtle-link" disabled={busy} onClick={() => setConfirmation({ connection, action: 'remove' })}>Remover</button><button className="subtle-link" disabled={busy} onClick={() => setConfirmation({ connection, action: 'block' })}>Bloquear</button></div></> : connection.status === 'PENDING' ? <><p className="muted">{connection.incoming ? 'Quer adicionar você como amigo.' : 'Solicitação enviada. Aguardando resposta.'}</p><div className="social-actions">{connection.incoming ? <><button className="button button-small" disabled={busy} onClick={() => void act(connection, 'accept')}>Aceitar amizade</button><button className="button button-secondary button-small" disabled={busy} onClick={() => void act(connection, 'decline')}>Recusar</button></> : <button className="button button-secondary button-small" disabled={busy} onClick={() => void act(connection, 'cancel')}>Cancelar solicitação</button>}<button className="subtle-link" disabled={busy} onClick={() => setConfirmation({ connection, action: 'block' })}>Bloquear</button></div></> : <><p className="muted">Você bloqueou esta pessoa.</p><button className="button button-secondary button-small" disabled={busy} onClick={() => void act(connection, 'unblock')}>Desbloquear</button></>}
+        {connection.status === 'ACCEPTED' ? <><p className="social-preview muted">{connection.lastMessage?.content || 'Vocês já podem conversar.'}</p><div className="social-actions"><button className="button button-small" onClick={() => { openedTarget.current = connectionId; setSelected(connection); }}>Conversar</button><button className="subtle-link" disabled={busy} onClick={() => setConfirmation({ connection, action: 'remove' })}>Remover</button><button className="subtle-link" disabled={busy} onClick={() => setConfirmation({ connection, action: 'block' })}>Bloquear</button></div></> : connection.status === 'PENDING' ? <><p className="muted">{connection.incoming ? 'Quer adicionar você como amigo.' : 'Solicitação enviada. Aguardando resposta.'}</p><div className="social-actions">{connection.incoming ? <><button className="button button-small" disabled={busy} onClick={() => void act(connection, 'accept')}>Aceitar amizade</button><button className="button button-secondary button-small" disabled={busy} onClick={() => void act(connection, 'decline')}>Recusar</button></> : <button className="button button-secondary button-small" disabled={busy} onClick={() => void act(connection, 'cancel')}>Cancelar solicitação</button>}<button className="subtle-link" disabled={busy} onClick={() => setConfirmation({ connection, action: 'block' })}>Bloquear</button></div></> : <><p className="muted">Você bloqueou esta pessoa.</p><button className="button button-secondary button-small" disabled={busy} onClick={() => void act(connection, 'unblock')}>Desbloquear</button></>}
       </article>)}</div>
       {connections && (page > 1 || connections.total > connections.pageSize) ? <div className="social-pagination"><button className="button button-secondary button-small" disabled={page === 1 || busy} onClick={() => setPage(value => value - 1)}>Anterior</button><span className="muted">Página {page}</span><button className="button button-secondary button-small" disabled={page * connections.pageSize >= connections.total || busy} onClick={() => setPage(value => value + 1)}>Próxima</button></div> : null}
     </section><section className="panel social-chat">{selected ? <DirectConversation key={selected.id} connection={selected} onRead={() => { setAttempt(value => value + 1); refreshNotifications(); }} onUnavailable={() => { setSelected(null); setAttempt(value => value + 1); setNotice('Esta conversa não está mais disponível.'); }} /> : <div className="social-chat-placeholder"><MessageCircle size={34} /><h2>Uma conversa pode começar uma aventura.</h2><p className="muted">Selecione um amigo para trocar mensagens privadas.</p></div>}</section></div>
