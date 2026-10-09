@@ -1,3 +1,4 @@
+import { testOrigin } from './test-origin';
 import { test, expect, type Page } from '@playwright/test';
 import { randomUUID } from 'node:crypto';
 import { Pool } from 'pg';
@@ -18,7 +19,7 @@ async function login(page: Page, username: string) {
   const pending = page.waitForResponse(response => response.url().endsWith('/auth/login') && response.status() === 200);
   await page.getByRole('button', { name: 'Entrar na minha conta' }).click(); const account = await (await pending).json() as AuthResponse; await expect(page).toHaveURL('/dashboard'); return account;
 }
-const options = (account: AuthResponse) => ({ headers: { Authorization: `Bearer ${account.accessToken}`, Origin: 'http://localhost:3000' } });
+const options = (account: AuthResponse) => ({ headers: { Authorization: `Bearer ${account.accessToken}`, Origin: testOrigin() } });
 async function fixture(page: Page, gm: AuthResponse, name: string) {
   const r = await page.request.post('/api/v1/systems', { ...options(gm), data: { name: `Regras ${name}`, description: '', visibility: 'PRIVATE', definition: { schemaVersion: 1, attributes: [], skills: [], resources: [], dice: [20] } } }); expect(r.status()).toBe(201); const system = await r.json();
   const c = await page.request.post('/api/v1/campaigns', { ...options(gm), data: { name, description: '', visibility: 'PUBLIC', status: 'PLANNED', maxPlayers: 2, systemVersionId: system.versionId } }); expect(c.status()).toBe(201); return await c.json() as CampaignDetail;
@@ -28,7 +29,7 @@ async function fillAgenda(page: Page, title: string) { await page.getByLabel('T�
 
 test('sessão: agenda com fuso, edição concorrente, iniciar/encerrar, público, cancelamento e remoção', async ({ page, browser }, info) => {
   test.setTimeout(120000);
-  const contexts = [await browser.newContext({ baseURL: 'http://localhost:3000', ...info.project.use }), await browser.newContext({ baseURL: 'http://localhost:3000', ...info.project.use })];
+  const contexts = [await browser.newContext({ baseURL: testOrigin(), ...info.project.use }), await browser.newContext({ baseURL: testOrigin(), ...info.project.use })];
   const player = await contexts[0].newPage(), visitor = await contexts[1].newPage(), errors: string[] = [];
   for (const surface of [page, player, visitor]) surface.on('pageerror', error => errors.push(error.message));
   try {

@@ -2,7 +2,7 @@
 
 Plataforma para criar sistemas próprios de RPG, organizar campanhas e jogar online. A plataforma fornece as ferramentas; o criador define as regras.
 
-Já estão disponíveis **cadastro, login, renovação de sessão, logout, dashboard, perfil com avatar, sistemas de RPG, campanhas, convites, membros, personagens, fichas, sessões e rolagens**, com PostgreSQL real. O editor de sistemas configura atributos, perícias, recursos e dados, mostra uma prévia da ficha e salva versões imutáveis. Sistemas podem ser privados, não listados ou públicos. Campanhas usam uma versão fixa de um sistema do mestre e oferecem descrição, estado, capacidade, edição e apresentação pública/privada. O mestre convida contas existentes; jogadores aceitam/recusam e recebem acesso privado conforme sua participação. Fichas usam os campos da versão fixa da campanha; dono ativo e mestre podem editá-las. Sessões oferecem agenda com fuso, início, encerramento, cancelamento e apresentação pública elegível. Chat e entrega em tempo real são as próximas entregas; o MVP 1 completo ainda não está concluído.
+Já estão disponíveis **cadastro, login, renovação de sessão, logout, dashboard, perfil com avatar, sistemas de RPG, campanhas, convites, membros, personagens, fichas, sessões, rolagens, amizades e mensagens privadas**, com PostgreSQL real. O editor de sistemas configura atributos, perícias, recursos e dados, mostra uma prévia da ficha e salva versões imutáveis. Sistemas podem ser privados, não listados ou públicos. Campanhas usam uma versão fixa de um sistema do mestre e oferecem descrição, estado, capacidade, edição e apresentação pública/privada. O mestre convida contas existentes; jogadores aceitam/recusam e recebem acesso privado conforme sua participação. Fichas usam os campos da versão fixa da campanha; dono ativo e mestre podem editá-las. Sessões oferecem agenda com fuso, início, encerramento, cancelamento e apresentação pública elegível. Chat de sessão e entrega por WebSocket continuam como próximas entregas; o MVP 1 completo ainda não está concluído.
 
 A interface adota fantasia moderna com tema escuro, roxo/ciano e Geist. O [design system](docs/19-design-system.md) registra a direção fornecida, os componentes atuais, a proveniência da arte e os padrões para os próximos módulos. A [identidade Paralax](docs/design/logo-paralax.md) reúne logos SVG/PNG, variantes para fundos claros/escuros, favicon, fontes e instruções de exportação.
 
@@ -13,6 +13,8 @@ Rolagens estão disponíveis dentro de uma sessão **Ao vivo**: escolha quantida
 Em **Perfil**, as áreas **Conquistas** e **Personalizar perfil** mostram quatro marcos que liberam fundos e bordas estáticos ou animados. Complete sua biografia e avatar, crie uma campanha/ficha ou faça sua primeira rolagem para obter os itens correspondentes. Escolha os desbloqueados, confira a prévia e clique em **Salvar personalização**. Os itens permanecem na coleção e só a combinação equipada aparece publicamente. O fundo padrão segue disponível; os novos visuais usam verde/turquesa e vermelho/dourado, com pausa e movimento reduzido. Veja as [artes e animações](docs/animated-profile-cosmetics.md). Veja a [decisão 008](docs/architecture/decisions/008-conquistas-e-cosmeticos.md).
 
 As dez primeiras contas recebem todos os cosméticos atuais e futuros, inclusive para usuários já cadastrados, em ordem de criação. A liberação é permanente e não reabre vagas após exclusão. Veja [acesso dos pioneiros](docs/pioneer-profile-access.md).
+
+Em **Amigos**, busque um nome de usuário, envie/aceite solicitações e abra uma conversa privada. As mensagens têm histórico, contagem de não lidas, atualização automática e bloqueio. Veja [amizades e mensagens](docs/friends-and-messages.md).
 
 ## Executar localmente
 
@@ -75,7 +77,7 @@ Para parar a aplicação, use `Ctrl+C` no terminal de desenvolvimento. `npm run 
 | Pasta | Conteúdo |
 | --- | --- |
 | `apps/web` | Next.js e interface em português |
-| `apps/api` | NestJS, autenticação, usuários, sistemas versionados, campanhas, convites/membros, fichas, sessões e Prisma |
+| `apps/api` | NestJS, autenticação, usuários, sistemas versionados, campanhas, convites/membros, fichas, sessões, amizades/mensagens e Prisma |
 | `packages/contracts` | Schemas Zod e DTOs públicos compartilhados |
 | `tests/e2e` | Testes de navegação desktop/mobile |
 | `docs` | Requisitos, arquitetura, decisões e instruções |
@@ -86,6 +88,6 @@ Consulte o [índice da documentação](docs/README.md), o [MVP](docs/14-mvp.md),
 
 ## Limites atuais
 
-Não há recuperação de senha, verificação de e-mail, troca de e-mail/username, retratos de personagens, inventário, notas privadas, chat, rolagens, presença, seleção de participantes por sessão ou WebSocket implementados. Convites usam contas existentes; e-mail, links, saída voluntária e solicitações de ingresso continuam futuros. O editor ainda não oferece autosave, fórmulas, exclusão, restauração de versões ou cópia de sistemas. Campanhas não oferecem exclusão, troca de sistema, transferência de mestre ou uso de sistemas de terceiros. A prévia mostra a definição, sem criar personagens. O rate limit inicial usa memória por processo; coordenação entre instâncias e Redis entram quando a arquitetura distribuída for implementada. Avatares antigos permanecem até definir política de limpeza.
+Não há recuperação de senha, verificação de e-mail, troca de e-mail/username, retratos de personagens, inventário, notas privadas, chat de sessão, presença, seleção de participantes por sessão ou WebSocket implementados. Convites usam contas existentes; e-mail, links, saída voluntária e solicitações de ingresso continuam futuros. O editor ainda não oferece autosave, fórmulas, exclusão, restauração de versões ou cópia de sistemas. Campanhas não oferecem exclusão, troca de sistema, transferência de mestre ou uso de sistemas de terceiros. A prévia mostra a definição, sem criar personagens. O rate limit inicial usa memória por processo; coordenação entre instâncias e Redis entram quando a arquitetura distribuída for implementada. Avatares antigos permanecem até definir política de limpeza.
 
 Vercel foi escolhida para publicar os módulos atuais para testes. A operação da plataforma completa, incluindo tempo real e recuperação de dados, continua a definir. A [especificação original](docs/referencias/especificacao-original.md) continua preservada integralmente.

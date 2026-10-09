@@ -1,5 +1,26 @@
 import { z } from 'zod';
 
+export const socialListSchema = z.object({ page: z.coerce.number().int().min(1).max(10000).default(1) }).strict();
+const socialUsername = z.string().trim().transform(value => value.replace(/^@/, '').toLowerCase()).pipe(z.string().min(3).max(30));
+export const socialSearchSchema = z.object({ search: socialUsername }).strict();
+export const friendRequestSchema = z.object({ username: socialUsername }).strict();
+export const friendActionSchema = z.object({ action: z.enum(['accept', 'decline', 'cancel', 'remove', 'block', 'unblock']) }).strict();
+export const directMessageSchema = z.object({ requestId: z.uuid(), content: z.string().trim().min(1, 'Escreva uma mensagem.').max(2000, 'Use até 2.000 caracteres.') }).strict();
+export const messageListSchema = z.object({ before: z.coerce.number().int().positive().max(2147483647).optional() }).strict();
+export const messageReadSchema = z.object({ sequence: z.number().int().min(0).max(2147483647) }).strict();
+export type SocialListQuery = z.infer<typeof socialListSchema>;
+export type SocialSearchQuery = z.infer<typeof socialSearchSchema>;
+export type FriendRequestInput = z.infer<typeof friendRequestSchema>;
+export type FriendActionInput = z.infer<typeof friendActionSchema>;
+export type DirectMessageInput = z.infer<typeof directMessageSchema>;
+export type MessageListQuery = z.infer<typeof messageListSchema>;
+export type MessageReadInput = z.infer<typeof messageReadSchema>;
+export type SocialPerson = Pick<PublicProfile, 'id' | 'username' | 'displayName' | 'avatarUrl'>;
+export interface SocialConnection { id: string; person: SocialPerson; status: 'PENDING' | 'ACCEPTED' | 'DECLINED' | 'BLOCKED'; incoming: boolean; blockedByMe: boolean; unread: number; lastMessage: DirectMessageItem | null }
+export interface SocialConnectionsPage { items: SocialConnection[]; total: number; page: number; pageSize: number }
+export interface DirectMessageItem { id: string; senderId: string; sequence: number; content: string; createdAt: string }
+export interface DirectMessagesPage { items: DirectMessageItem[]; hasMore: boolean }
+
 const email = z.string().trim().toLowerCase().email('Informe um e-mail válido.').max(254);
 const username = z.string().trim().toLowerCase()
   .min(3, 'Use pelo menos 3 caracteres.').max(24, 'Use até 24 caracteres.')

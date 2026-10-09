@@ -1,3 +1,4 @@
+import { testOrigin } from './test-origin';
 import { test, expect } from '@playwright/test';
 import { randomUUID } from 'node:crypto';
 import { Pool } from 'pg';
@@ -75,12 +76,12 @@ test('sistema: criar → ordenar campos → prévia → salvar → recarregar �
   const anonymous = await browser.newContext({ viewport: page.viewportSize()!, isMobile: testInfo.project.name === 'mobile', hasTouch: testInfo.project.name === 'mobile' });
   try {
     const stranger = await anonymous.newPage();
-    expect((await stranger.request.get(`http://localhost:3000/api/v1/systems/${system.id}`)).status()).toBe(404);
+    expect((await stranger.request.get(`${testOrigin()}/api/v1/systems/${system.id}`)).status()).toBe(404);
     await page.getByRole('button', { name: /^Informações gerais/ }).click();
     await page.getByLabel('Visibilidade', { exact: true }).selectOption('PUBLIC');
     await page.getByRole('button', { name: 'Salvar alterações' }).click();
     await expect(page.getByRole('status')).toHaveText('Salvo · versão 2');
-    await stranger.goto(`http://localhost:3000/s/${system.id}`);
+    await stranger.goto(`${testOrigin()}/s/${system.id}`);
     await expect(stranger.getByRole('heading', { name, exact: true }).first()).toBeVisible();
     await expect(stranger.getByText('Energia', { exact: true })).toBeVisible();
     expect(await stranger.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
@@ -95,13 +96,13 @@ test('sistema: criar → ordenar campos → prévia → salvar → recarregar �
     await page.getByLabel('Visibilidade', { exact: true }).selectOption('UNLISTED');
     await page.getByRole('button', { name: 'Salvar alterações' }).click();
     await expect(page.getByRole('status')).toHaveText('Salvo · versão 3');
-    const catalog = await stranger.request.get(`http://localhost:3000/api/v1/systems/public?search=${suffix}`);
+    const catalog = await stranger.request.get(`${testOrigin()}/api/v1/systems/public?search=${suffix}`);
     expect((await catalog.json()).total).toBe(0);
-    expect((await stranger.request.get(`http://localhost:3000/api/v1/systems/${system.id}`)).status()).toBe(200);
+    expect((await stranger.request.get(`${testOrigin()}/api/v1/systems/${system.id}`)).status()).toBe(200);
     await page.getByLabel('Visibilidade', { exact: true }).selectOption('PRIVATE');
     await page.getByRole('button', { name: 'Salvar alterações' }).click();
     await expect(page.getByRole('status')).toHaveText('Salvo · versão 4');
-    expect((await stranger.request.get(`http://localhost:3000/api/v1/systems/${system.id}`)).status()).toBe(404);
+    expect((await stranger.request.get(`${testOrigin()}/api/v1/systems/${system.id}`)).status()).toBe(404);
   } finally { await anonymous.close(); }
 
   // Two open editors keep the second user's local edit after a conflict.

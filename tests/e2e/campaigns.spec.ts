@@ -1,3 +1,4 @@
+import { testOrigin } from './test-origin';
 import { test, expect } from '@playwright/test';
 import { randomUUID } from 'node:crypto';
 import { Pool } from 'pg';
@@ -29,7 +30,7 @@ test('campanha: criar → versão fixa → editar → publicar → privatizar �
   await expect(page.getByRole('link', { name: 'Criar minha primeira campanha' })).toBeVisible();
   const systemInput = { name: `Regras ${suffix}`, description: 'Sistema privado do mestre.', visibility: 'PRIVATE', definition: { schemaVersion: 1,
     attributes: [{ id: randomUUID(), name: 'Vontade secreta', defaultValue: 3 }], skills: [], resources: [], dice: [20] } };
-  const apiOptions = { headers: { Authorization: `Bearer ${session.accessToken}`, Origin: 'http://localhost:3000' } };
+  const apiOptions = { headers: { Authorization: `Bearer ${session.accessToken}`, Origin: testOrigin() } };
   const systemResponse = await page.request.post('/api/v1/systems', { ...apiOptions, data: systemInput }); expect(systemResponse.status()).toBe(201);
   const system = await systemResponse.json() as SystemDetail;
   await page.getByRole('link', { name: 'Criar minha primeira campanha' }).click();
@@ -65,8 +66,8 @@ test('campanha: criar → versão fixa → editar → publicar → privatizar �
 
   const anonymous = await browser.newContext();
   try {
-    expect((await anonymous.request.get(`http://localhost:3000/api/v1/campaigns/${campaign.id}`)).status()).toBe(404);
-    expect((await anonymous.request.get('http://localhost:3000/api/v1/campaigns/mine')).status()).toBe(401);
+    expect((await anonymous.request.get(`${testOrigin()}/api/v1/campaigns/${campaign.id}`)).status()).toBe(404);
+    expect((await anonymous.request.get(`${testOrigin()}/api/v1/campaigns/mine`)).status()).toBe(401);
     await page.getByRole('link', { name: 'Editar campanha', exact: true }).click();
     await page.getByLabel('Visibilidade', { exact: true }).selectOption('PUBLIC');
     await page.getByLabel('Estado da campanha').selectOption('RECRUITING');
@@ -77,12 +78,12 @@ test('campanha: criar → versão fixa → editar → publicar → privatizar �
     await expect(page.getByLabel('Estado da campanha')).toHaveValue('RECRUITING');
     await expect(page.getByLabel('Máximo de jogadores')).toHaveValue('6');
     const publicPage = await anonymous.newPage();
-    await publicPage.goto(`http://localhost:3000/c/${campaign.id}`);
+    await publicPage.goto(`${testOrigin()}/c/${campaign.id}`);
     await expect(publicPage.getByRole('heading', { name, exact: true })).toBeVisible();
     await expect(publicPage.getByText('Recrutando', { exact: true })).toBeVisible();
     await expect(publicPage.getByText('Vontade secreta', { exact: true })).toHaveCount(0);
-    expect((await anonymous.request.get(`http://localhost:3000/api/v1/systems/${system.id}`)).status()).toBe(404);
-    const publicJson = await (await anonymous.request.get(`http://localhost:3000/api/v1/campaigns/${campaign.id}`)).json(); expect(publicJson.definition).toBeUndefined();
+    expect((await anonymous.request.get(`${testOrigin()}/api/v1/systems/${system.id}`)).status()).toBe(404);
+    const publicJson = await (await anonymous.request.get(`${testOrigin()}/api/v1/campaigns/${campaign.id}`)).json(); expect(publicJson.definition).toBeUndefined();
     expect(await publicPage.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
     await publicPage.screenshot({ path: `.artifacts/${testInfo.project.name}-campanha-publica.png`, fullPage: true });
     await page.getByRole('link', { name: 'Campanhas', exact: true }).last().click();
@@ -93,8 +94,8 @@ test('campanha: criar → versão fixa → editar → publicar → privatizar �
     await page.getByLabel('Visibilidade', { exact: true }).selectOption('PRIVATE');
     await page.getByRole('button', { name: 'Salvar alterações' }).click();
     await expect(page.getByRole('status')).toHaveText('Campanha salva');
-    expect((await anonymous.request.get(`http://localhost:3000/api/v1/campaigns/${campaign.id}`)).status()).toBe(404);
-    expect((await (await anonymous.request.get(`http://localhost:3000/api/v1/campaigns/public?search=${suffix}`)).json()).total).toBe(0);
+    expect((await anonymous.request.get(`${testOrigin()}/api/v1/campaigns/${campaign.id}`)).status()).toBe(404);
+    expect((await (await anonymous.request.get(`${testOrigin()}/api/v1/campaigns/public?search=${suffix}`)).json()).total).toBe(0);
   } finally { await anonymous.close(); }
 
   const second = await page.context().newPage();
@@ -141,7 +142,7 @@ test('seletor de regras: vazio → falha e recuperação → paginação → bus
   await expect(page.getByRole('link', { name: 'Criar sistema', exact: true })).toBeVisible();
   const systems: SystemDetail[] = [];
   for (let n = 0; n < 21; n++) {
-    const response = await page.request.post('/api/v1/systems', { headers: { Authorization: `Bearer ${session.accessToken}`, Origin: 'http://localhost:3000' }, data: {
+    const response = await page.request.post('/api/v1/systems', { headers: { Authorization: `Bearer ${session.accessToken}`, Origin: testOrigin() }, data: {
       name: `Regras ${suffix} ${n}`, description: '', visibility: 'PRIVATE', definition: { schemaVersion: 1, attributes: [], skills: [], resources: [], dice: [] },
     } }); expect(response.status()).toBe(201); systems.push(await response.json());
   }

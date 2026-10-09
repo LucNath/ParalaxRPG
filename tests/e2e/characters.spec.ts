@@ -1,3 +1,4 @@
+import { testOrigin } from './test-origin';
 import { test, expect, type Page } from '@playwright/test';
 import { randomUUID } from 'node:crypto';
 import { Pool } from 'pg';
@@ -25,7 +26,7 @@ async function register(page: Page, username: string) {
   const session = await (await pending).json() as AuthResponse; users.push(session.user.id);
   await expect(page).toHaveURL('/dashboard'); return session;
 }
-function options(session: AuthResponse) { return { headers: { Authorization: `Bearer ${session.accessToken}`, Origin: 'http://localhost:3000' } }; }
+function options(session: AuthResponse) { return { headers: { Authorization: `Bearer ${session.accessToken}`, Origin: testOrigin() } }; }
 async function loginFixture(page: Page, username: string) {
   const id = randomUUID(), password = 'Uma-senha-de-teste-123!';
   await pool.query('INSERT INTO "User" (id,email,username,"passwordHash","updatedAt") VALUES ($1,$2,$3,$4,NOW())', [id, `${username}@example.test`, username, await argon2.hash(password)]); users.push(id);
@@ -51,7 +52,7 @@ async function focus(page: Page) { await page.bringToFront(); await page.evaluat
 
 test('ficha: versão fixa, validação, jogador/mestre, conflito preservado e revogação', async ({ page, browser }, info) => {
   test.setTimeout(120000);
-  const context = await browser.newContext({ baseURL: 'http://localhost:3000', ...info.project.use });
+  const context = await browser.newContext({ baseURL: testOrigin(), ...info.project.use });
   const player = await context.newPage(), problems: string[] = [];
   for (const surface of [page, player]) surface.on('pageerror', error => problems.push(error.message));
   try {

@@ -1,3 +1,4 @@
+import { testOrigin } from './test-origin';
 import { test, expect, type Page } from '@playwright/test';
 import { randomUUID } from 'node:crypto';
 import { Pool } from 'pg';
@@ -27,7 +28,7 @@ async function register(page: Page, username: string) {
   return session;
 }
 async function campaignFixture(page: Page, session: AuthResponse, name: string) {
-  const options = { headers: { Authorization: `Bearer ${session.accessToken}`, Origin: 'http://localhost:3000' } };
+  const options = { headers: { Authorization: `Bearer ${session.accessToken}`, Origin: testOrigin() } };
   const response = await page.request.post('/api/v1/systems', { ...options, data: { name: `Regras ${name}`, description: '', visibility: 'PRIVATE', definition: {
     schemaVersion: 1, attributes: [{ id: randomUUID(), name: 'Vontade da mesa', defaultValue: 3 }], skills: [], resources: [], dice: [20],
   } } }); expect(response.status()).toBe(201);
@@ -45,7 +46,7 @@ async function invite(page: Page, username: string) {
 
 test('convites: recusar, aceitar, lotação, remover, reingressar e revogar com três contas', async ({ page, browser }, testInfo) => {
   test.setTimeout(120000);
-  const contexts = [await browser.newContext({ baseURL: 'http://localhost:3000', ...testInfo.project.use }), await browser.newContext({ baseURL: 'http://localhost:3000', ...testInfo.project.use })];
+  const contexts = [await browser.newContext({ baseURL: testOrigin(), ...testInfo.project.use }), await browser.newContext({ baseURL: testOrigin(), ...testInfo.project.use })];
   const player = await contexts[0].newPage(), other = await contexts[1].newPage();
   const suffix = randomUUID().replaceAll('-', '').slice(0, 9), name = `Mesa ${suffix}`, problems: string[] = [];
   for (const surface of [page, player, other]) surface.on('pageerror', error => problems.push(error.message));

@@ -26,6 +26,50 @@ model User {
   achievements UserAchievement[]
   cosmetics UserCosmetic[]
   pioneerAccess PioneerAccessSlot?
+  friendshipsLow Friendship[] @relation("FriendLow")
+  friendshipsHigh Friendship[] @relation("FriendHigh")
+  directMessages DirectMessage[]
+}
+
+enum FriendshipStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+  BLOCKED
+}
+
+model Friendship {
+  id String @id @default(uuid())
+  lowId String
+  highId String
+  initiatorId String
+  blockedById String?
+  status FriendshipStatus @default(PENDING)
+  lastSequence Int @default(0)
+  lowReadSequence Int @default(0)
+  highReadSequence Int @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  low User @relation("FriendLow", fields: [lowId], references: [id], onDelete: Cascade)
+  high User @relation("FriendHigh", fields: [highId], references: [id], onDelete: Cascade)
+  messages DirectMessage[]
+  @@unique([lowId, highId])
+  @@index([lowId, updatedAt])
+  @@index([highId, updatedAt])
+}
+
+model DirectMessage {
+  id String @id @default(uuid())
+  friendshipId String
+  senderId String
+  requestId String
+  sequence Int
+  content String
+  createdAt DateTime @default(now())
+  friendship Friendship @relation(fields: [friendshipId], references: [id], onDelete: Cascade)
+  sender User @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  @@unique([friendshipId, sequence])
+  @@unique([friendshipId, senderId, requestId])
 }
 
 model PioneerAccessSlot {
