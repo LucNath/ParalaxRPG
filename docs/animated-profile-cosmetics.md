@@ -9,7 +9,7 @@ Implementação: duas paisagens e duas bordas, somadas aos quatro itens estátic
 | Órbita de jade | Verde e turquesa | Uma identidade na Paralax |
 | Coroa das brasas | Âmbar, vermelho e dourado | Primeiros dados |
 
-Perfil → Personalizar perfil: escolher fundo e borda, conferir prévia e salvar. As miniaturas ficam estáticas; somente o visual equipado ou em prévia recebe movimento. O visitante pode pausar e retomar todas as animações pelo botão sobre a capa; a pausa é local àquela visualização. A preferência do sistema por movimento reduzido desativa animações, inclusive antes da hidratação. Imagens indisponíveis usam os padrões existentes. Sem flashes ou som.
+Perfil → Personalizar perfil: escolher fundo e borda, conferir prévia e salvar. As miniaturas ficam estáticas; somente o visual equipado ou em prévia recebe movimento. O visitante pode pausar e retomar todas as animações pelo botão sobre a capa. A preferência do sistema por movimento reduzido desativa animações por padrão, inclusive antes da hidratação; o botão **Ativar animações** permite uma escolha explícita para o perfil. Ativação/pausa ficam salvas neste navegador, e **Seguir sistema** restaura o comportamento automático. Se o navegador bloquear armazenamento, o controle continua funcionando naquela visualização. A escolha não muda a aparência equipada ou as permissões da conta. Imagens indisponíveis usam os padrões existentes. Sem flashes ou som.
 
 Cada conquista agora concede dois itens na transação da ação real. A migration 20261008050000_animated_cosmetics amplia as restrições de catálogo/categoria e concede os novos prêmios a conquistas existentes com a data original. Não muda escolhas equipadas. A liberação administrativa permanente cobre automaticamente os oito itens e futuras expansões, sem marcar conquistas como obtidas.
 
@@ -33,4 +33,3 @@ Use case: stylized-concept. Asset type: premium RPG profile banner artwork, land
 ## Verificação
 
 Testes de integração verificam recompensas múltiplas, bloqueios de propriedade/categoria, retroatividade idempotente, preservação dos itens e datas anteriores e liberação administrativa. Testes de navegador exercitam seleção → gravação → banco → perfil público, carregamento de ambas as paletas, avanço efetivo das animações, pausa/retomada, alteração de movimento reduzido, falhas de imagem e largura de 320 px.
-
