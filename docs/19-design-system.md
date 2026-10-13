@@ -6,6 +6,8 @@ SessionList/SessionEditor usam cards com badge textual, título, campanha, data/
 
 ## Direção adotada
 
+A [demonstração da mesa](25-vtt-prototipo-visual.md) aplica essa direção com mapa central, controles neutros, preparação lateral e layout empilhado em 320 px. É uma prévia fictícia e não substitui as sessões reais; resultados de interação e renderer na [verificação 013](verification/013-prototipo-visual-vtt.md).
+
 Fonte: [direção visual original do usuário](referencias/direcao-visual-original.md), preservada integralmente. Complementa a [interface funcional](13-interface.md).
 
 Fantasia moderna, sóbria e premium. A arte pertence ao conteúdo; navegação e formulários usam superfícies neutras, tipografia legível e bordas discretas. Sem pergaminho, couro ou dourado como identidade global.

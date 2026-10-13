@@ -41,6 +41,7 @@ test('sessão: agenda com fuso, edição concorrente, iniciar/encerrar, público
     const pending = page.waitForResponse(response => response.url().endsWith(`/campaigns/${campaign.id}/sessions`) && response.status() === 201);
     await page.getByRole('button', { name: 'Criar sessão', exact: true }).click(); const session = await (await pending).json() as GameSession;
     await expect(page).toHaveURL(`/sessoes/${session.id}`); expect(session.scheduledAt).toBe('2027-01-10T21:00:00.000Z');
+    await expect(page.getByRole('link', { name: 'Conhecer demonstração da mesa' })).toHaveAttribute('href', '/mesa-demo');
     await player.goto(`/sessoes/${session.id}`); await expect(player.getByRole('heading', { name: session.title, exact: true })).toBeVisible(); await expect(player.getByRole('button', { name: 'Iniciar sessão', exact: true })).toHaveCount(0);
     await page.getByRole('link', { name: 'Editar agenda', exact: true }).click();
     await expect(page.getByLabel('Data e horário', { exact: true })).toHaveValue('2027-01-10T18:00');

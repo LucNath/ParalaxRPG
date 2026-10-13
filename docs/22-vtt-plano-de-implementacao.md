@@ -1,8 +1,8 @@
 # 22 - Plano de implementação da VTT
 
-**Estado:** sequência e escopo preparados em 13 de outubro de 2026. VTT-I01 avançou para contratos e políticas de referência conforme [24](24-vtt-contratos-da-mesa.md); protótipos visual/de transporte e funcionalidades da mesa continuam pendentes.
+**Estado:** sequência e escopo preparados em 13 de outubro de 2026. VTT-I01 possui contratos/políticas em [24](24-vtt-contratos-da-mesa.md) e protótipo visual fictício em [25](25-vtt-prototipo-visual.md). Mesa persistida, transporte, operação de arquivos e ensaio em dispositivo físico continuam pendentes.
 
-**Evolução autorizada após o plano:** definir contratos e permissões da primeira entrega. Schemas/DTOs e testes foram acrescentados ao pacote compartilhado; rotas, migrations e interface não fazem parte desta etapa de contrato. VTT-I01 está parcial, sem apresentar a mesa como funcionalidade entregue.
+**Evolução autorizada após o plano:** contratos/permissões e protótipo visual da primeira entrega. Schemas/DTOs e demonstração foram acrescentados com testes; novas rotas/migrations de mesa e integração com campanhas reais ainda não foram implementadas. O fechamento operacional de VTT-I01 depende das decisões antes dos incrementos seguintes.
 
 Fonte: [catálogo e rastreabilidade](21-vtt-requisitos.md), derivado do [PDF preservado](referencias/especificacoes_vtt_mestre.pdf). Critérios verificáveis: [backlog e aceite](23-vtt-backlog-e-aceite.md).
 
@@ -46,7 +46,7 @@ Dados 3D de VTT-R38 e geração procedural de VTT-R26 são extensões P2 sugerid
 4. Definir armazenamento e entrega autenticada de imagens privadas. O caminho de avatar atual é público e não deve ser usado como autorização para mapas ou notas secretas.
 5. Exercitar a audiência com dados sintéticos: uma campanha, outra campanha, mestre, jogador, removido, pendente e visitante.
 
-**Progresso:** itens 1, 3 e 5 têm contrato e políticas testados; item 4 tem política de upload/entrega, com custo/cotas/retenção pendentes antes da integração. Item 2 ainda requer protótipo visual e medição de renderização. Referências: [contratos](24-vtt-contratos-da-mesa.md), [decisão 009](architecture/decisions/009-contratos-da-mesa-vtt.md) e [verificação 012](verification/012-contratos-vtt.md).
+**Progresso:** itens 1, 3 e 5 têm contrato e políticas testados. Item 2 tem [protótipo visual](25-vtt-prototipo-visual.md) com mouse/toque/teclado, audiências/estados e medição em Chromium com CPU limitada, conforme [verificação 013](verification/013-prototipo-visual-vtt.md); ensaio físico permanece pendente. Item 4 tem política de upload/entrega, com custo/cotas/retenção pendentes antes da integração. Referências: [contratos](24-vtt-contratos-da-mesa.md), [decisão 009](architecture/decisions/009-contratos-da-mesa-vtt.md) e [verificação 012](verification/012-contratos-vtt.md).
 
 ### VTT-I02 - Cenas e mapas básicos
 
@@ -107,7 +107,7 @@ Os registros `VTT-D01` a `VTT-D12` complementam os DP existentes. Todos estão a
 | VTT-D01 | Recorte da mesa inicial e mudança de prioridade de mapas/tokens | VTT-I01 | Recorte básico adotado na decisão 009/contrato 24; limites piloto sujeitos a medição; relação com MVPs mantida |
 | VTT-D02 | Transporte, topologia, ordenação, presença e recuperação de eventos | VTT-I03 | Protótipo com dois clientes, perda/reconexão, revogação e medição na hospedagem pretendida; custo registrado |
 | VTT-D03 | Audiência, controladores, campos expostos, co-mestre/espectador e edição após encerramento | VTT-I01 para papéis básicos; antes das expansões dependentes | Mestre/jogador, campos, remoção e estados adotados no contrato 24; co-mestre/espectador continuam pendentes |
-| VTT-D04 | Canvas/renderização e interação mouse/toque/teclado | VTT-I02 | Protótipo e medição em dispositivo modesto, com zoom e arraste; manter interface atual da aplicação |
+| VTT-D04 | Canvas/renderização e interação mouse/toque/teclado | VTT-I02 | SVG adotado inicialmente no protótipo 25, medido com 25/200 marcadores e CPU 4×; mouse/toque/teclado aprovados; validação física e no editor real ainda pendente |
 | VTT-D05 | Limites, armazenamento privado, URLs temporárias e retenção de assets | Upload em VTT-I02 | Política privada e validação adotadas no contrato 24; custo/cotas, retenção de órfãos e limpeza compensatória ainda exigem ensaio |
 | VTT-D06 | Formato do pacote, importação, RPO/RTO, backups automáticos e restauração | VTT-I05 | Manifesto e compatibilidade; restauração ensaiada; verificar capacidade/retenção/PITR do serviço contratado sem presumir suporte |
 | VTT-D07 | Autosave, rascunho offline, undo/redo, retenção e conflitos | VTT-I04 | Confirmar política de dados privados no cliente e limites de revisão; preservar mudanças concorrentes de terceiros |

@@ -6,7 +6,7 @@ Esta organização deriva das 60 seções da [especificação original](referenc
 
 Use primeiro a visão do produto, as regras de negócio e o MVP. Em seguida, consulte arquitetura, dados, API, tempo real e segurança para projetar a implementação.
 
-A ampliação de VTT focada no mestre, organizada em 13 de outubro de 2026, parte do [PDF preservado](referencias/especificacoes_vtt_mestre.pdf). Consulte [21 - requisitos](21-vtt-requisitos.md), [22 - plano de implementação](22-vtt-plano-de-implementacao.md), [23 - backlog e aceite](23-vtt-backlog-e-aceite.md) e [24 - contratos da mesa](24-vtt-contratos-da-mesa.md). O contrato básico possui schemas e políticas de referência testadas; interface, rotas, persistência e medições continuam pendentes. VTT-I01 é parcial.
+A ampliação de VTT focada no mestre, organizada em 13 de outubro de 2026, parte do [PDF preservado](referencias/especificacoes_vtt_mestre.pdf). Consulte [21 - requisitos](21-vtt-requisitos.md), [22 - plano de implementação](22-vtt-plano-de-implementacao.md), [23 - backlog e aceite](23-vtt-backlog-e-aceite.md), [24 - contratos da mesa](24-vtt-contratos-da-mesa.md) e [25 - protótipo visual](25-vtt-prototipo-visual.md). Contratos e demonstração com dados fictícios estão entregues/testados; rotas/persistência da mesa real, transporte, operação de arquivos e ensaio físico continuam pendentes.
 
 ### Status das informações
 
@@ -49,8 +49,10 @@ Consulte as [instruções de execução](../README.md) e os relatórios de [cont
 | [22 - VTT: plano de implementação](22-vtt-plano-de-implementacao.md) | Quatro fases, 15 incrementos, dependências, recorte inicial e 12 decisões registradas |
 | [23 - VTT: backlog e aceite](23-vtt-backlog-e-aceite.md) | 18 histórias/épicos e 18 cenários de teste planejados |
 | [24 - VTT: contratos da mesa](24-vtt-contratos-da-mesa.md) | Schemas/DTOs, matriz GM/PLAYER, APIs futuras, arquivos privados, revisões e retry |
+| [25 - VTT: protótipo visual](25-vtt-prototipo-visual.md) | Demonstração fictícia com mapas, grade, zoom, gestos, audiências e estados |
 | [Decisão 009](architecture/decisions/009-contratos-da-mesa-vtt.md) | Modelos e cópias por sessão, projeções por audiência e política básica da mesa |
 | [Verificação 012](verification/012-contratos-vtt.md) | Testes dos contratos e políticas; limites da evidência sem rotas/persistência VTT |
+| [Verificação 013](verification/013-prototipo-visual-vtt.md) | Navegador desktop/mobile, payload por audiência e ensaio do renderer com 25/200 marcadores |
 | [Fonte: VTT focada no mestre](referencias/especificacoes_vtt_mestre.pdf) | PDF original de sete páginas, versão 1.0, preservado sem alterações |
 | [Decisão 008](architecture/decisions/008-conquistas-e-cosmeticos.md) | Marcos de conta, concessão atômica, retroatividade e aparência pública |
 | [Verificação 011](verification/011-conquistas-e-cosmeticos.md) | Conquistas, propriedade, concorrência, coleção e perfil público |

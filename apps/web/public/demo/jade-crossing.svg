@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+  <defs>
+    <radialGradient id="land"><stop stop-color="#537269"/><stop offset="1" stop-color="#1c3631"/></radialGradient>
+    <linearGradient id="river"><stop stop-color="#234a61"/><stop offset=".5" stop-color="#4c959c"/><stop offset="1" stop-color="#1e495a"/></linearGradient>
+    <g id="tree"><circle r="58" fill="#172f2d"/><circle cx="-12" cy="-11" r="44" fill="#315950"/><circle cx="4" cy="-17" r="27" fill="#4a7963"/></g>
+    <pattern id="boards" width="19" height="19" patternUnits="userSpaceOnUse"><rect width="19" height="19" fill="#938b70"/><path d="M0 0V19" stroke="#5a5a4f" stroke-width="3"/></pattern>
+  </defs>
+  <rect width="1200" height="800" fill="url(#land)"/>
+  <path d="M540-90Q472 93 562 211T572 475Q502 618 644 884" stroke="#193a40" stroke-width="220" fill="none"/>
+  <path d="M540-90Q472 93 562 211T572 475Q502 618 644 884" stroke="url(#river)" stroke-width="170" fill="none"/>
+  <g fill="none" stroke="#8bd5ce" stroke-width="3" opacity=".35"><path d="M488 75q-15 65 28 131m76 297q-61 80-17 145M542 259q44 60 16 109m76 333 29 62"/></g>
+  <path d="M-10 484q285-72 475-80m155-13q282-66 596 84" stroke="#2e4740" stroke-width="100" fill="none"/>
+  <path d="M-10 484q285-72 475-80m155-13q282-66 596 84" stroke="#8a8b6a" stroke-width="65" fill="none" opacity=".7"/>
+  <rect x="450" y="358" width="260" height="105" rx="5" fill="url(#boards)" stroke="#3e504e" stroke-width="8"/>
+  <path d="M446 359H714M446 464H714" stroke="#b1aa84" stroke-width="11"/>
+  <g fill="#435c5a" stroke="#a4b6a0" stroke-width="4"><circle cx="447" cy="355" r="14"/><circle cx="714" cy="355" r="14"/><circle cx="447" cy="468" r="14"/><circle cx="714" cy="468" r="14"/></g>
+  <g><use href="#tree" x="91" y="100"/><use href="#tree" x="215" y="135"/><use href="#tree" x="369" y="83"/><use href="#tree" x="114" y="277"/><use href="#tree" x="280" y="274"/><use href="#tree" x="958" y="111"/><use href="#tree" x="1119" y="179"/><use href="#tree" x="833" y="213"/><use href="#tree" x="1037" y="324"/><use href="#tree" x="86" y="629"/><use href="#tree" x="238" y="712"/><use href="#tree" x="389" y="611"/><use href="#tree" x="874" y="692"/><use href="#tree" x="1019" y="637"/><use href="#tree" x="1146" y="704"/></g>
+  <g fill="#a0a291" stroke="#324947" stroke-width="4"><path d="m399 304 27-18 24 22-16 37-29-6Z"/><path d="m786 537 38-9 22 31-29 25-29-17Z"/><path d="m678 95 26-13 18 34-28 20Z"/></g>
+  <g fill="#9ad7ba" opacity=".55"><circle cx="369" cy="392" r="3"/><circle cx="849" cy="447" r="2"/><circle cx="735" cy="265" r="3"/><circle cx="427" cy="547" r="2"/></g>
+</svg>

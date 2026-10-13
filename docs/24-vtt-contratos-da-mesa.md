@@ -209,4 +209,4 @@ O protótipo precisa mostrar carregamento, erro/retry, vazio, conflito, somente 
 
 Schemas/DTOs, matriz, geometria e projeções por audiência estão disponíveis e têm testes executáveis. Contratos de rotas, atomicidade/retry e arquivos estão documentados para implementação. Persistência, autenticação das rotas, corrida entre encerramento/remoção/movimento, parser/Blob, performance e interação visual ainda precisam de integração/ensaio.
 
-VTT-I01 permanece **parcial**: contrato e protótipo de políticas concluídos; protótipo visual/medição ainda pendentes. Próximo recorte: protótipo visual de cena para concluir o gate de VTT-D04 e iniciar VTT-I02 com migrations aditivas, cenas/assets e seleção de mesa, sem implementar as quatro fases de uma vez.
+**Evolução posterior:** [25 - protótipo visual](25-vtt-prototipo-visual.md) entrega a navegação/estados e medição inicial de VTT-D04, com dados fictícios e sem persistência. Ensaio físico e operação/cotas/retenção de arquivos continuam pendentes. Próximo recorte de VTT-I02: migrations aditivas, API/editor de cenas e seleção persistida da mesa; tokens/sincronização ficam em VTT-I03.

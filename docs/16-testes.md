@@ -16,6 +16,8 @@ O [contrato básico](24-vtt-contratos-da-mesa.md) acrescenta testes executáveis
 
 A próxima entrega deve produzir evidência de navegador → API → persistência → resposta para a mesa básica; o portão da Fundação exige restaurar um pacote completo em ambiente isolado. Não usar contas/dados de produção ou vagas pioneiras como fixtures.
 
+O [protótipo visual](25-vtt-prototipo-visual.md) acrescenta nove casos de navegador com fixtures fictícios em desktop/mobile: grade, mapa, zoom/pan, seleção/movimento, teclado, toque/pinça/cancelamento, audiência e payload, estados e fallback/retry de imagem. [Verificação 013](verification/013-prototipo-visual-vtt.md) registra esses resultados e medição em produção local/CPU 4× com 25/200 marcadores. Não comprova persistência, sincronização ou arquivos privados reais.
+
 ## Níveis propostos
 
 | Nível | Foco | Exemplos |

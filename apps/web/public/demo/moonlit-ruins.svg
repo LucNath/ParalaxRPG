@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+  <defs>
+    <radialGradient id="land"><stop stop-color="#465864"/><stop offset="1" stop-color="#192f32"/></radialGradient>
+    <radialGradient id="moon"><stop stop-color="#b6b2e4" stop-opacity=".36"/><stop offset="1" stop-color="#7b79aa" stop-opacity="0"/></radialGradient>
+    <pattern id="stone" width="50" height="50" patternUnits="userSpaceOnUse"><rect width="50" height="50" fill="#68717c"/><path d="M0 0H50V50H0Z" stroke="#4c565f" stroke-width="3"/><path d="m4 37 9-8m19-23 8 5" stroke="#899297" opacity=".35"/></pattern>
+    <g id="tree"><circle r="57" fill="#11282c"/><circle cx="-11" cy="-9" r="44" fill="#24433f"/><circle cx="7" cy="-18" r="29" fill="#32554b"/><path d="m-20 18 18-49 20 35" fill="none" stroke="#4a7261" stroke-width="2" opacity=".5"/></g>
+  </defs>
+  <rect width="1200" height="800" fill="url(#land)"/>
+  <path d="M-20 717Q310 706 361 547T628 523Q811 512 845 251T1240 101" fill="none" stroke="#1b2e35" stroke-width="99"/>
+  <path d="M-20 717Q310 706 361 547T628 523Q811 512 845 251T1240 101" fill="none" stroke="#5f6870" stroke-width="64" opacity=".46"/>
+  <path d="M442 202h310v298H442Z" fill="#283c45" stroke="#18272f" stroke-width="22"/>
+  <rect x="455" y="215" width="285" height="275" fill="url(#stone)"/>
+  <g fill="#87919b" stroke="#384551" stroke-width="9"><path d="M426 192h351v32H426Z"/><path d="M426 192v156h33V192Z"/><path d="M426 393v114h33V393Z"/><path d="M744 192v315h33V192Z"/><path d="M426 476h110v31H426Z"/><path d="M605 476h172v31H605Z"/></g>
+  <circle cx="600" cy="336" r="69" fill="#363c54" stroke="#a298bd" stroke-width="8"/><circle cx="600" cy="336" r="47" fill="#747294" stroke="#d0b9fb" stroke-width="2"/><path d="m600 294 24 42-24 42-24-42Z" fill="#c6b2eb" opacity=".65"/>
+  <g fill="#3d5f52"><ellipse cx="448" cy="475" rx="40" ry="14"/><ellipse cx="761" cy="212" rx="44" ry="15"/><ellipse cx="739" cy="504" rx="51" ry="17"/></g>
+  <g fill="#6b737d" stroke="#32414a" stroke-width="4"><path d="m370 318 27-7 12 33-33 5Z"/><path d="m796 552 36 3-5 20-38-8Z"/><path d="m479 538 22-5 7 31-20-2Z"/></g>
+  <g><use href="#tree" x="105" y="130"/><use href="#tree" x="190" y="190"/><use href="#tree" x="295" y="125"/><use href="#tree" x="74" y="337"/><use href="#tree" x="169" y="405"/><use href="#tree" x="253" y="321"/><use href="#tree" x="93" y="551"/><use href="#tree" x="236" y="616"/><use href="#tree" x="428" y="80"/><use href="#tree" x="614" y="76"/><use href="#tree" x="803" y="78"/><use href="#tree" x="1004" y="313"/><use href="#tree" x="1128" y="384"/><use href="#tree" x="1046" y="536"/><use href="#tree" x="923" y="678"/><use href="#tree" x="1117" y="708"/><use href="#tree" x="517" y="724"/><use href="#tree" x="711" y="714"/></g>
+  <ellipse cx="601" cy="340" rx="330" ry="260" fill="url(#moon)"/>
+  <g fill="#aecbbb" opacity=".35"><circle cx="341" cy="172" r="3"/><circle cx="808" cy="586" r="3"/><circle cx="388" cy="681" r="2"/><circle cx="1055" cy="223" r="2"/></g>
+</svg>

@@ -22,7 +22,7 @@ Na página de cada sessão, **Chat da sessão** permite combinar os preparativos
 
 ## Planejamento da VTT
 
-As [especificações de uma VTT focada no mestre](docs/referencias/especificacoes_vtt_mestre.pdf) foram organizadas em [requisitos](docs/21-vtt-requisitos.md), [plano de implementação](docs/22-vtt-plano-de-implementacao.md) e [histórias/aceite](docs/23-vtt-backlog-e-aceite.md). Os [contratos da mesa básica](docs/24-vtt-contratos-da-mesa.md) já definem cenas, mapas, tokens, arquivos privados e permissões, com schemas/DTOs e políticas testadas no pacote compartilhado. VTT-I01 está parcial: protótipo visual e medições ainda pendentes; as novas rotas e a mesa no site serão implementadas em VTT-I02/VTT-I03. Os quatro estágios do PDF complementam os MVPs anteriores.
+As [especificações de uma VTT focada no mestre](docs/referencias/especificacoes_vtt_mestre.pdf) foram organizadas em [requisitos](docs/21-vtt-requisitos.md), [plano de implementação](docs/22-vtt-plano-de-implementacao.md) e [histórias/aceite](docs/23-vtt-backlog-e-aceite.md). Os [contratos da mesa básica](docs/24-vtt-contratos-da-mesa.md) definem cenas, mapas, tokens, arquivos privados e permissões. O [protótipo visual](docs/25-vtt-prototipo-visual.md) pode ser aberto em `/mesa-demo` ou pelo link numa sessão: mapa/grade, zoom, navegação e marcadores com dados fictícios, sem salvar ou alterar campanhas. Ensaios de navegador e renderer estão na [verificação 013](docs/verification/013-prototipo-visual-vtt.md). Rotas e persistência da mesa real continuam em VTT-I02/VTT-I03; transporte, operação de arquivos e ensaio em dispositivo físico ainda pendentes.
 
 ## Executar localmente
 
