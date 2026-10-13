@@ -2,6 +2,8 @@
 
 **Data:** 13 de outubro de 2026. **Status:** adotada para contratos do recorte básico; integração e protótipos visual/de transporte pendentes.
 
+**Evolução:** o [protótipo visual](../../25-vtt-prototipo-visual.md) foi entregue e medido no recorte fictício, conforme [verificação 013](../../verification/013-prototipo-visual-vtt.md). Integração/persistência, transporte e ensaio em dispositivo físico continuam pendentes; as decisões de contrato abaixo permanecem válidas.
+
 ## Contexto
 
 O [plano VTT](../../22-vtt-plano-de-implementacao.md) propõe cenas/mapas e tokens sobre campanhas, membros e sessões existentes. O próximo passo autorizado é definir contratos e permissões antes de implementar as rotas. A mesa precisa proteger preparação do mestre, validar concessões e preservar o histórico de uma sessão encerrada.

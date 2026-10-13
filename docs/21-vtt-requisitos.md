@@ -2,7 +2,7 @@
 
 **Estado:** requisitos organizados para planejamento; módulos de produto desta ampliação ainda pendentes. **Data do levantamento:** 13 de outubro de 2026. **Base de código consultada:** `8cca37bf72e743017a19470a2d14b0b9f49d5a3d`, cuja implementação é equivalente à versão `463961205c258cebbd6abb01a87e0be0f99154d2`.
 
-**Evolução posterior ao levantamento:** [24 - contratos da mesa](24-vtt-contratos-da-mesa.md) define o recorte básico e acrescenta schemas/políticas testados em `packages/contracts`. A matriz abaixo continua descrevendo funcionalidades disponíveis, sem apresentar o contrato como mesa implementada. VTT-I01 permanece parcial até os protótipos/medições.
+**Evolução posterior ao levantamento:** [24 - contratos da mesa](24-vtt-contratos-da-mesa.md) define schemas/políticas; [25 - protótipo visual](25-vtt-prototipo-visual.md) entrega a demonstração fictícia e medição inicial. A matriz abaixo descreve funcionalidades de produto, sem apresentar o protótipo como mesa real integrada. Persistência/transporte, operação de arquivos e ensaio físico continuam pendentes.
 
 ## Origem e uso
 

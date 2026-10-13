@@ -4,6 +4,8 @@
 
 **Evolução de VTT-I01:** [contratos da mesa](24-vtt-contratos-da-mesa.md) e políticas de referência têm testes em memória registrados na [verificação 012](verification/012-contratos-vtt.md). Essa evidência prepara os cenários básicos; não conclui nenhuma história ou cenário completo abaixo, que exige interface, API e persistência reais.
 
+O [protótipo visual](25-vtt-prototipo-visual.md) acrescenta ensaios de interação/audiência/estados em navegador, conforme a [verificação 013](verification/013-prototipo-visual-vtt.md). Usa fixtures públicos e continua sem persistência; as histórias/cenários completos abaixo permanecem planejados.
+
 Os IDs `VTT-HU01` a `VTT-HU18` e `VTT-T01` a `VTT-T18` são novos e não substituem HU/CT da especificação inicial. O detalhamento de aceite abaixo é uma proposta operacional para capacidades do PDF.
 
 ## Próximas histórias: mesa básica e fundação

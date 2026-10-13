@@ -38,3 +38,11 @@ Aplicada a checklist de React: separação servidor/cliente, fixtures protegidos
 VTT-T01/VTT-T02/VTT-T03 completos continuam pendentes: não houve persistência, cópia/congelamento em banco, corrida transacional com remoção/encerramento, upload privado, sincronização/reconexão entre clientes ou ensaio de dispositivo físico modesto. Acesso revogado e conflito nesta tela são fixtures, não respostas das futuras rotas de mesa.
 
 VTT-D04 adota SVG como decisão inicial do recorte medido, sujeita à validação no editor real. VTT-D02 e os itens operacionais de VTT-D05 continuam abertos. A mesa de campanhas reais ainda depende de VTT-I02/VTT-I03.
+
+## Publicação e verificação online
+
+Código de aplicação: `23b64d809de36ecb96c81db3687d33264f718eae`. Deployment web `dpl_B57Kp4q9kTrKMZiCiHWCqLny2fKa`, target production, READY, com alias [paralax-rpg-web.vercel.app](https://paralax-rpg-web.vercel.app/mesa-demo). Projeto `paralax-rpg-web`, ID `prj_3CIUtF5k98CGleh4AGMMJ2Lbarwk`, raiz `apps/web` e time `lucky-8804ce74` conferidos antes da publicação. A API e o banco não foram republicados ou migrados nesta etapa.
+
+Os nove casos novos passaram também no domínio publicado, em desktop e viewport móvel de 320 px. Sete histórias de interação/estados/imagem/toque passaram na execução inicial; as duas histórias de payload/controle passaram após ativar os certificados do sistema para o cliente Node de testes, mantendo validação TLS. Sem criação de contas ou alteração de campanhas reais. Capturas online foram inspecionadas e a tela continua marcada como demonstração fictícia.
+
+Consulta aos logs do deployment web, filtro error, janela de dez minutos e limite 40: nenhum registro encontrado. Não é uma auditoria de logs da API ou de erros anteriores. O CI [38417178082](https://github.com/LucNath/ParalaxRPG/actions/runs/38417178082) aprovou tipos, contratos/API e build; a suíte completa de navegador ainda estava em execução ao registrar esta publicação.

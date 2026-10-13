@@ -6,7 +6,7 @@ Referências: [contratos](24-vtt-contratos-da-mesa.md), [decisão 009](architect
 
 ## Como experimentar
 
-Abra `/mesa-demo`, também disponível pelo botão **Conhecer demonstração da mesa** na página de uma sessão. A demonstração é pública e não exige criar uma conta. O seletor de visão configura somente personagens e relações fictícios; não concede papel de mestre nem acesso a campanhas reais.
+Abra a [demonstração publicada](https://paralax-rpg-web.vercel.app/mesa-demo), também disponível pelo botão **Conhecer demonstração da mesa** na página de uma sessão. Localmente, use `/mesa-demo`. A demonstração é pública e não exige criar uma conta. O seletor de visão configura somente personagens e relações fictícios; não concede papel de mestre nem acesso a campanhas reais.
 
 - Mestre: trocar entre Ruínas do luar e Travessia de jade, alterar grade/escala, selecionar marcadores, navegar e mover os autorizados na demonstração.
 - Jogador: consultar a cena de exemplo compartilhada e mover Rook/Nara; demais marcadores são somente leitura. Não recebe notas, fichas, controladores ou token oculto.
