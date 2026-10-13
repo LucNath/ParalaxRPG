@@ -80,6 +80,10 @@ Implementar HU01–HU03, HU04–HU05, HU06–HU10, HU11–HU12, HU13–HU16 e HU
 
 Uma história está pronta quando seus critérios positivos e negativos passaram, dados persistem, autorização foi exercitada, erros são compreensíveis e documentação/contratos refletem o comportamento. O [fluxo completo do MVP](14-mvp.md) continua obrigatório mesmo com histórias individualmente concluídas.
 
+## Ampliação planejada - histórias da VTT
+
+As histórias `VTT-HU01` a `VTT-HU18` complementam este backlog em [23 - VTT: backlog e aceite](23-vtt-backlog-e-aceite.md). Os identificadores HU anteriores permanecem estáveis. As novas histórias estão planejadas e têm origem/escopo no [catálogo](21-vtt-requisitos.md) e ordem/dependências no [plano](22-vtt-plano-de-implementacao.md); critérios de mapas, tokens, autosave e restauração não são resultados de teste já obtidos.
+
 ## Referências
 
 [Casos de uso](05-casos-de-uso.md), [requisitos](02-requisitos-funcionais.md) e [testes](16-testes.md).

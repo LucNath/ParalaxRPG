@@ -6,6 +6,8 @@ RNF005 exige comunicação bidirecional para chat e informações de sessão. A 
 
 O banco é fonte de verdade para mensagens, rolagens, fichas e estado da sessão. Redis pode coordenar presença e distribuição entre instâncias, sem substituir a persistência.
 
+No recorte atual, o [chat da sessão](session-chat.md) já funciona por consulta periódica; este documento descreve a proposta de transporte/eventos futuros. Para a mesa visual planejada, VTT-D02 em [22 - plano VTT](22-vtt-plano-de-implementacao.md) deve escolher sincronização, topologia, recuperação e revogação a partir de um protótipo medido. O catálogo [21](21-vtt-requisitos.md) e os cenários [23](23-vtt-backlog-e-aceite.md) não presumem Socket.IO/Redis já instalados ou adotados.
+
 ## Conexão e autorização
 
 1. Cliente conecta usando o mecanismo autenticado definido em DP03, sempre por transporte seguro em produção.
