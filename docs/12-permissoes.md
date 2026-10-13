@@ -4,6 +4,10 @@
 
 Somente mestre agenda, edita, inicia, encerra e cancela. Mestre e jogador ACTIVE consultam todos os encontros da campanha; removido, pendente ou terceiro recebe 404. Rotas privadas sem Bearer recebem 401. Visitante lê metadados LIVE/PUBLIC em campanha PUBLIC nas rotas públicas, sem regras, fichas, membros ou auditoria. Telas limpam conteúdo perdido na próxima verificação de foco/intervalo. Sem seleção de participantes ou presença. [Decisão 006](architecture/decisions/006-sessoes-e-agenda.md).
 
+## Permissões planejadas da VTT
+
+Mapas/tokens e demais recursos do [plano VTT](22-vtt-plano-de-implementacao.md) ainda não acrescentam roles ou concessões ao código atual. A matriz futura depende de VTT-D03; controladores de tokens continuam obrigatoriamente participantes ativos. VTT-D05 trata acesso e revogação de arquivos, e VTT-D10 trata projeção de áreas/visão. Critérios negativos e cenários por audiência estão em [23 - backlog e aceite](23-vtt-backlog-e-aceite.md).
+
 ## Princípio
 
 O RBAC de origem combina papéis da plataforma e papéis dentro da campanha. **Ser Mestre em uma campanha não concede autoridade em outra.** O controle do Mestre cobre todos os módulos disponíveis do próprio ambiente, sem alterar recursos originais pertencentes a terceiros.
