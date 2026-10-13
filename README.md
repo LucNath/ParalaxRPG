@@ -20,10 +20,6 @@ O sino abre a **central de notificações**, com solicitações, amizades aceita
 
 Na página de cada sessão, **Chat da sessão** permite combinar os preparativos e conversar durante o jogo. O mestre e os jogadores ativos compartilham mensagens de até 2.000 caracteres; encerrar a sessão fecha o envio e preserva o histórico. O sino avisa novas mensagens e abre o chat diretamente. Veja [permissões, leitura e API](docs/session-chat.md).
 
-## Planejamento da VTT
-
-As [especificações de uma VTT focada no mestre](docs/referencias/especificacoes_vtt_mestre.pdf) foram organizadas em [requisitos](docs/21-vtt-requisitos.md), [plano de implementação](docs/22-vtt-plano-de-implementacao.md) e [histórias/aceite](docs/23-vtt-backlog-e-aceite.md). A próxima entrega sugerida é a mesa visual com cenas, mapas e tokens autorizados; esses recursos permanecem planejados. Os quatro estágios do PDF complementam os MVPs anteriores, sem alterar o que já está disponível no site.
-
 ## Executar localmente
 
 Pré-requisitos: Node.js 22.18 ou superior, npm 10 ou superior e Docker com Compose. A implementação foi verificada em Windows com Node.js 26.5.0.

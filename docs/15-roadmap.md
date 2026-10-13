@@ -24,21 +24,6 @@ Estado atual: conta/perfil, sistemas básicos e campanhas vinculadas a uma vers�
 
 O recorte estático foi antecipado por solicitação do usuário: quatro conquistas de conta, concessão persistente, retroatividade comprovável, coleção/editor com prévia e aparência pública, conforme a [decisão 008](architecture/decisions/008-conquistas-e-cosmeticos.md). Fundos/bordas animados e novos marcos seguem em [20](20-conquistas-e-personalizacao.md); prioridade dessas extensões em relação ao chat/tempo real permanece pendente. O incremento antecipa parte das conquistas originalmente previstas no MVP 4, sem antecipar todo o módulo social.
 
-## Ampliação planejada - VTT focada no mestre
-
-O [PDF adicional](referencias/especificacoes_vtt_mestre.pdf) foi organizado em [requisitos](21-vtt-requisitos.md), [plano de implementação](22-vtt-plano-de-implementacao.md) e [backlog/aceite](23-vtt-backlog-e-aceite.md). O plano é uma proposta de evolução; não altera os RFs originais nem declara os módulos novos como implementados.
-
-| Fase do PDF | Complemento proposto | Condição de conclusão |
-| --- | --- | --- |
-| 1 - Fundação | Cenas/mapas básicos, tokens autorizados, salvamento confiável, exportação/restauração e demonstração, reaproveitando conta/campanha/ficha/sessão/dados/chat | Mesa completa com acesso correto, estado recuperável e pacote integral restaurado em teste |
-| 2 - Mestre avançado | Compêndios, NPCs, inventário, Wiki/preparação, tracker e regras/efeitos configuráveis | Combate e preparação conectados a fichas/mapas, com logs e reversão |
-| 3 - Imersão e transmissão | Visão/fog/luz, mapas avançados, handouts, áudio, efeitos e saída de apresentação | Alternar audiências sem expor segredos; recursos desligáveis e desempenho verificado |
-| 4 - Ecossistema | Plugins, API de integração, marketplace, importadores/migrações avançados e simulação opcional | Compartilhar/atualizar/testar conteúdo preservando campanhas e isolamento |
-
-O próximo recorte sugerido é VTT-I01 a VTT-I03: contratos/permissões da mesa, cenas/mapas e tokens básicos. Ele antecipa parte dos mapas/tokens originalmente previstos no MVP 2; esta mudança de prioridade permanece proposta em VTT-D01. Fase 1 também exige VTT-I04 a VTT-I06 e não significa conclusão automática do MVP 1 original, cujo fluxo inclui espectadores.
-
-As fases do PDF e os MVPs originais são classificações diferentes. Preservar as duas referências evita promover toda a VTT avançada a uma única entrega ou declarar como pronto conteúdo ainda planejado. Prazos, custo e limites quantitativos dependem das decisões e medições descritas no plano.
-
 ## Prioridade técnica de origem
 
 A seção 57 recomenda:
