@@ -1,6 +1,8 @@
 # 23 - Backlog e critérios de aceite da VTT
 
-**Estado:** histórias e testes planejados, sem implementação ou resultados de execução nesta etapa. **Data:** 13 de outubro de 2026. Origem, situação atual e IDs de requisitos estão no [catálogo](21-vtt-requisitos.md); ordem e decisões abertas estão no [plano](22-vtt-plano-de-implementacao.md).
+**Estado:** histórias e cenários completos planejados; execução dos contratos básicos registrada separadamente. **Data:** 13 de outubro de 2026. Origem, situação atual e IDs de requisitos estão no [catálogo](21-vtt-requisitos.md); ordem e decisões estão no [plano](22-vtt-plano-de-implementacao.md).
+
+**Evolução de VTT-I01:** [contratos da mesa](24-vtt-contratos-da-mesa.md) e políticas de referência têm testes em memória registrados na [verificação 012](verification/012-contratos-vtt.md). Essa evidência prepara os cenários básicos; não conclui nenhuma história ou cenário completo abaixo, que exige interface, API e persistência reais.
 
 Os IDs `VTT-HU01` a `VTT-HU18` e `VTT-T01` a `VTT-T18` são novos e não substituem HU/CT da especificação inicial. O detalhamento de aceite abaixo é uma proposta operacional para capacidades do PDF.
 

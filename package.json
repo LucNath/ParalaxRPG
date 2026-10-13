@@ -15,8 +15,9 @@
     "build": "npm run prepare:dev && npm run build --workspace @paralax/api && npm run build --workspace @paralax/web",
     "typecheck": "npm run prepare:dev && npm run typecheck --workspaces --if-present",
     "test:api": "npm run prepare:dev && npm run build --workspace @paralax/api && npm run test --workspace @paralax/api",
+    "test:contracts": "npm run test --workspace @paralax/contracts",
     "test:e2e": "npm run prepare:dev && node apps/api/test/prepare-post-pioneer-fixtures.cjs && node scripts/test-e2e.mjs",
-    "check": "npm run typecheck && npm run test:api"
+    "check": "npm run typecheck && npm run test:contracts && npm run test:api"
   },
   "devDependencies": {
     "@playwright/test": "1.63.0",

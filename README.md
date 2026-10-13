@@ -22,7 +22,7 @@ Na página de cada sessão, **Chat da sessão** permite combinar os preparativos
 
 ## Planejamento da VTT
 
-As [especificações de uma VTT focada no mestre](docs/referencias/especificacoes_vtt_mestre.pdf) foram organizadas em [requisitos](docs/21-vtt-requisitos.md), [plano de implementação](docs/22-vtt-plano-de-implementacao.md) e [histórias/aceite](docs/23-vtt-backlog-e-aceite.md). A próxima entrega sugerida é a mesa visual com cenas, mapas e tokens autorizados; esses recursos permanecem planejados. Os quatro estágios do PDF complementam os MVPs anteriores, sem alterar o que já está disponível no site.
+As [especificações de uma VTT focada no mestre](docs/referencias/especificacoes_vtt_mestre.pdf) foram organizadas em [requisitos](docs/21-vtt-requisitos.md), [plano de implementação](docs/22-vtt-plano-de-implementacao.md) e [histórias/aceite](docs/23-vtt-backlog-e-aceite.md). Os [contratos da mesa básica](docs/24-vtt-contratos-da-mesa.md) já definem cenas, mapas, tokens, arquivos privados e permissões, com schemas/DTOs e políticas testadas no pacote compartilhado. VTT-I01 está parcial: protótipo visual e medições ainda pendentes; as novas rotas e a mesa no site serão implementadas em VTT-I02/VTT-I03. Os quatro estágios do PDF complementam os MVPs anteriores.
 
 ## Executar localmente
 
@@ -72,7 +72,8 @@ npx playwright install chromium
 npm run test:e2e
 ```
 
-- `check`: tipos e testes de integração da API com banco real.
+- `check`: tipos, contratos da VTT e testes de integração da API com banco real.
+- `test:contracts`: schemas e políticas da mesa básica, com fixtures em memória e sem banco/servidores.
 - `build`: produção de frontend e backend.
 - `test:e2e`: navegação real em Chromium, desktop e celular; inicia os servidores necessários.
 

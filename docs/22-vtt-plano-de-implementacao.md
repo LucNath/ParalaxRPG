@@ -1,8 +1,8 @@
 # 22 - Plano de implementação da VTT
 
-**Estado:** proposta de sequência e escopo, preparada em 13 de outubro de 2026. A autorização desta etapa é organizar requisitos e plano. As funcionalidades abaixo permanecem planejadas.
+**Estado:** sequência e escopo preparados em 13 de outubro de 2026. VTT-I01 avançou para contratos e políticas de referência conforme [24](24-vtt-contratos-da-mesa.md); protótipos visual/de transporte e funcionalidades da mesa continuam pendentes.
 
-**Escopo do pedido atual:** documentar o plano das implementações propostas no PDF. O levantamento do código existente serve para identificar reaproveitamento e dependências; os incrementos futuros não são apresentados como funcionalidades entregues.
+**Evolução autorizada após o plano:** definir contratos e permissões da primeira entrega. Schemas/DTOs e testes foram acrescentados ao pacote compartilhado; rotas, migrations e interface não fazem parte desta etapa de contrato. VTT-I01 está parcial, sem apresentar a mesa como funcionalidade entregue.
 
 Fonte: [catálogo e rastreabilidade](21-vtt-requisitos.md), derivado do [PDF preservado](referencias/especificacoes_vtt_mestre.pdf). Critérios verificáveis: [backlog e aceite](23-vtt-backlog-e-aceite.md).
 
@@ -46,13 +46,15 @@ Dados 3D de VTT-R38 e geração procedural de VTT-R26 são extensões P2 sugerid
 4. Definir armazenamento e entrega autenticada de imagens privadas. O caminho de avatar atual é público e não deve ser usado como autorização para mapas ou notas secretas.
 5. Exercitar a audiência com dados sintéticos: uma campanha, outra campanha, mestre, jogador, removido, pendente e visitante.
 
+**Progresso:** itens 1, 3 e 5 têm contrato e políticas testados; item 4 tem política de upload/entrega, com custo/cotas/retenção pendentes antes da integração. Item 2 ainda requer protótipo visual e medição de renderização. Referências: [contratos](24-vtt-contratos-da-mesa.md), [decisão 009](architecture/decisions/009-contratos-da-mesa-vtt.md) e [verificação 012](verification/012-contratos-vtt.md).
+
 ### VTT-I02 - Cenas e mapas básicos
 
 Proposta de recorte: upload de imagem raster validada por decodificação, grade quadrada ou nenhuma, unidade/escala configurável, zoom/pan e seleção de cena. Grades hexagonal/isométrica, ferramentas completas de desenho, portas, visão dinâmica e fog of war ficam em VTT-I11.
 
 O mapa base compartilhado nesta entrega é visível por inteiro aos membros autorizados da cena. Não anunciar ocultação segura de salas desenhadas nessa imagem. Segredos devem ficar em recursos/camadas que o servidor não entrega ao jogador; sigilo de áreas do próprio raster depende da solução de projeção de VTT-D10.
 
-Persistir a cena na campanha e sua seleção na sessão. A cena selecionada deve pertencer à mesma campanha. Edição do mestre e consulta do jogador usam revisões e checagem de acesso atual; conhecer um UUID não concede acesso.
+Persistir um modelo na campanha e uma cópia independente por instanciação na sessão, conforme a decisão 009. Seleção aponta para uma instância da mesma sessão/campanha; modelos não alteram cópias já criadas, e encerramento congela a mesa. Edição do mestre e consulta do jogador usam revisões por audiência e checagem de acesso atual; conhecer um UUID não concede acesso.
 
 ### VTT-I03 - Tokens e sincronização
 
@@ -73,14 +75,14 @@ Estes nomes representam responsabilidades de domínio; não são tabelas, migrat
 
 | Conceito proposto | Responsabilidade e invariantes |
 | --- | --- |
-| Scene | Campanha, configuração do mapa, grade/escala e revisão; seleção de cena da sessão valida a campanha |
+| SceneTemplate / SceneInstance / SessionTable | Preparação da campanha, cópia independente por sessão e seleção; configuração, grade/escala e revisões por audiência; mesa encerrada não muda com edição do modelo |
 | SceneAsset | Metadados de imagem, autoria, chave privada, acesso e ciclo de vida; sem URL permanente pública para arquivo secreto |
 | Token / TokenController | Estado básico e concessões de controle; controle sempre depende de participação ativa e audiência |
 | SceneChange / comando idempotente | Registro de alterações confirmadas, ator, revisão e dados necessários ao desfazer; sem expor histórico secreto ao jogador |
 | CampaignExport | Manifesto/versionamento e resultado de exportação; somente responsável autorizado obtém pacote integral |
 | Actor / NPC, Item, Encounter, Effect | Fases posteriores; NPC não deve exigir criação de conta de usuário |
 
-Proposta de API sob `/api/v1`: coleção de cenas da campanha, consulta/edição de cena, upload autorizado de asset, seleção da cena da sessão e comandos de criação/movimento de token. Definir URLs, schemas estritos e códigos de conflito em `packages/contracts` antes da implementação; atualizar [API](09-api.md) somente quando esse contrato for efetivamente adotado.
+O contrato de API sob `/api/v1` foi adotado em [24 - contratos da mesa](24-vtt-contratos-da-mesa.md#api-adotada-para-implementação), com schemas estritos em `packages/contracts`. A [API](09-api.md) o identifica como contrato futuro; as rotas continuam indisponíveis até VTT-I02/VTT-I03.
 
 Operações que dependem de remoção de membro ou fechamento de sessão precisam compartilhar a ordenação transacional existente: verificar/bloquear campanha antes do recurso dependente. A granularidade de bloqueio deve ser medida; não trocar integridade por uma prévia de arraste mais rápida.
 
@@ -102,11 +104,11 @@ Os registros `VTT-D01` a `VTT-D12` complementam os DP existentes. Todos estão a
 
 | ID | Escolha a resolver | Necessária antes de | Condição mínima |
 | --- | --- | --- | --- |
-| VTT-D01 | Recorte da mesa inicial e mudança de prioridade de mapas/tokens | VTT-I01 | Aceitar explicitamente limites da primeira entrega e a relação com os MVPs originais |
+| VTT-D01 | Recorte da mesa inicial e mudança de prioridade de mapas/tokens | VTT-I01 | Recorte básico adotado na decisão 009/contrato 24; limites piloto sujeitos a medição; relação com MVPs mantida |
 | VTT-D02 | Transporte, topologia, ordenação, presença e recuperação de eventos | VTT-I03 | Protótipo com dois clientes, perda/reconexão, revogação e medição na hospedagem pretendida; custo registrado |
-| VTT-D03 | Audiência, controladores, campos expostos, co-mestre/espectador e edição após encerramento | VTT-I01 para papéis básicos; antes das expansões dependentes | Matriz por ação/objeto e comportamento do token vinculado a ficha de removido; nenhuma concessão global implícita |
+| VTT-D03 | Audiência, controladores, campos expostos, co-mestre/espectador e edição após encerramento | VTT-I01 para papéis básicos; antes das expansões dependentes | Mestre/jogador, campos, remoção e estados adotados no contrato 24; co-mestre/espectador continuam pendentes |
 | VTT-D04 | Canvas/renderização e interação mouse/toque/teclado | VTT-I02 | Protótipo e medição em dispositivo modesto, com zoom e arraste; manter interface atual da aplicação |
-| VTT-D05 | Limites, armazenamento privado, URLs temporárias e retenção de assets | Upload em VTT-I02 | Verificar capacidade/custo do recurso escolhido, autorização, validação de arquivo e política para órfãos/substituições |
+| VTT-D05 | Limites, armazenamento privado, URLs temporárias e retenção de assets | Upload em VTT-I02 | Política privada e validação adotadas no contrato 24; custo/cotas, retenção de órfãos e limpeza compensatória ainda exigem ensaio |
 | VTT-D06 | Formato do pacote, importação, RPO/RTO, backups automáticos e restauração | VTT-I05 | Manifesto e compatibilidade; restauração ensaiada; verificar capacidade/retenção/PITR do serviço contratado sem presumir suporte |
 | VTT-D07 | Autosave, rascunho offline, undo/redo, retenção e conflitos | VTT-I04 | Confirmar política de dados privados no cliente e limites de revisão; preservar mudanças concorrentes de terceiros |
 | VTT-D08 | Modelo de NPC, inventário, recursos e condições; visibilidade de PV | VTT-I07 e VTT-I09 | Fonte única, relações por campanha, migração de fichas existentes e definição de valores visíveis por audiência |
@@ -126,6 +128,6 @@ Decisões de interface/armazenamento/tempo real acima não contratam serviços o
 | 3 - Imersão e transmissão | Alternar preparação, jogo e apresentação sem expor segredos | Projeções de mestre/jogador/transmissão verificadas no payload e nos arquivos; efeitos desligáveis |
 | 4 - Ecossistema | Compartilhar, atualizar e testar conteúdo preservando campanhas | Compatibilidade e desativação de plugins; restauração; simulação isolada se o recurso opcional for adotado |
 
-Prazo, esforço, teto de custo, limites finais de cena e metas quantitativas de desempenho ainda não foram fornecidos. Proposta de massa inicial de ensaio: cenas com 25 e 200 tokens, imagem pequena/grande, computador modesto, celular e conexão instável. A massa é de teste, não uma cota do produto; medir antes de fixar metas e publicar limites.
+Prazo, esforço, teto de custo, limites finais de cena e metas quantitativas de desempenho ainda não foram fornecidos. O contrato inicial adota limites piloto explícitos em [24](24-vtt-contratos-da-mesa.md#configuração-e-coordenadas), inclusive 200 tokens/instância, sem afirmar capacidade medida. Massa inicial de ensaio: cenas com 25 e 200 tokens, imagem pequena/grande, computador modesto, celular e conexão instável. Revisar limites e metas com os protótipos antes de habilitar o recurso.
 
 Cada incremento deve entregar contratos, persistência, autorização, interface, testes pertinentes, documentação e evidência. Publicação só entra quando a entrega implementada passou pelos critérios, com migration/backup quando necessários; editar este plano não exige republicar o site.

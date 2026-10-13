@@ -1,5 +1,8 @@
 import { z } from 'zod';
 
+export * from './vtt';
+export * from './vtt-policy';
+
 export const socialListSchema = z.object({ page: z.coerce.number().int().min(1).max(10000).default(1) }).strict();
 const socialUsername = z.string().trim().transform(value => value.replace(/^@/, '').toLowerCase()).pipe(z.string().min(3).max(30));
 export const socialSearchSchema = z.object({ search: socialUsername }).strict();

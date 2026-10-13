@@ -10,7 +10,9 @@ O incremento de conquistas acrescenta sete testes de API, incluindo execução d
 
 ## Plano de aceite da VTT
 
-A ampliação de 13 de outubro de 2026 possui 18 cenários `VTT-T01` a `VTT-T18` em [23 - VTT: backlog e aceite](23-vtt-backlog-e-aceite.md), vinculados a histórias e aos [requisitos do PDF](21-vtt-requisitos.md). São testes planejados, sem execução nesta etapa documental. Incluem payloads/assets secretos, controle de tokens, concorrência/reconexão, autosave, desfazer, exportação/restauração, carga e isolamento das fases avançadas. CT/RNF anteriores continuam com seus significados.
+A ampliação de 13 de outubro de 2026 possui 18 cenários `VTT-T01` a `VTT-T18` em [23 - VTT: backlog e aceite](23-vtt-backlog-e-aceite.md), vinculados a histórias e aos [requisitos do PDF](21-vtt-requisitos.md). Os cenários completos continuam planejados; incluem payloads/assets secretos, controle de tokens, concorrência/reconexão, autosave, desfazer, exportação/restauração, carga e isolamento das fases avançadas. CT/RNF anteriores continuam com seus significados.
+
+O [contrato básico](24-vtt-contratos-da-mesa.md) acrescenta testes executáveis de schemas, geometria, papéis, projeções e autorização de referência em memória. `npm run test:contracts` também integra `npm run check`/CI. Os resultados e limites estão na [verificação 012](verification/012-contratos-vtt.md); estes testes não concluem VTT-T01/VTT-T02/VTT-T03 nem demonstram banco, parser/Blob ou browser → API → dados para a mesa.
 
 A próxima entrega deve produzir evidência de navegador → API → persistência → resposta para a mesa básica; o portão da Fundação exige restaurar um pacote completo em ambiente isolado. Não usar contas/dados de produção ou vagas pioneiras como fixtures.
 

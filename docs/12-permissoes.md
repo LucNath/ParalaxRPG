@@ -6,7 +6,7 @@ Somente mestre agenda, edita, inicia, encerra e cancela. Mestre e jogador ACTIVE
 
 ## Permissões planejadas da VTT
 
-Mapas/tokens e demais recursos do [plano VTT](22-vtt-plano-de-implementacao.md) ainda não acrescentam roles ou concessões ao código atual. A matriz futura depende de VTT-D03; controladores de tokens continuam obrigatoriamente participantes ativos. VTT-D05 trata acesso e revogação de arquivos, e VTT-D10 trata projeção de áreas/visão. Critérios negativos e cenários por audiência estão em [23 - backlog e aceite](23-vtt-backlog-e-aceite.md).
+O recorte básico de VTT-D03 está definido na [matriz da mesa](24-vtt-contratos-da-mesa.md#matriz-de-acesso): mestre proprietário, jogador ACTIVE e controle explícito de token visível da cena ativa. Schemas e políticas de referência estão no pacote compartilhado, sem novas rotas ou concessões nos módulos atuais. Co-mestre/espectador continuam pendentes. VTT-D05 trata arquivos privados e VTT-D10 tratará projeção de áreas/visão. Critérios negativos e cenários por audiência estão em [23 - backlog e aceite](23-vtt-backlog-e-aceite.md); os testes já executados do contrato estão na [verificação 012](verification/012-contratos-vtt.md).
 
 ## Princípio
 

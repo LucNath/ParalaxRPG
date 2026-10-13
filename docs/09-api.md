@@ -4,6 +4,10 @@
 
 As rotas da seção 45 estão preservadas no primeiro catálogo. Payloads, respostas, erros e rotas complementares abaixo são **propostas de contrato** para a plataforma completa. O recorte já implementado está identificado a seguir; as demais rotas ainda não estão disponíveis.
 
+## Contrato adotado para a próxima implementação VTT
+
+[24 - contratos da mesa](24-vtt-contratos-da-mesa.md#api-adotada-para-implementação) define as rotas futuras de modelos de cena, assets privados, instâncias por sessão e tokens. Schemas/DTOs e políticas estão no pacote compartilhado conforme a [decisão 009](architecture/decisions/009-contratos-da-mesa-vtt.md); esses endpoints ainda não estão implementados. O recorte VTT substitui as propostas genéricas de mapas/tokens abaixo quando as respectivas rotas forem desenvolvidas.
+
 ## Contrato implementado — etapa 1
 
 Todas as rotas abaixo usam o prefixo `/api/v1`. Schemas e DTOs reais estão em [contracts](../packages/contracts/src/index.ts).

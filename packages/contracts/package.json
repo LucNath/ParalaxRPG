@@ -4,6 +4,6 @@
   "private": true,
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "scripts": { "build": "tsc", "typecheck": "tsc --noEmit" },
+  "scripts": { "build": "tsc", "typecheck": "tsc --noEmit", "test": "npm run build && node --test test/*.test.cjs" },
   "dependencies": { "zod": "4.6.5" }
 }
